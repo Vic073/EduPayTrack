@@ -44,6 +44,11 @@ export type StatementImport = $Result.DefaultSelection<Prisma.$StatementImportPa
  */
 export type StatementImportRow = $Result.DefaultSelection<Prisma.$StatementImportRowPayload>
 /**
+ * Model ReminderCampaign
+ * 
+ */
+export type ReminderCampaign = $Result.DefaultSelection<Prisma.$ReminderCampaignPayload>
+/**
  * Model GeneratedReport
  * 
  */
@@ -115,6 +120,22 @@ export const ReconciliationStatus: {
 
 export type ReconciliationStatus = (typeof ReconciliationStatus)[keyof typeof ReconciliationStatus]
 
+
+export const ReminderCampaignStatus: {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED'
+};
+
+export type ReminderCampaignStatus = (typeof ReminderCampaignStatus)[keyof typeof ReminderCampaignStatus]
+
+
+export const ReminderScheduleType: {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY'
+};
+
+export type ReminderScheduleType = (typeof ReminderScheduleType)[keyof typeof ReminderScheduleType]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -140,6 +161,14 @@ export const VerificationStatus: typeof $Enums.VerificationStatus
 export type ReconciliationStatus = $Enums.ReconciliationStatus
 
 export const ReconciliationStatus: typeof $Enums.ReconciliationStatus
+
+export type ReminderCampaignStatus = $Enums.ReminderCampaignStatus
+
+export const ReminderCampaignStatus: typeof $Enums.ReminderCampaignStatus
+
+export type ReminderScheduleType = $Enums.ReminderScheduleType
+
+export const ReminderScheduleType: typeof $Enums.ReminderScheduleType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -318,6 +347,16 @@ export class PrismaClient<
     * ```
     */
   get statementImportRow(): Prisma.StatementImportRowDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.reminderCampaign`: Exposes CRUD operations for the **ReminderCampaign** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReminderCampaigns
+    * const reminderCampaigns = await prisma.reminderCampaign.findMany()
+    * ```
+    */
+  get reminderCampaign(): Prisma.ReminderCampaignDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.generatedReport`: Exposes CRUD operations for the **GeneratedReport** model.
@@ -795,6 +834,7 @@ export namespace Prisma {
     Payment: 'Payment',
     StatementImport: 'StatementImport',
     StatementImportRow: 'StatementImportRow',
+    ReminderCampaign: 'ReminderCampaign',
     GeneratedReport: 'GeneratedReport',
     Notification: 'Notification',
     SystemRegistry: 'SystemRegistry'
@@ -816,7 +856,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "student" | "feeStructure" | "payment" | "statementImport" | "statementImportRow" | "generatedReport" | "notification" | "systemRegistry"
+      modelProps: "user" | "student" | "feeStructure" | "payment" | "statementImport" | "statementImportRow" | "reminderCampaign" | "generatedReport" | "notification" | "systemRegistry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1264,6 +1304,80 @@ export namespace Prisma {
           }
         }
       }
+      ReminderCampaign: {
+        payload: Prisma.$ReminderCampaignPayload<ExtArgs>
+        fields: Prisma.ReminderCampaignFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReminderCampaignFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReminderCampaignFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>
+          }
+          findFirst: {
+            args: Prisma.ReminderCampaignFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReminderCampaignFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>
+          }
+          findMany: {
+            args: Prisma.ReminderCampaignFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>[]
+          }
+          create: {
+            args: Prisma.ReminderCampaignCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>
+          }
+          createMany: {
+            args: Prisma.ReminderCampaignCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReminderCampaignCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>[]
+          }
+          delete: {
+            args: Prisma.ReminderCampaignDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>
+          }
+          update: {
+            args: Prisma.ReminderCampaignUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReminderCampaignDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReminderCampaignUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReminderCampaignUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReminderCampaignUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReminderCampaignPayload>
+          }
+          aggregate: {
+            args: Prisma.ReminderCampaignAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReminderCampaign>
+          }
+          groupBy: {
+            args: Prisma.ReminderCampaignGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReminderCampaignGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReminderCampaignCountArgs<ExtArgs>
+            result: $Utils.Optional<ReminderCampaignCountAggregateOutputType> | number
+          }
+        }
+      }
       GeneratedReport: {
         payload: Prisma.$GeneratedReportPayload<ExtArgs>
         fields: Prisma.GeneratedReportFieldRefs
@@ -1588,6 +1702,7 @@ export namespace Prisma {
     payment?: PaymentOmit
     statementImport?: StatementImportOmit
     statementImportRow?: StatementImportRowOmit
+    reminderCampaign?: ReminderCampaignOmit
     generatedReport?: GeneratedReportOmit
     notification?: NotificationOmit
     systemRegistry?: SystemRegistryOmit
@@ -1675,6 +1790,7 @@ export namespace Prisma {
     reviewedPayments: number
     reconciledPayments: number
     statementImports: number
+    reminderCampaigns: number
     generatedReports: number
     notifications: number
   }
@@ -1684,6 +1800,7 @@ export namespace Prisma {
     reviewedPayments?: boolean | UserCountOutputTypeCountReviewedPaymentsArgs
     reconciledPayments?: boolean | UserCountOutputTypeCountReconciledPaymentsArgs
     statementImports?: boolean | UserCountOutputTypeCountStatementImportsArgs
+    reminderCampaigns?: boolean | UserCountOutputTypeCountReminderCampaignsArgs
     generatedReports?: boolean | UserCountOutputTypeCountGeneratedReportsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   }
@@ -1725,6 +1842,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountStatementImportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StatementImportWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReminderCampaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReminderCampaignWhereInput
   }
 
   /**
@@ -2033,6 +2157,7 @@ export namespace Prisma {
     reviewedPayments?: boolean | User$reviewedPaymentsArgs<ExtArgs>
     reconciledPayments?: boolean | User$reconciledPaymentsArgs<ExtArgs>
     statementImports?: boolean | User$statementImportsArgs<ExtArgs>
+    reminderCampaigns?: boolean | User$reminderCampaignsArgs<ExtArgs>
     generatedReports?: boolean | User$generatedReportsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2090,6 +2215,7 @@ export namespace Prisma {
     reviewedPayments?: boolean | User$reviewedPaymentsArgs<ExtArgs>
     reconciledPayments?: boolean | User$reconciledPaymentsArgs<ExtArgs>
     statementImports?: boolean | User$statementImportsArgs<ExtArgs>
+    reminderCampaigns?: boolean | User$reminderCampaignsArgs<ExtArgs>
     generatedReports?: boolean | User$generatedReportsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2105,6 +2231,7 @@ export namespace Prisma {
       reviewedPayments: Prisma.$PaymentPayload<ExtArgs>[]
       reconciledPayments: Prisma.$PaymentPayload<ExtArgs>[]
       statementImports: Prisma.$StatementImportPayload<ExtArgs>[]
+      reminderCampaigns: Prisma.$ReminderCampaignPayload<ExtArgs>[]
       generatedReports: Prisma.$GeneratedReportPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
@@ -2520,6 +2647,7 @@ export namespace Prisma {
     reviewedPayments<T extends User$reviewedPaymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewedPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reconciledPayments<T extends User$reconciledPaymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$reconciledPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     statementImports<T extends User$statementImportsArgs<ExtArgs> = {}>(args?: Subset<T, User$statementImportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reminderCampaigns<T extends User$reminderCampaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$reminderCampaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     generatedReports<T extends User$generatedReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$generatedReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GeneratedReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -3063,6 +3191,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StatementImportScalarFieldEnum | StatementImportScalarFieldEnum[]
+  }
+
+  /**
+   * User.reminderCampaigns
+   */
+  export type User$reminderCampaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    where?: ReminderCampaignWhereInput
+    orderBy?: ReminderCampaignOrderByWithRelationInput | ReminderCampaignOrderByWithRelationInput[]
+    cursor?: ReminderCampaignWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReminderCampaignScalarFieldEnum | ReminderCampaignScalarFieldEnum[]
   }
 
   /**
@@ -9378,6 +9530,1266 @@ export namespace Prisma {
 
 
   /**
+   * Model ReminderCampaign
+   */
+
+  export type AggregateReminderCampaign = {
+    _count: ReminderCampaignCountAggregateOutputType | null
+    _avg: ReminderCampaignAvgAggregateOutputType | null
+    _sum: ReminderCampaignSumAggregateOutputType | null
+    _min: ReminderCampaignMinAggregateOutputType | null
+    _max: ReminderCampaignMaxAggregateOutputType | null
+  }
+
+  export type ReminderCampaignAvgAggregateOutputType = {
+    dayOfWeek: number | null
+    sendHour: number | null
+    sendMinute: number | null
+    minBalance: Decimal | null
+    maxBalance: Decimal | null
+  }
+
+  export type ReminderCampaignSumAggregateOutputType = {
+    dayOfWeek: number | null
+    sendHour: number | null
+    sendMinute: number | null
+    minBalance: Decimal | null
+    maxBalance: Decimal | null
+  }
+
+  export type ReminderCampaignMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    status: $Enums.ReminderCampaignStatus | null
+    scheduleType: $Enums.ReminderScheduleType | null
+    dayOfWeek: number | null
+    sendHour: number | null
+    sendMinute: number | null
+    minBalance: Decimal | null
+    maxBalance: Decimal | null
+    titleTemplate: string | null
+    messageTemplate: string | null
+    createdBy: string | null
+    lastRunAt: Date | null
+    nextRunAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ReminderCampaignMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    status: $Enums.ReminderCampaignStatus | null
+    scheduleType: $Enums.ReminderScheduleType | null
+    dayOfWeek: number | null
+    sendHour: number | null
+    sendMinute: number | null
+    minBalance: Decimal | null
+    maxBalance: Decimal | null
+    titleTemplate: string | null
+    messageTemplate: string | null
+    createdBy: string | null
+    lastRunAt: Date | null
+    nextRunAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ReminderCampaignCountAggregateOutputType = {
+    id: number
+    name: number
+    status: number
+    scheduleType: number
+    dayOfWeek: number
+    sendHour: number
+    sendMinute: number
+    minBalance: number
+    maxBalance: number
+    titleTemplate: number
+    messageTemplate: number
+    targetStudentIds: number
+    createdBy: number
+    lastRunAt: number
+    nextRunAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ReminderCampaignAvgAggregateInputType = {
+    dayOfWeek?: true
+    sendHour?: true
+    sendMinute?: true
+    minBalance?: true
+    maxBalance?: true
+  }
+
+  export type ReminderCampaignSumAggregateInputType = {
+    dayOfWeek?: true
+    sendHour?: true
+    sendMinute?: true
+    minBalance?: true
+    maxBalance?: true
+  }
+
+  export type ReminderCampaignMinAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    scheduleType?: true
+    dayOfWeek?: true
+    sendHour?: true
+    sendMinute?: true
+    minBalance?: true
+    maxBalance?: true
+    titleTemplate?: true
+    messageTemplate?: true
+    createdBy?: true
+    lastRunAt?: true
+    nextRunAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ReminderCampaignMaxAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    scheduleType?: true
+    dayOfWeek?: true
+    sendHour?: true
+    sendMinute?: true
+    minBalance?: true
+    maxBalance?: true
+    titleTemplate?: true
+    messageTemplate?: true
+    createdBy?: true
+    lastRunAt?: true
+    nextRunAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ReminderCampaignCountAggregateInputType = {
+    id?: true
+    name?: true
+    status?: true
+    scheduleType?: true
+    dayOfWeek?: true
+    sendHour?: true
+    sendMinute?: true
+    minBalance?: true
+    maxBalance?: true
+    titleTemplate?: true
+    messageTemplate?: true
+    targetStudentIds?: true
+    createdBy?: true
+    lastRunAt?: true
+    nextRunAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ReminderCampaignAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReminderCampaign to aggregate.
+     */
+    where?: ReminderCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReminderCampaigns to fetch.
+     */
+    orderBy?: ReminderCampaignOrderByWithRelationInput | ReminderCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReminderCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReminderCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReminderCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ReminderCampaigns
+    **/
+    _count?: true | ReminderCampaignCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReminderCampaignAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReminderCampaignSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReminderCampaignMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReminderCampaignMaxAggregateInputType
+  }
+
+  export type GetReminderCampaignAggregateType<T extends ReminderCampaignAggregateArgs> = {
+        [P in keyof T & keyof AggregateReminderCampaign]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReminderCampaign[P]>
+      : GetScalarType<T[P], AggregateReminderCampaign[P]>
+  }
+
+
+
+
+  export type ReminderCampaignGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReminderCampaignWhereInput
+    orderBy?: ReminderCampaignOrderByWithAggregationInput | ReminderCampaignOrderByWithAggregationInput[]
+    by: ReminderCampaignScalarFieldEnum[] | ReminderCampaignScalarFieldEnum
+    having?: ReminderCampaignScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReminderCampaignCountAggregateInputType | true
+    _avg?: ReminderCampaignAvgAggregateInputType
+    _sum?: ReminderCampaignSumAggregateInputType
+    _min?: ReminderCampaignMinAggregateInputType
+    _max?: ReminderCampaignMaxAggregateInputType
+  }
+
+  export type ReminderCampaignGroupByOutputType = {
+    id: string
+    name: string
+    status: $Enums.ReminderCampaignStatus
+    scheduleType: $Enums.ReminderScheduleType
+    dayOfWeek: number | null
+    sendHour: number
+    sendMinute: number
+    minBalance: Decimal | null
+    maxBalance: Decimal | null
+    titleTemplate: string
+    messageTemplate: string
+    targetStudentIds: JsonValue | null
+    createdBy: string
+    lastRunAt: Date | null
+    nextRunAt: Date
+    createdAt: Date
+    updatedAt: Date
+    _count: ReminderCampaignCountAggregateOutputType | null
+    _avg: ReminderCampaignAvgAggregateOutputType | null
+    _sum: ReminderCampaignSumAggregateOutputType | null
+    _min: ReminderCampaignMinAggregateOutputType | null
+    _max: ReminderCampaignMaxAggregateOutputType | null
+  }
+
+  type GetReminderCampaignGroupByPayload<T extends ReminderCampaignGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReminderCampaignGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReminderCampaignGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReminderCampaignGroupByOutputType[P]>
+            : GetScalarType<T[P], ReminderCampaignGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReminderCampaignSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    scheduleType?: boolean
+    dayOfWeek?: boolean
+    sendHour?: boolean
+    sendMinute?: boolean
+    minBalance?: boolean
+    maxBalance?: boolean
+    titleTemplate?: boolean
+    messageTemplate?: boolean
+    targetStudentIds?: boolean
+    createdBy?: boolean
+    lastRunAt?: boolean
+    nextRunAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reminderCampaign"]>
+
+  export type ReminderCampaignSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    scheduleType?: boolean
+    dayOfWeek?: boolean
+    sendHour?: boolean
+    sendMinute?: boolean
+    minBalance?: boolean
+    maxBalance?: boolean
+    titleTemplate?: boolean
+    messageTemplate?: boolean
+    targetStudentIds?: boolean
+    createdBy?: boolean
+    lastRunAt?: boolean
+    nextRunAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reminderCampaign"]>
+
+  export type ReminderCampaignSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    scheduleType?: boolean
+    dayOfWeek?: boolean
+    sendHour?: boolean
+    sendMinute?: boolean
+    minBalance?: boolean
+    maxBalance?: boolean
+    titleTemplate?: boolean
+    messageTemplate?: boolean
+    targetStudentIds?: boolean
+    createdBy?: boolean
+    lastRunAt?: boolean
+    nextRunAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reminderCampaign"]>
+
+  export type ReminderCampaignSelectScalar = {
+    id?: boolean
+    name?: boolean
+    status?: boolean
+    scheduleType?: boolean
+    dayOfWeek?: boolean
+    sendHour?: boolean
+    sendMinute?: boolean
+    minBalance?: boolean
+    maxBalance?: boolean
+    titleTemplate?: boolean
+    messageTemplate?: boolean
+    targetStudentIds?: boolean
+    createdBy?: boolean
+    lastRunAt?: boolean
+    nextRunAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ReminderCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "scheduleType" | "dayOfWeek" | "sendHour" | "sendMinute" | "minBalance" | "maxBalance" | "titleTemplate" | "messageTemplate" | "targetStudentIds" | "createdBy" | "lastRunAt" | "nextRunAt" | "createdAt" | "updatedAt", ExtArgs["result"]["reminderCampaign"]>
+  export type ReminderCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReminderCampaignIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReminderCampaignIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ReminderCampaignPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ReminderCampaign"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      status: $Enums.ReminderCampaignStatus
+      scheduleType: $Enums.ReminderScheduleType
+      dayOfWeek: number | null
+      sendHour: number
+      sendMinute: number
+      minBalance: Prisma.Decimal | null
+      maxBalance: Prisma.Decimal | null
+      titleTemplate: string
+      messageTemplate: string
+      targetStudentIds: Prisma.JsonValue | null
+      createdBy: string
+      lastRunAt: Date | null
+      nextRunAt: Date
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["reminderCampaign"]>
+    composites: {}
+  }
+
+  type ReminderCampaignGetPayload<S extends boolean | null | undefined | ReminderCampaignDefaultArgs> = $Result.GetResult<Prisma.$ReminderCampaignPayload, S>
+
+  type ReminderCampaignCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReminderCampaignFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReminderCampaignCountAggregateInputType | true
+    }
+
+  export interface ReminderCampaignDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ReminderCampaign'], meta: { name: 'ReminderCampaign' } }
+    /**
+     * Find zero or one ReminderCampaign that matches the filter.
+     * @param {ReminderCampaignFindUniqueArgs} args - Arguments to find a ReminderCampaign
+     * @example
+     * // Get one ReminderCampaign
+     * const reminderCampaign = await prisma.reminderCampaign.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReminderCampaignFindUniqueArgs>(args: SelectSubset<T, ReminderCampaignFindUniqueArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ReminderCampaign that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReminderCampaignFindUniqueOrThrowArgs} args - Arguments to find a ReminderCampaign
+     * @example
+     * // Get one ReminderCampaign
+     * const reminderCampaign = await prisma.reminderCampaign.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReminderCampaignFindUniqueOrThrowArgs>(args: SelectSubset<T, ReminderCampaignFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReminderCampaign that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReminderCampaignFindFirstArgs} args - Arguments to find a ReminderCampaign
+     * @example
+     * // Get one ReminderCampaign
+     * const reminderCampaign = await prisma.reminderCampaign.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReminderCampaignFindFirstArgs>(args?: SelectSubset<T, ReminderCampaignFindFirstArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReminderCampaign that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReminderCampaignFindFirstOrThrowArgs} args - Arguments to find a ReminderCampaign
+     * @example
+     * // Get one ReminderCampaign
+     * const reminderCampaign = await prisma.reminderCampaign.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReminderCampaignFindFirstOrThrowArgs>(args?: SelectSubset<T, ReminderCampaignFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ReminderCampaigns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReminderCampaignFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ReminderCampaigns
+     * const reminderCampaigns = await prisma.reminderCampaign.findMany()
+     * 
+     * // Get first 10 ReminderCampaigns
+     * const reminderCampaigns = await prisma.reminderCampaign.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const reminderCampaignWithIdOnly = await prisma.reminderCampaign.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReminderCampaignFindManyArgs>(args?: SelectSubset<T, ReminderCampaignFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ReminderCampaign.
+     * @param {ReminderCampaignCreateArgs} args - Arguments to create a ReminderCampaign.
+     * @example
+     * // Create one ReminderCampaign
+     * const ReminderCampaign = await prisma.reminderCampaign.create({
+     *   data: {
+     *     // ... data to create a ReminderCampaign
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReminderCampaignCreateArgs>(args: SelectSubset<T, ReminderCampaignCreateArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ReminderCampaigns.
+     * @param {ReminderCampaignCreateManyArgs} args - Arguments to create many ReminderCampaigns.
+     * @example
+     * // Create many ReminderCampaigns
+     * const reminderCampaign = await prisma.reminderCampaign.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReminderCampaignCreateManyArgs>(args?: SelectSubset<T, ReminderCampaignCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ReminderCampaigns and returns the data saved in the database.
+     * @param {ReminderCampaignCreateManyAndReturnArgs} args - Arguments to create many ReminderCampaigns.
+     * @example
+     * // Create many ReminderCampaigns
+     * const reminderCampaign = await prisma.reminderCampaign.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ReminderCampaigns and only return the `id`
+     * const reminderCampaignWithIdOnly = await prisma.reminderCampaign.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReminderCampaignCreateManyAndReturnArgs>(args?: SelectSubset<T, ReminderCampaignCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ReminderCampaign.
+     * @param {ReminderCampaignDeleteArgs} args - Arguments to delete one ReminderCampaign.
+     * @example
+     * // Delete one ReminderCampaign
+     * const ReminderCampaign = await prisma.reminderCampaign.delete({
+     *   where: {
+     *     // ... filter to delete one ReminderCampaign
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReminderCampaignDeleteArgs>(args: SelectSubset<T, ReminderCampaignDeleteArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ReminderCampaign.
+     * @param {ReminderCampaignUpdateArgs} args - Arguments to update one ReminderCampaign.
+     * @example
+     * // Update one ReminderCampaign
+     * const reminderCampaign = await prisma.reminderCampaign.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReminderCampaignUpdateArgs>(args: SelectSubset<T, ReminderCampaignUpdateArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ReminderCampaigns.
+     * @param {ReminderCampaignDeleteManyArgs} args - Arguments to filter ReminderCampaigns to delete.
+     * @example
+     * // Delete a few ReminderCampaigns
+     * const { count } = await prisma.reminderCampaign.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReminderCampaignDeleteManyArgs>(args?: SelectSubset<T, ReminderCampaignDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReminderCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReminderCampaignUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ReminderCampaigns
+     * const reminderCampaign = await prisma.reminderCampaign.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReminderCampaignUpdateManyArgs>(args: SelectSubset<T, ReminderCampaignUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReminderCampaigns and returns the data updated in the database.
+     * @param {ReminderCampaignUpdateManyAndReturnArgs} args - Arguments to update many ReminderCampaigns.
+     * @example
+     * // Update many ReminderCampaigns
+     * const reminderCampaign = await prisma.reminderCampaign.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ReminderCampaigns and only return the `id`
+     * const reminderCampaignWithIdOnly = await prisma.reminderCampaign.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReminderCampaignUpdateManyAndReturnArgs>(args: SelectSubset<T, ReminderCampaignUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ReminderCampaign.
+     * @param {ReminderCampaignUpsertArgs} args - Arguments to update or create a ReminderCampaign.
+     * @example
+     * // Update or create a ReminderCampaign
+     * const reminderCampaign = await prisma.reminderCampaign.upsert({
+     *   create: {
+     *     // ... data to create a ReminderCampaign
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ReminderCampaign we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReminderCampaignUpsertArgs>(args: SelectSubset<T, ReminderCampaignUpsertArgs<ExtArgs>>): Prisma__ReminderCampaignClient<$Result.GetResult<Prisma.$ReminderCampaignPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ReminderCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReminderCampaignCountArgs} args - Arguments to filter ReminderCampaigns to count.
+     * @example
+     * // Count the number of ReminderCampaigns
+     * const count = await prisma.reminderCampaign.count({
+     *   where: {
+     *     // ... the filter for the ReminderCampaigns we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReminderCampaignCountArgs>(
+      args?: Subset<T, ReminderCampaignCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReminderCampaignCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ReminderCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReminderCampaignAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReminderCampaignAggregateArgs>(args: Subset<T, ReminderCampaignAggregateArgs>): Prisma.PrismaPromise<GetReminderCampaignAggregateType<T>>
+
+    /**
+     * Group by ReminderCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReminderCampaignGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReminderCampaignGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReminderCampaignGroupByArgs['orderBy'] }
+        : { orderBy?: ReminderCampaignGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReminderCampaignGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReminderCampaignGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ReminderCampaign model
+   */
+  readonly fields: ReminderCampaignFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ReminderCampaign.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReminderCampaignClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ReminderCampaign model
+   */
+  interface ReminderCampaignFieldRefs {
+    readonly id: FieldRef<"ReminderCampaign", 'String'>
+    readonly name: FieldRef<"ReminderCampaign", 'String'>
+    readonly status: FieldRef<"ReminderCampaign", 'ReminderCampaignStatus'>
+    readonly scheduleType: FieldRef<"ReminderCampaign", 'ReminderScheduleType'>
+    readonly dayOfWeek: FieldRef<"ReminderCampaign", 'Int'>
+    readonly sendHour: FieldRef<"ReminderCampaign", 'Int'>
+    readonly sendMinute: FieldRef<"ReminderCampaign", 'Int'>
+    readonly minBalance: FieldRef<"ReminderCampaign", 'Decimal'>
+    readonly maxBalance: FieldRef<"ReminderCampaign", 'Decimal'>
+    readonly titleTemplate: FieldRef<"ReminderCampaign", 'String'>
+    readonly messageTemplate: FieldRef<"ReminderCampaign", 'String'>
+    readonly targetStudentIds: FieldRef<"ReminderCampaign", 'Json'>
+    readonly createdBy: FieldRef<"ReminderCampaign", 'String'>
+    readonly lastRunAt: FieldRef<"ReminderCampaign", 'DateTime'>
+    readonly nextRunAt: FieldRef<"ReminderCampaign", 'DateTime'>
+    readonly createdAt: FieldRef<"ReminderCampaign", 'DateTime'>
+    readonly updatedAt: FieldRef<"ReminderCampaign", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ReminderCampaign findUnique
+   */
+  export type ReminderCampaignFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which ReminderCampaign to fetch.
+     */
+    where: ReminderCampaignWhereUniqueInput
+  }
+
+  /**
+   * ReminderCampaign findUniqueOrThrow
+   */
+  export type ReminderCampaignFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which ReminderCampaign to fetch.
+     */
+    where: ReminderCampaignWhereUniqueInput
+  }
+
+  /**
+   * ReminderCampaign findFirst
+   */
+  export type ReminderCampaignFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which ReminderCampaign to fetch.
+     */
+    where?: ReminderCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReminderCampaigns to fetch.
+     */
+    orderBy?: ReminderCampaignOrderByWithRelationInput | ReminderCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReminderCampaigns.
+     */
+    cursor?: ReminderCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReminderCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReminderCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReminderCampaigns.
+     */
+    distinct?: ReminderCampaignScalarFieldEnum | ReminderCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * ReminderCampaign findFirstOrThrow
+   */
+  export type ReminderCampaignFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which ReminderCampaign to fetch.
+     */
+    where?: ReminderCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReminderCampaigns to fetch.
+     */
+    orderBy?: ReminderCampaignOrderByWithRelationInput | ReminderCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReminderCampaigns.
+     */
+    cursor?: ReminderCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReminderCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReminderCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReminderCampaigns.
+     */
+    distinct?: ReminderCampaignScalarFieldEnum | ReminderCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * ReminderCampaign findMany
+   */
+  export type ReminderCampaignFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which ReminderCampaigns to fetch.
+     */
+    where?: ReminderCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReminderCampaigns to fetch.
+     */
+    orderBy?: ReminderCampaignOrderByWithRelationInput | ReminderCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ReminderCampaigns.
+     */
+    cursor?: ReminderCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReminderCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReminderCampaigns.
+     */
+    skip?: number
+    distinct?: ReminderCampaignScalarFieldEnum | ReminderCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * ReminderCampaign create
+   */
+  export type ReminderCampaignCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ReminderCampaign.
+     */
+    data: XOR<ReminderCampaignCreateInput, ReminderCampaignUncheckedCreateInput>
+  }
+
+  /**
+   * ReminderCampaign createMany
+   */
+  export type ReminderCampaignCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ReminderCampaigns.
+     */
+    data: ReminderCampaignCreateManyInput | ReminderCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ReminderCampaign createManyAndReturn
+   */
+  export type ReminderCampaignCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * The data used to create many ReminderCampaigns.
+     */
+    data: ReminderCampaignCreateManyInput | ReminderCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReminderCampaign update
+   */
+  export type ReminderCampaignUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ReminderCampaign.
+     */
+    data: XOR<ReminderCampaignUpdateInput, ReminderCampaignUncheckedUpdateInput>
+    /**
+     * Choose, which ReminderCampaign to update.
+     */
+    where: ReminderCampaignWhereUniqueInput
+  }
+
+  /**
+   * ReminderCampaign updateMany
+   */
+  export type ReminderCampaignUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ReminderCampaigns.
+     */
+    data: XOR<ReminderCampaignUpdateManyMutationInput, ReminderCampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which ReminderCampaigns to update
+     */
+    where?: ReminderCampaignWhereInput
+    /**
+     * Limit how many ReminderCampaigns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReminderCampaign updateManyAndReturn
+   */
+  export type ReminderCampaignUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * The data used to update ReminderCampaigns.
+     */
+    data: XOR<ReminderCampaignUpdateManyMutationInput, ReminderCampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which ReminderCampaigns to update
+     */
+    where?: ReminderCampaignWhereInput
+    /**
+     * Limit how many ReminderCampaigns to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReminderCampaign upsert
+   */
+  export type ReminderCampaignUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ReminderCampaign to update in case it exists.
+     */
+    where: ReminderCampaignWhereUniqueInput
+    /**
+     * In case the ReminderCampaign found by the `where` argument doesn't exist, create a new ReminderCampaign with this data.
+     */
+    create: XOR<ReminderCampaignCreateInput, ReminderCampaignUncheckedCreateInput>
+    /**
+     * In case the ReminderCampaign was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReminderCampaignUpdateInput, ReminderCampaignUncheckedUpdateInput>
+  }
+
+  /**
+   * ReminderCampaign delete
+   */
+  export type ReminderCampaignDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+    /**
+     * Filter which ReminderCampaign to delete.
+     */
+    where: ReminderCampaignWhereUniqueInput
+  }
+
+  /**
+   * ReminderCampaign deleteMany
+   */
+  export type ReminderCampaignDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReminderCampaigns to delete
+     */
+    where?: ReminderCampaignWhereInput
+    /**
+     * Limit how many ReminderCampaigns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReminderCampaign without action
+   */
+  export type ReminderCampaignDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReminderCampaign
+     */
+    select?: ReminderCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReminderCampaign
+     */
+    omit?: ReminderCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderCampaignInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model GeneratedReport
    */
 
@@ -12700,6 +14112,29 @@ export namespace Prisma {
   export type StatementImportRowScalarFieldEnum = (typeof StatementImportRowScalarFieldEnum)[keyof typeof StatementImportRowScalarFieldEnum]
 
 
+  export const ReminderCampaignScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    status: 'status',
+    scheduleType: 'scheduleType',
+    dayOfWeek: 'dayOfWeek',
+    sendHour: 'sendHour',
+    sendMinute: 'sendMinute',
+    minBalance: 'minBalance',
+    maxBalance: 'maxBalance',
+    titleTemplate: 'titleTemplate',
+    messageTemplate: 'messageTemplate',
+    targetStudentIds: 'targetStudentIds',
+    createdBy: 'createdBy',
+    lastRunAt: 'lastRunAt',
+    nextRunAt: 'nextRunAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ReminderCampaignScalarFieldEnum = (typeof ReminderCampaignScalarFieldEnum)[keyof typeof ReminderCampaignScalarFieldEnum]
+
+
   export const GeneratedReportScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -12954,6 +14389,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ReminderCampaignStatus'
+   */
+  export type EnumReminderCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderCampaignStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReminderCampaignStatus[]'
+   */
+  export type ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderCampaignStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReminderScheduleType'
+   */
+  export type EnumReminderScheduleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderScheduleType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReminderScheduleType[]'
+   */
+  export type ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderScheduleType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -12991,6 +14454,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentListRelationFilter
     reconciledPayments?: PaymentListRelationFilter
     statementImports?: StatementImportListRelationFilter
+    reminderCampaigns?: ReminderCampaignListRelationFilter
     generatedReports?: GeneratedReportListRelationFilter
     notifications?: NotificationListRelationFilter
   }
@@ -13013,6 +14477,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentOrderByRelationAggregateInput
     reconciledPayments?: PaymentOrderByRelationAggregateInput
     statementImports?: StatementImportOrderByRelationAggregateInput
+    reminderCampaigns?: ReminderCampaignOrderByRelationAggregateInput
     generatedReports?: GeneratedReportOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
   }
@@ -13038,6 +14503,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentListRelationFilter
     reconciledPayments?: PaymentListRelationFilter
     statementImports?: StatementImportListRelationFilter
+    reminderCampaigns?: ReminderCampaignListRelationFilter
     generatedReports?: GeneratedReportListRelationFilter
     notifications?: NotificationListRelationFilter
   }, "id" | "email">
@@ -13650,6 +15116,123 @@ export namespace Prisma {
     reconciledAt?: DateTimeNullableWithAggregatesFilter<"StatementImportRow"> | Date | string | null
   }
 
+  export type ReminderCampaignWhereInput = {
+    AND?: ReminderCampaignWhereInput | ReminderCampaignWhereInput[]
+    OR?: ReminderCampaignWhereInput[]
+    NOT?: ReminderCampaignWhereInput | ReminderCampaignWhereInput[]
+    id?: StringFilter<"ReminderCampaign"> | string
+    name?: StringFilter<"ReminderCampaign"> | string
+    status?: EnumReminderCampaignStatusFilter<"ReminderCampaign"> | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFilter<"ReminderCampaign"> | $Enums.ReminderScheduleType
+    dayOfWeek?: IntNullableFilter<"ReminderCampaign"> | number | null
+    sendHour?: IntFilter<"ReminderCampaign"> | number
+    sendMinute?: IntFilter<"ReminderCampaign"> | number
+    minBalance?: DecimalNullableFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: DecimalNullableFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFilter<"ReminderCampaign"> | string
+    messageTemplate?: StringFilter<"ReminderCampaign"> | string
+    targetStudentIds?: JsonNullableFilter<"ReminderCampaign">
+    createdBy?: StringFilter<"ReminderCampaign"> | string
+    lastRunAt?: DateTimeNullableFilter<"ReminderCampaign"> | Date | string | null
+    nextRunAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    createdAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    updatedAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ReminderCampaignOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    scheduleType?: SortOrder
+    dayOfWeek?: SortOrderInput | SortOrder
+    sendHour?: SortOrder
+    sendMinute?: SortOrder
+    minBalance?: SortOrderInput | SortOrder
+    maxBalance?: SortOrderInput | SortOrder
+    titleTemplate?: SortOrder
+    messageTemplate?: SortOrder
+    targetStudentIds?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    lastRunAt?: SortOrderInput | SortOrder
+    nextRunAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ReminderCampaignWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ReminderCampaignWhereInput | ReminderCampaignWhereInput[]
+    OR?: ReminderCampaignWhereInput[]
+    NOT?: ReminderCampaignWhereInput | ReminderCampaignWhereInput[]
+    name?: StringFilter<"ReminderCampaign"> | string
+    status?: EnumReminderCampaignStatusFilter<"ReminderCampaign"> | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFilter<"ReminderCampaign"> | $Enums.ReminderScheduleType
+    dayOfWeek?: IntNullableFilter<"ReminderCampaign"> | number | null
+    sendHour?: IntFilter<"ReminderCampaign"> | number
+    sendMinute?: IntFilter<"ReminderCampaign"> | number
+    minBalance?: DecimalNullableFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: DecimalNullableFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFilter<"ReminderCampaign"> | string
+    messageTemplate?: StringFilter<"ReminderCampaign"> | string
+    targetStudentIds?: JsonNullableFilter<"ReminderCampaign">
+    createdBy?: StringFilter<"ReminderCampaign"> | string
+    lastRunAt?: DateTimeNullableFilter<"ReminderCampaign"> | Date | string | null
+    nextRunAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    createdAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    updatedAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type ReminderCampaignOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    scheduleType?: SortOrder
+    dayOfWeek?: SortOrderInput | SortOrder
+    sendHour?: SortOrder
+    sendMinute?: SortOrder
+    minBalance?: SortOrderInput | SortOrder
+    maxBalance?: SortOrderInput | SortOrder
+    titleTemplate?: SortOrder
+    messageTemplate?: SortOrder
+    targetStudentIds?: SortOrderInput | SortOrder
+    createdBy?: SortOrder
+    lastRunAt?: SortOrderInput | SortOrder
+    nextRunAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ReminderCampaignCountOrderByAggregateInput
+    _avg?: ReminderCampaignAvgOrderByAggregateInput
+    _max?: ReminderCampaignMaxOrderByAggregateInput
+    _min?: ReminderCampaignMinOrderByAggregateInput
+    _sum?: ReminderCampaignSumOrderByAggregateInput
+  }
+
+  export type ReminderCampaignScalarWhereWithAggregatesInput = {
+    AND?: ReminderCampaignScalarWhereWithAggregatesInput | ReminderCampaignScalarWhereWithAggregatesInput[]
+    OR?: ReminderCampaignScalarWhereWithAggregatesInput[]
+    NOT?: ReminderCampaignScalarWhereWithAggregatesInput | ReminderCampaignScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ReminderCampaign"> | string
+    name?: StringWithAggregatesFilter<"ReminderCampaign"> | string
+    status?: EnumReminderCampaignStatusWithAggregatesFilter<"ReminderCampaign"> | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeWithAggregatesFilter<"ReminderCampaign"> | $Enums.ReminderScheduleType
+    dayOfWeek?: IntNullableWithAggregatesFilter<"ReminderCampaign"> | number | null
+    sendHour?: IntWithAggregatesFilter<"ReminderCampaign"> | number
+    sendMinute?: IntWithAggregatesFilter<"ReminderCampaign"> | number
+    minBalance?: DecimalNullableWithAggregatesFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: DecimalNullableWithAggregatesFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringWithAggregatesFilter<"ReminderCampaign"> | string
+    messageTemplate?: StringWithAggregatesFilter<"ReminderCampaign"> | string
+    targetStudentIds?: JsonNullableWithAggregatesFilter<"ReminderCampaign">
+    createdBy?: StringWithAggregatesFilter<"ReminderCampaign"> | string
+    lastRunAt?: DateTimeNullableWithAggregatesFilter<"ReminderCampaign"> | Date | string | null
+    nextRunAt?: DateTimeWithAggregatesFilter<"ReminderCampaign"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"ReminderCampaign"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ReminderCampaign"> | Date | string
+  }
+
   export type GeneratedReportWhereInput = {
     AND?: GeneratedReportWhereInput | GeneratedReportWhereInput[]
     OR?: GeneratedReportWhereInput[]
@@ -13860,6 +15443,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -13882,6 +15466,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -13904,6 +15489,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -13926,6 +15512,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -14641,6 +16228,145 @@ export namespace Prisma {
     reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type ReminderCampaignCreateInput = {
+    id?: string
+    name: string
+    status?: $Enums.ReminderCampaignStatus
+    scheduleType: $Enums.ReminderScheduleType
+    dayOfWeek?: number | null
+    sendHour: number
+    sendMinute?: number
+    minBalance?: Decimal | DecimalJsLike | number | string | null
+    maxBalance?: Decimal | DecimalJsLike | number | string | null
+    titleTemplate: string
+    messageTemplate: string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: Date | string | null
+    nextRunAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutReminderCampaignsInput
+  }
+
+  export type ReminderCampaignUncheckedCreateInput = {
+    id?: string
+    name: string
+    status?: $Enums.ReminderCampaignStatus
+    scheduleType: $Enums.ReminderScheduleType
+    dayOfWeek?: number | null
+    sendHour: number
+    sendMinute?: number
+    minBalance?: Decimal | DecimalJsLike | number | string | null
+    maxBalance?: Decimal | DecimalJsLike | number | string | null
+    titleTemplate: string
+    messageTemplate: string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    createdBy: string
+    lastRunAt?: Date | string | null
+    nextRunAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReminderCampaignUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumReminderCampaignStatusFieldUpdateOperationsInput | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFieldUpdateOperationsInput | $Enums.ReminderScheduleType
+    dayOfWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    sendHour?: IntFieldUpdateOperationsInput | number
+    sendMinute?: IntFieldUpdateOperationsInput | number
+    minBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFieldUpdateOperationsInput | string
+    messageTemplate?: StringFieldUpdateOperationsInput | string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextRunAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReminderCampaignsNestedInput
+  }
+
+  export type ReminderCampaignUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumReminderCampaignStatusFieldUpdateOperationsInput | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFieldUpdateOperationsInput | $Enums.ReminderScheduleType
+    dayOfWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    sendHour?: IntFieldUpdateOperationsInput | number
+    sendMinute?: IntFieldUpdateOperationsInput | number
+    minBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFieldUpdateOperationsInput | string
+    messageTemplate?: StringFieldUpdateOperationsInput | string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    createdBy?: StringFieldUpdateOperationsInput | string
+    lastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextRunAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReminderCampaignCreateManyInput = {
+    id?: string
+    name: string
+    status?: $Enums.ReminderCampaignStatus
+    scheduleType: $Enums.ReminderScheduleType
+    dayOfWeek?: number | null
+    sendHour: number
+    sendMinute?: number
+    minBalance?: Decimal | DecimalJsLike | number | string | null
+    maxBalance?: Decimal | DecimalJsLike | number | string | null
+    titleTemplate: string
+    messageTemplate: string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    createdBy: string
+    lastRunAt?: Date | string | null
+    nextRunAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReminderCampaignUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumReminderCampaignStatusFieldUpdateOperationsInput | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFieldUpdateOperationsInput | $Enums.ReminderScheduleType
+    dayOfWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    sendHour?: IntFieldUpdateOperationsInput | number
+    sendMinute?: IntFieldUpdateOperationsInput | number
+    minBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFieldUpdateOperationsInput | string
+    messageTemplate?: StringFieldUpdateOperationsInput | string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextRunAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReminderCampaignUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumReminderCampaignStatusFieldUpdateOperationsInput | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFieldUpdateOperationsInput | $Enums.ReminderScheduleType
+    dayOfWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    sendHour?: IntFieldUpdateOperationsInput | number
+    sendMinute?: IntFieldUpdateOperationsInput | number
+    minBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFieldUpdateOperationsInput | string
+    messageTemplate?: StringFieldUpdateOperationsInput | string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    createdBy?: StringFieldUpdateOperationsInput | string
+    lastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextRunAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type GeneratedReportCreateInput = {
     id?: string
     title: string
@@ -14932,6 +16658,12 @@ export namespace Prisma {
     none?: StatementImportWhereInput
   }
 
+  export type ReminderCampaignListRelationFilter = {
+    every?: ReminderCampaignWhereInput
+    some?: ReminderCampaignWhereInput
+    none?: ReminderCampaignWhereInput
+  }
+
   export type GeneratedReportListRelationFilter = {
     every?: GeneratedReportWhereInput
     some?: GeneratedReportWhereInput
@@ -14954,6 +16686,10 @@ export namespace Prisma {
   }
 
   export type StatementImportOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReminderCampaignOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15713,6 +17449,141 @@ export namespace Prisma {
     amount?: SortOrder
   }
 
+  export type EnumReminderCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderCampaignStatus | EnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderCampaignStatusFilter<$PrismaModel> | $Enums.ReminderCampaignStatus
+  }
+
+  export type EnumReminderScheduleTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderScheduleType | EnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderScheduleTypeFilter<$PrismaModel> | $Enums.ReminderScheduleType
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type ReminderCampaignCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    scheduleType?: SortOrder
+    dayOfWeek?: SortOrder
+    sendHour?: SortOrder
+    sendMinute?: SortOrder
+    minBalance?: SortOrder
+    maxBalance?: SortOrder
+    titleTemplate?: SortOrder
+    messageTemplate?: SortOrder
+    targetStudentIds?: SortOrder
+    createdBy?: SortOrder
+    lastRunAt?: SortOrder
+    nextRunAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReminderCampaignAvgOrderByAggregateInput = {
+    dayOfWeek?: SortOrder
+    sendHour?: SortOrder
+    sendMinute?: SortOrder
+    minBalance?: SortOrder
+    maxBalance?: SortOrder
+  }
+
+  export type ReminderCampaignMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    scheduleType?: SortOrder
+    dayOfWeek?: SortOrder
+    sendHour?: SortOrder
+    sendMinute?: SortOrder
+    minBalance?: SortOrder
+    maxBalance?: SortOrder
+    titleTemplate?: SortOrder
+    messageTemplate?: SortOrder
+    createdBy?: SortOrder
+    lastRunAt?: SortOrder
+    nextRunAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReminderCampaignMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    scheduleType?: SortOrder
+    dayOfWeek?: SortOrder
+    sendHour?: SortOrder
+    sendMinute?: SortOrder
+    minBalance?: SortOrder
+    maxBalance?: SortOrder
+    titleTemplate?: SortOrder
+    messageTemplate?: SortOrder
+    createdBy?: SortOrder
+    lastRunAt?: SortOrder
+    nextRunAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ReminderCampaignSumOrderByAggregateInput = {
+    dayOfWeek?: SortOrder
+    sendHour?: SortOrder
+    sendMinute?: SortOrder
+    minBalance?: SortOrder
+    maxBalance?: SortOrder
+  }
+
+  export type EnumReminderCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderCampaignStatus | EnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReminderCampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReminderCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumReminderCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type EnumReminderScheduleTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderScheduleType | EnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderScheduleTypeWithAggregatesFilter<$PrismaModel> | $Enums.ReminderScheduleType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReminderScheduleTypeFilter<$PrismaModel>
+    _max?: NestedEnumReminderScheduleTypeFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type GeneratedReportCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -15833,6 +17704,13 @@ export namespace Prisma {
     connect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
   }
 
+  export type ReminderCampaignCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReminderCampaignCreateWithoutUserInput, ReminderCampaignUncheckedCreateWithoutUserInput> | ReminderCampaignCreateWithoutUserInput[] | ReminderCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReminderCampaignCreateOrConnectWithoutUserInput | ReminderCampaignCreateOrConnectWithoutUserInput[]
+    createMany?: ReminderCampaignCreateManyUserInputEnvelope
+    connect?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+  }
+
   export type GeneratedReportCreateNestedManyWithoutUserInput = {
     create?: XOR<GeneratedReportCreateWithoutUserInput, GeneratedReportUncheckedCreateWithoutUserInput> | GeneratedReportCreateWithoutUserInput[] | GeneratedReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: GeneratedReportCreateOrConnectWithoutUserInput | GeneratedReportCreateOrConnectWithoutUserInput[]
@@ -15879,6 +17757,13 @@ export namespace Prisma {
     connectOrCreate?: StatementImportCreateOrConnectWithoutUserInput | StatementImportCreateOrConnectWithoutUserInput[]
     createMany?: StatementImportCreateManyUserInputEnvelope
     connect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+  }
+
+  export type ReminderCampaignUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReminderCampaignCreateWithoutUserInput, ReminderCampaignUncheckedCreateWithoutUserInput> | ReminderCampaignCreateWithoutUserInput[] | ReminderCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReminderCampaignCreateOrConnectWithoutUserInput | ReminderCampaignCreateOrConnectWithoutUserInput[]
+    createMany?: ReminderCampaignCreateManyUserInputEnvelope
+    connect?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
   }
 
   export type GeneratedReportUncheckedCreateNestedManyWithoutUserInput = {
@@ -15985,6 +17870,20 @@ export namespace Prisma {
     deleteMany?: StatementImportScalarWhereInput | StatementImportScalarWhereInput[]
   }
 
+  export type ReminderCampaignUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReminderCampaignCreateWithoutUserInput, ReminderCampaignUncheckedCreateWithoutUserInput> | ReminderCampaignCreateWithoutUserInput[] | ReminderCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReminderCampaignCreateOrConnectWithoutUserInput | ReminderCampaignCreateOrConnectWithoutUserInput[]
+    upsert?: ReminderCampaignUpsertWithWhereUniqueWithoutUserInput | ReminderCampaignUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReminderCampaignCreateManyUserInputEnvelope
+    set?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    disconnect?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    delete?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    connect?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    update?: ReminderCampaignUpdateWithWhereUniqueWithoutUserInput | ReminderCampaignUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReminderCampaignUpdateManyWithWhereWithoutUserInput | ReminderCampaignUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReminderCampaignScalarWhereInput | ReminderCampaignScalarWhereInput[]
+  }
+
   export type GeneratedReportUpdateManyWithoutUserNestedInput = {
     create?: XOR<GeneratedReportCreateWithoutUserInput, GeneratedReportUncheckedCreateWithoutUserInput> | GeneratedReportCreateWithoutUserInput[] | GeneratedReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: GeneratedReportCreateOrConnectWithoutUserInput | GeneratedReportCreateOrConnectWithoutUserInput[]
@@ -16077,6 +17976,20 @@ export namespace Prisma {
     update?: StatementImportUpdateWithWhereUniqueWithoutUserInput | StatementImportUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: StatementImportUpdateManyWithWhereWithoutUserInput | StatementImportUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: StatementImportScalarWhereInput | StatementImportScalarWhereInput[]
+  }
+
+  export type ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReminderCampaignCreateWithoutUserInput, ReminderCampaignUncheckedCreateWithoutUserInput> | ReminderCampaignCreateWithoutUserInput[] | ReminderCampaignUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReminderCampaignCreateOrConnectWithoutUserInput | ReminderCampaignCreateOrConnectWithoutUserInput[]
+    upsert?: ReminderCampaignUpsertWithWhereUniqueWithoutUserInput | ReminderCampaignUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReminderCampaignCreateManyUserInputEnvelope
+    set?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    disconnect?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    delete?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    connect?: ReminderCampaignWhereUniqueInput | ReminderCampaignWhereUniqueInput[]
+    update?: ReminderCampaignUpdateWithWhereUniqueWithoutUserInput | ReminderCampaignUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReminderCampaignUpdateManyWithWhereWithoutUserInput | ReminderCampaignUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReminderCampaignScalarWhereInput | ReminderCampaignScalarWhereInput[]
   }
 
   export type GeneratedReportUncheckedUpdateManyWithoutUserNestedInput = {
@@ -16346,6 +18259,36 @@ export namespace Prisma {
     upsert?: StatementImportUpsertWithoutRowsInput
     connect?: StatementImportWhereUniqueInput
     update?: XOR<XOR<StatementImportUpdateToOneWithWhereWithoutRowsInput, StatementImportUpdateWithoutRowsInput>, StatementImportUncheckedUpdateWithoutRowsInput>
+  }
+
+  export type UserCreateNestedOneWithoutReminderCampaignsInput = {
+    create?: XOR<UserCreateWithoutReminderCampaignsInput, UserUncheckedCreateWithoutReminderCampaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReminderCampaignsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumReminderCampaignStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ReminderCampaignStatus
+  }
+
+  export type EnumReminderScheduleTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ReminderScheduleType
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutReminderCampaignsNestedInput = {
+    create?: XOR<UserCreateWithoutReminderCampaignsInput, UserUncheckedCreateWithoutReminderCampaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReminderCampaignsInput
+    upsert?: UserUpsertWithoutReminderCampaignsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReminderCampaignsInput, UserUpdateWithoutReminderCampaignsInput>, UserUncheckedUpdateWithoutReminderCampaignsInput>
   }
 
   export type UserCreateNestedOneWithoutGeneratedReportsInput = {
@@ -16752,6 +18695,67 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumReminderCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderCampaignStatus | EnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderCampaignStatusFilter<$PrismaModel> | $Enums.ReminderCampaignStatus
+  }
+
+  export type NestedEnumReminderScheduleTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderScheduleType | EnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderScheduleTypeFilter<$PrismaModel> | $Enums.ReminderScheduleType
+  }
+
+  export type NestedEnumReminderCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderCampaignStatus | EnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderCampaignStatus[] | ListEnumReminderCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReminderCampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReminderCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumReminderCampaignStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumReminderScheduleTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReminderScheduleType | EnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReminderScheduleType[] | ListEnumReminderScheduleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReminderScheduleTypeWithAggregatesFilter<$PrismaModel> | $Enums.ReminderScheduleType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReminderScheduleTypeFilter<$PrismaModel>
+    _max?: NestedEnumReminderScheduleTypeFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type StudentCreateWithoutUserInput = {
     id?: string
     studentCode: string
@@ -17053,6 +19057,54 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ReminderCampaignCreateWithoutUserInput = {
+    id?: string
+    name: string
+    status?: $Enums.ReminderCampaignStatus
+    scheduleType: $Enums.ReminderScheduleType
+    dayOfWeek?: number | null
+    sendHour: number
+    sendMinute?: number
+    minBalance?: Decimal | DecimalJsLike | number | string | null
+    maxBalance?: Decimal | DecimalJsLike | number | string | null
+    titleTemplate: string
+    messageTemplate: string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: Date | string | null
+    nextRunAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReminderCampaignUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    status?: $Enums.ReminderCampaignStatus
+    scheduleType: $Enums.ReminderScheduleType
+    dayOfWeek?: number | null
+    sendHour: number
+    sendMinute?: number
+    minBalance?: Decimal | DecimalJsLike | number | string | null
+    maxBalance?: Decimal | DecimalJsLike | number | string | null
+    titleTemplate: string
+    messageTemplate: string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: Date | string | null
+    nextRunAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReminderCampaignCreateOrConnectWithoutUserInput = {
+    where: ReminderCampaignWhereUniqueInput
+    create: XOR<ReminderCampaignCreateWithoutUserInput, ReminderCampaignUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReminderCampaignCreateManyUserInputEnvelope = {
+    data: ReminderCampaignCreateManyUserInput | ReminderCampaignCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type GeneratedReportCreateWithoutUserInput = {
     id?: string
     title: string
@@ -17270,6 +19322,45 @@ export namespace Prisma {
     columnMapping?: JsonNullableFilter<"StatementImport">
   }
 
+  export type ReminderCampaignUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReminderCampaignWhereUniqueInput
+    update: XOR<ReminderCampaignUpdateWithoutUserInput, ReminderCampaignUncheckedUpdateWithoutUserInput>
+    create: XOR<ReminderCampaignCreateWithoutUserInput, ReminderCampaignUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReminderCampaignUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReminderCampaignWhereUniqueInput
+    data: XOR<ReminderCampaignUpdateWithoutUserInput, ReminderCampaignUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReminderCampaignUpdateManyWithWhereWithoutUserInput = {
+    where: ReminderCampaignScalarWhereInput
+    data: XOR<ReminderCampaignUpdateManyMutationInput, ReminderCampaignUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ReminderCampaignScalarWhereInput = {
+    AND?: ReminderCampaignScalarWhereInput | ReminderCampaignScalarWhereInput[]
+    OR?: ReminderCampaignScalarWhereInput[]
+    NOT?: ReminderCampaignScalarWhereInput | ReminderCampaignScalarWhereInput[]
+    id?: StringFilter<"ReminderCampaign"> | string
+    name?: StringFilter<"ReminderCampaign"> | string
+    status?: EnumReminderCampaignStatusFilter<"ReminderCampaign"> | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFilter<"ReminderCampaign"> | $Enums.ReminderScheduleType
+    dayOfWeek?: IntNullableFilter<"ReminderCampaign"> | number | null
+    sendHour?: IntFilter<"ReminderCampaign"> | number
+    sendMinute?: IntFilter<"ReminderCampaign"> | number
+    minBalance?: DecimalNullableFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: DecimalNullableFilter<"ReminderCampaign"> | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFilter<"ReminderCampaign"> | string
+    messageTemplate?: StringFilter<"ReminderCampaign"> | string
+    targetStudentIds?: JsonNullableFilter<"ReminderCampaign">
+    createdBy?: StringFilter<"ReminderCampaign"> | string
+    lastRunAt?: DateTimeNullableFilter<"ReminderCampaign"> | Date | string | null
+    nextRunAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    createdAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+    updatedAt?: DateTimeFilter<"ReminderCampaign"> | Date | string
+  }
+
   export type GeneratedReportUpsertWithWhereUniqueWithoutUserInput = {
     where: GeneratedReportWhereUniqueInput
     update: XOR<GeneratedReportUpdateWithoutUserInput, GeneratedReportUncheckedUpdateWithoutUserInput>
@@ -17345,6 +19436,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -17366,6 +19458,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17479,6 +19572,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -17500,6 +19594,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17576,6 +19671,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -17597,6 +19693,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17623,6 +19720,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -17644,6 +19742,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17670,6 +19769,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -17691,6 +19791,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17773,6 +19874,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -17794,6 +19896,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17826,6 +19929,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -17847,6 +19951,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17879,6 +19984,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -17900,6 +20006,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17921,6 +20028,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -17942,6 +20050,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -18021,6 +20130,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -18042,6 +20152,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -18146,6 +20257,110 @@ export namespace Prisma {
     columnMapping?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type UserCreateWithoutReminderCampaignsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName?: string | null
+    lastName?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
+    profilePictureUrl?: string | null
+    currentSessionId?: string | null
+    sessionExpires?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student?: StudentCreateNestedOneWithoutUserInput
+    verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
+    reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
+    reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReminderCampaignsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName?: string | null
+    lastName?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
+    profilePictureUrl?: string | null
+    currentSessionId?: string | null
+    sessionExpires?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student?: StudentUncheckedCreateNestedOneWithoutUserInput
+    verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
+    reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
+    reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReminderCampaignsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReminderCampaignsInput, UserUncheckedCreateWithoutReminderCampaignsInput>
+  }
+
+  export type UserUpsertWithoutReminderCampaignsInput = {
+    update: XOR<UserUpdateWithoutReminderCampaignsInput, UserUncheckedUpdateWithoutReminderCampaignsInput>
+    create: XOR<UserCreateWithoutReminderCampaignsInput, UserUncheckedCreateWithoutReminderCampaignsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReminderCampaignsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReminderCampaignsInput, UserUncheckedUpdateWithoutReminderCampaignsInput>
+  }
+
+  export type UserUpdateWithoutReminderCampaignsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUpdateOneWithoutUserNestedInput
+    verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
+    reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
+    reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReminderCampaignsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUncheckedUpdateOneWithoutUserNestedInput
+    verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
+    reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
+    reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutGeneratedReportsInput = {
     id?: string
     email: string
@@ -18164,6 +20379,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
@@ -18185,6 +20401,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -18222,6 +20439,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
@@ -18243,6 +20461,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -18264,6 +20483,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
   }
 
@@ -18285,6 +20505,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
     statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -18322,6 +20543,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
   }
 
@@ -18343,6 +20565,7 @@ export namespace Prisma {
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
     statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -18454,6 +20677,25 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string
     summary: JsonNullValueInput | InputJsonValue
     columnMapping?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ReminderCampaignCreateManyUserInput = {
+    id?: string
+    name: string
+    status?: $Enums.ReminderCampaignStatus
+    scheduleType: $Enums.ReminderScheduleType
+    dayOfWeek?: number | null
+    sendHour: number
+    sendMinute?: number
+    minBalance?: Decimal | DecimalJsLike | number | string | null
+    maxBalance?: Decimal | DecimalJsLike | number | string | null
+    titleTemplate: string
+    messageTemplate: string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: Date | string | null
+    nextRunAt: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type GeneratedReportCreateManyUserInput = {
@@ -18804,6 +21046,63 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     summary?: JsonNullValueInput | InputJsonValue
     columnMapping?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ReminderCampaignUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumReminderCampaignStatusFieldUpdateOperationsInput | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFieldUpdateOperationsInput | $Enums.ReminderScheduleType
+    dayOfWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    sendHour?: IntFieldUpdateOperationsInput | number
+    sendMinute?: IntFieldUpdateOperationsInput | number
+    minBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFieldUpdateOperationsInput | string
+    messageTemplate?: StringFieldUpdateOperationsInput | string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextRunAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReminderCampaignUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumReminderCampaignStatusFieldUpdateOperationsInput | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFieldUpdateOperationsInput | $Enums.ReminderScheduleType
+    dayOfWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    sendHour?: IntFieldUpdateOperationsInput | number
+    sendMinute?: IntFieldUpdateOperationsInput | number
+    minBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFieldUpdateOperationsInput | string
+    messageTemplate?: StringFieldUpdateOperationsInput | string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextRunAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReminderCampaignUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumReminderCampaignStatusFieldUpdateOperationsInput | $Enums.ReminderCampaignStatus
+    scheduleType?: EnumReminderScheduleTypeFieldUpdateOperationsInput | $Enums.ReminderScheduleType
+    dayOfWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    sendHour?: IntFieldUpdateOperationsInput | number
+    sendMinute?: IntFieldUpdateOperationsInput | number
+    minBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    titleTemplate?: StringFieldUpdateOperationsInput | string
+    messageTemplate?: StringFieldUpdateOperationsInput | string
+    targetStudentIds?: NullableJsonNullValueInput | InputJsonValue
+    lastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextRunAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GeneratedReportUpdateWithoutUserInput = {

@@ -43,6 +43,16 @@ enum ReconciliationStatus {
   MATCHED
 }
 
+enum ReminderCampaignStatus {
+  ACTIVE
+  PAUSED
+}
+
+enum ReminderScheduleType {
+  DAILY
+  WEEKLY
+}
+
 model User {
   id               String    @id @default(cuid())
   email            String    @unique
@@ -61,6 +71,7 @@ model User {
   reviewedPayments Payment[] @relation("PaymentReviewer")
   reconciledPayments Payment[] @relation("PaymentReconciler")
   statementImports   StatementImport[]
+  reminderCampaigns  ReminderCampaign[]
   generatedReports GeneratedReport[]
   notifications    Notification[]
 }
@@ -177,6 +188,30 @@ model StatementImportRow {
   statementImport   StatementImport  @relation(fields: [importId], references: [id], onDelete: Cascade)
 
   @@index([importId, rowNumber])
+}
+
+model ReminderCampaign {
+  id              String                 @id @default(cuid())
+  name            String
+  status          ReminderCampaignStatus @default(ACTIVE)
+  scheduleType    ReminderScheduleType
+  dayOfWeek       Int?
+  sendHour        Int
+  sendMinute      Int @default(0)
+  minBalance      Decimal?               @db.Decimal(12, 2)
+  maxBalance      Decimal?               @db.Decimal(12, 2)
+  titleTemplate   String
+  messageTemplate String
+  targetStudentIds Json?
+  createdBy       String
+  lastRunAt       DateTime?
+  nextRunAt       DateTime
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  user            User                   @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([status, nextRunAt])
+  @@index([createdBy, createdAt])
 }
 
 model GeneratedReport {

@@ -8,6 +8,7 @@ import {
   AdminNotificationsPage,
   ReconciliationExceptionsPage,
   ReconciliationHistoryPage,
+  ReminderCampaignsPage,
   AuditLogsPage,
   AuthLayout,
   FeeStructurePage,
@@ -114,6 +115,10 @@ export function AppRouter() {
         <Route
           path="/admin/reconciliation-exceptions"
           element={<RequireRoles allowedRoles={['admin', 'accounts']}><ReconciliationExceptionsPage /></RequireRoles>}
+        />
+        <Route
+          path="/admin/reminder-campaigns"
+          element={<RequireRoles allowedRoles={['admin', 'accounts']}><ReminderCampaignsPage /></RequireRoles>}
         />
         <Route
           path="/admin/students"

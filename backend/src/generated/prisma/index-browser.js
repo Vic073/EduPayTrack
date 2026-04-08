@@ -231,6 +231,26 @@ exports.Prisma.StatementImportRowScalarFieldEnum = {
   reconciledAt: 'reconciledAt'
 };
 
+exports.Prisma.ReminderCampaignScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  scheduleType: 'scheduleType',
+  dayOfWeek: 'dayOfWeek',
+  sendHour: 'sendHour',
+  sendMinute: 'sendMinute',
+  minBalance: 'minBalance',
+  maxBalance: 'maxBalance',
+  titleTemplate: 'titleTemplate',
+  messageTemplate: 'messageTemplate',
+  targetStudentIds: 'targetStudentIds',
+  createdBy: 'createdBy',
+  lastRunAt: 'lastRunAt',
+  nextRunAt: 'nextRunAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.GeneratedReportScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -325,6 +345,16 @@ exports.ReconciliationStatus = exports.$Enums.ReconciliationStatus = {
   MATCHED: 'MATCHED'
 };
 
+exports.ReminderCampaignStatus = exports.$Enums.ReminderCampaignStatus = {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED'
+};
+
+exports.ReminderScheduleType = exports.$Enums.ReminderScheduleType = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Student: 'Student',
@@ -332,6 +362,7 @@ exports.Prisma.ModelName = {
   Payment: 'Payment',
   StatementImport: 'StatementImport',
   StatementImportRow: 'StatementImportRow',
+  ReminderCampaign: 'ReminderCampaign',
   GeneratedReport: 'GeneratedReport',
   Notification: 'Notification',
   SystemRegistry: 'SystemRegistry'

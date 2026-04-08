@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { asyncHandler } from '../lib/async-handler';
 import { requireAuth, requireRole } from '../middleware/auth';
-import { UserRole } from '../generated/prisma';
+import { ReminderCampaignStatus, ReminderScheduleType, UserRole } from '../generated/prisma';
 import {
     getUserNotifications,
     markNotificationRead,
@@ -9,6 +9,13 @@ import {
     createBulkNotifications,
 } from '../services/notification.service';
 import { prisma } from '../lib/prisma';
+import {
+    createReminderCampaign,
+    listReminderCampaigns,
+    runDueReminderCampaigns,
+    runReminderCampaign,
+    updateReminderCampaignStatus,
+} from '../services/reminder-campaign.service';
 
 export const notificationRouter = Router();
 
@@ -73,6 +80,65 @@ notificationRouter.post(
         }
 
         res.status(200).json({ message: `Sent ${notifications.length} reminders.` });
+    })
+);
+
+notificationRouter.get(
+    '/campaigns',
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
+    asyncHandler(async (_req, res) => {
+        const campaigns = await listReminderCampaigns();
+        res.status(200).json(campaigns);
+    })
+);
+
+notificationRouter.post(
+    '/campaigns',
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
+    asyncHandler(async (req, res) => {
+        const campaign = await createReminderCampaign(req.user!.userId, {
+            name: req.body.name,
+            scheduleType: req.body.scheduleType as ReminderScheduleType,
+            dayOfWeek: req.body.dayOfWeek,
+            sendHour: req.body.sendHour,
+            sendMinute: req.body.sendMinute,
+            minBalance: req.body.minBalance,
+            maxBalance: req.body.maxBalance,
+            titleTemplate: req.body.titleTemplate,
+            messageTemplate: req.body.messageTemplate,
+            targetStudentIds: req.body.targetStudentIds,
+        });
+        res.status(201).json(campaign);
+    })
+);
+
+notificationRouter.patch(
+    '/campaigns/:campaignId/status',
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
+    asyncHandler(async (req, res) => {
+        const campaign = await updateReminderCampaignStatus(
+            req.params.campaignId,
+            req.body.status as ReminderCampaignStatus
+        );
+        res.status(200).json(campaign);
+    })
+);
+
+notificationRouter.post(
+    '/campaigns/:campaignId/run',
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
+    asyncHandler(async (req, res) => {
+        const result = await runReminderCampaign(req.params.campaignId);
+        res.status(200).json(result);
+    })
+);
+
+notificationRouter.post(
+    '/campaigns/run-due',
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
+    asyncHandler(async (_req, res) => {
+        const result = await runDueReminderCampaigns();
+        res.status(200).json(result);
     })
 );
 
