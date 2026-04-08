@@ -6,6 +6,7 @@ declare namespace Express {
             encoding: string;
             mimetype: string;
             size: number;
+            buffer?: Buffer;
             destination: string;
             filename: string;
             path: string;

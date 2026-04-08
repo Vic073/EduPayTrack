@@ -60,6 +60,7 @@ model User {
   verifiedPayments Payment[] @relation("PaymentVerifier")
   reviewedPayments Payment[] @relation("PaymentReviewer")
   reconciledPayments Payment[] @relation("PaymentReconciler")
+  statementImports   StatementImport[]
   generatedReports GeneratedReport[]
   notifications    Notification[]
 }
@@ -140,6 +141,42 @@ model Payment {
   @@index([receiptNumber])
   @@index([academicYear, term])
   @@index([academicYear, semester])
+}
+
+model StatementImport {
+  id            String             @id @default(cuid())
+  fileName      String
+  uploadedBy    String
+  uploadedAt    DateTime           @default(now())
+  headers       String[]
+  totalRows     Int                @default(0)
+  totalAmount   Decimal            @default(0) @db.Decimal(12, 2)
+  summary       Json
+  columnMapping Json?
+  user          User               @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+  rows          StatementImportRow[]
+
+  @@index([uploadedBy, uploadedAt])
+}
+
+model StatementImportRow {
+  id                String           @id @default(cuid())
+  importId          String
+  rowNumber         Int
+  rawData           Json
+  reference         String?
+  payerName         String?
+  description       String?
+  amount            Decimal?         @db.Decimal(12, 2)
+  transactionDate   DateTime?
+  matchState        String
+  suggestions       Json
+  resolvedPaymentId String?
+  autoApprovedPaymentId String?
+  reconciledAt      DateTime?
+  statementImport   StatementImport  @relation(fields: [importId], references: [id], onDelete: Cascade)
+
+  @@index([importId, rowNumber])
 }
 
 model GeneratedReport {

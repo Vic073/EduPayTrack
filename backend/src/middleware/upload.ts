@@ -25,6 +25,13 @@ const imageMimeTypes = new Set([
     'image/vnd.microsoft.icon',
 ]);
 
+const csvMimeTypes = new Set([
+    'text/csv',
+    'application/vnd.ms-excel',
+    'application/csv',
+    'text/plain',
+]);
+
 const storage = multer.diskStorage({
     destination: (_req, _file, callback) => {
         callback(null, uploadsDirectory);
@@ -71,6 +78,24 @@ export const uploadProfilePicture = multer({
 
         if (!validFile) {
             callback(new AppError('Only image files are allowed (JPG, PNG, GIF, WebP, SVG, BMP, TIFF)', 400));
+            return;
+        }
+
+        callback(null, true);
+    },
+});
+
+export const uploadStatement = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024,
+    },
+    fileFilter: (_req, file, callback) => {
+        const extension = path.extname(file.originalname).toLowerCase();
+        const validFile = extension === '.csv' && csvMimeTypes.has(file.mimetype);
+
+        if (!validFile) {
+            callback(new AppError('Only CSV statement files are allowed', 400));
             return;
         }
 

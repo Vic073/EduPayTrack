@@ -34,6 +34,16 @@ export type FeeStructure = $Result.DefaultSelection<Prisma.$FeeStructurePayload>
  */
 export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
 /**
+ * Model StatementImport
+ * 
+ */
+export type StatementImport = $Result.DefaultSelection<Prisma.$StatementImportPayload>
+/**
+ * Model StatementImportRow
+ * 
+ */
+export type StatementImportRow = $Result.DefaultSelection<Prisma.$StatementImportRowPayload>
+/**
  * Model GeneratedReport
  * 
  */
@@ -288,6 +298,26 @@ export class PrismaClient<
     * ```
     */
   get payment(): Prisma.PaymentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.statementImport`: Exposes CRUD operations for the **StatementImport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StatementImports
+    * const statementImports = await prisma.statementImport.findMany()
+    * ```
+    */
+  get statementImport(): Prisma.StatementImportDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.statementImportRow`: Exposes CRUD operations for the **StatementImportRow** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StatementImportRows
+    * const statementImportRows = await prisma.statementImportRow.findMany()
+    * ```
+    */
+  get statementImportRow(): Prisma.StatementImportRowDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.generatedReport`: Exposes CRUD operations for the **GeneratedReport** model.
@@ -763,6 +793,8 @@ export namespace Prisma {
     Student: 'Student',
     FeeStructure: 'FeeStructure',
     Payment: 'Payment',
+    StatementImport: 'StatementImport',
+    StatementImportRow: 'StatementImportRow',
     GeneratedReport: 'GeneratedReport',
     Notification: 'Notification',
     SystemRegistry: 'SystemRegistry'
@@ -784,7 +816,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "student" | "feeStructure" | "payment" | "generatedReport" | "notification" | "systemRegistry"
+      modelProps: "user" | "student" | "feeStructure" | "payment" | "statementImport" | "statementImportRow" | "generatedReport" | "notification" | "systemRegistry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1081,6 +1113,154 @@ export namespace Prisma {
           count: {
             args: Prisma.PaymentCountArgs<ExtArgs>
             result: $Utils.Optional<PaymentCountAggregateOutputType> | number
+          }
+        }
+      }
+      StatementImport: {
+        payload: Prisma.$StatementImportPayload<ExtArgs>
+        fields: Prisma.StatementImportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StatementImportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StatementImportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>
+          }
+          findFirst: {
+            args: Prisma.StatementImportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StatementImportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>
+          }
+          findMany: {
+            args: Prisma.StatementImportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>[]
+          }
+          create: {
+            args: Prisma.StatementImportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>
+          }
+          createMany: {
+            args: Prisma.StatementImportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StatementImportCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>[]
+          }
+          delete: {
+            args: Prisma.StatementImportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>
+          }
+          update: {
+            args: Prisma.StatementImportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>
+          }
+          deleteMany: {
+            args: Prisma.StatementImportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StatementImportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StatementImportUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>[]
+          }
+          upsert: {
+            args: Prisma.StatementImportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportPayload>
+          }
+          aggregate: {
+            args: Prisma.StatementImportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStatementImport>
+          }
+          groupBy: {
+            args: Prisma.StatementImportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StatementImportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StatementImportCountArgs<ExtArgs>
+            result: $Utils.Optional<StatementImportCountAggregateOutputType> | number
+          }
+        }
+      }
+      StatementImportRow: {
+        payload: Prisma.$StatementImportRowPayload<ExtArgs>
+        fields: Prisma.StatementImportRowFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StatementImportRowFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StatementImportRowFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>
+          }
+          findFirst: {
+            args: Prisma.StatementImportRowFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StatementImportRowFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>
+          }
+          findMany: {
+            args: Prisma.StatementImportRowFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>[]
+          }
+          create: {
+            args: Prisma.StatementImportRowCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>
+          }
+          createMany: {
+            args: Prisma.StatementImportRowCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StatementImportRowCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>[]
+          }
+          delete: {
+            args: Prisma.StatementImportRowDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>
+          }
+          update: {
+            args: Prisma.StatementImportRowUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>
+          }
+          deleteMany: {
+            args: Prisma.StatementImportRowDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StatementImportRowUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StatementImportRowUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>[]
+          }
+          upsert: {
+            args: Prisma.StatementImportRowUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatementImportRowPayload>
+          }
+          aggregate: {
+            args: Prisma.StatementImportRowAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStatementImportRow>
+          }
+          groupBy: {
+            args: Prisma.StatementImportRowGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StatementImportRowGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StatementImportRowCountArgs<ExtArgs>
+            result: $Utils.Optional<StatementImportRowCountAggregateOutputType> | number
           }
         }
       }
@@ -1406,6 +1586,8 @@ export namespace Prisma {
     student?: StudentOmit
     feeStructure?: FeeStructureOmit
     payment?: PaymentOmit
+    statementImport?: StatementImportOmit
+    statementImportRow?: StatementImportRowOmit
     generatedReport?: GeneratedReportOmit
     notification?: NotificationOmit
     systemRegistry?: SystemRegistryOmit
@@ -1492,6 +1674,7 @@ export namespace Prisma {
     verifiedPayments: number
     reviewedPayments: number
     reconciledPayments: number
+    statementImports: number
     generatedReports: number
     notifications: number
   }
@@ -1500,6 +1683,7 @@ export namespace Prisma {
     verifiedPayments?: boolean | UserCountOutputTypeCountVerifiedPaymentsArgs
     reviewedPayments?: boolean | UserCountOutputTypeCountReviewedPaymentsArgs
     reconciledPayments?: boolean | UserCountOutputTypeCountReconciledPaymentsArgs
+    statementImports?: boolean | UserCountOutputTypeCountStatementImportsArgs
     generatedReports?: boolean | UserCountOutputTypeCountGeneratedReportsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   }
@@ -1534,6 +1718,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountReconciledPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountStatementImportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StatementImportWhereInput
   }
 
   /**
@@ -1579,6 +1770,37 @@ export namespace Prisma {
    */
   export type StudentCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentWhereInput
+  }
+
+
+  /**
+   * Count Type StatementImportCountOutputType
+   */
+
+  export type StatementImportCountOutputType = {
+    rows: number
+  }
+
+  export type StatementImportCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rows?: boolean | StatementImportCountOutputTypeCountRowsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StatementImportCountOutputType without action
+   */
+  export type StatementImportCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportCountOutputType
+     */
+    select?: StatementImportCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StatementImportCountOutputType without action
+   */
+  export type StatementImportCountOutputTypeCountRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StatementImportRowWhereInput
   }
 
 
@@ -1810,6 +2032,7 @@ export namespace Prisma {
     verifiedPayments?: boolean | User$verifiedPaymentsArgs<ExtArgs>
     reviewedPayments?: boolean | User$reviewedPaymentsArgs<ExtArgs>
     reconciledPayments?: boolean | User$reconciledPaymentsArgs<ExtArgs>
+    statementImports?: boolean | User$statementImportsArgs<ExtArgs>
     generatedReports?: boolean | User$generatedReportsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1866,6 +2089,7 @@ export namespace Prisma {
     verifiedPayments?: boolean | User$verifiedPaymentsArgs<ExtArgs>
     reviewedPayments?: boolean | User$reviewedPaymentsArgs<ExtArgs>
     reconciledPayments?: boolean | User$reconciledPaymentsArgs<ExtArgs>
+    statementImports?: boolean | User$statementImportsArgs<ExtArgs>
     generatedReports?: boolean | User$generatedReportsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1880,6 +2104,7 @@ export namespace Prisma {
       verifiedPayments: Prisma.$PaymentPayload<ExtArgs>[]
       reviewedPayments: Prisma.$PaymentPayload<ExtArgs>[]
       reconciledPayments: Prisma.$PaymentPayload<ExtArgs>[]
+      statementImports: Prisma.$StatementImportPayload<ExtArgs>[]
       generatedReports: Prisma.$GeneratedReportPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
@@ -2294,6 +2519,7 @@ export namespace Prisma {
     verifiedPayments<T extends User$verifiedPaymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$verifiedPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewedPayments<T extends User$reviewedPaymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewedPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reconciledPayments<T extends User$reconciledPaymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$reconciledPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    statementImports<T extends User$statementImportsArgs<ExtArgs> = {}>(args?: Subset<T, User$statementImportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     generatedReports<T extends User$generatedReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$generatedReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GeneratedReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -2813,6 +3039,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * User.statementImports
+   */
+  export type User$statementImportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    where?: StatementImportWhereInput
+    orderBy?: StatementImportOrderByWithRelationInput | StatementImportOrderByWithRelationInput[]
+    cursor?: StatementImportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StatementImportScalarFieldEnum | StatementImportScalarFieldEnum[]
   }
 
   /**
@@ -6757,6 +7007,2364 @@ export namespace Prisma {
 
 
   /**
+   * Model StatementImport
+   */
+
+  export type AggregateStatementImport = {
+    _count: StatementImportCountAggregateOutputType | null
+    _avg: StatementImportAvgAggregateOutputType | null
+    _sum: StatementImportSumAggregateOutputType | null
+    _min: StatementImportMinAggregateOutputType | null
+    _max: StatementImportMaxAggregateOutputType | null
+  }
+
+  export type StatementImportAvgAggregateOutputType = {
+    totalRows: number | null
+    totalAmount: Decimal | null
+  }
+
+  export type StatementImportSumAggregateOutputType = {
+    totalRows: number | null
+    totalAmount: Decimal | null
+  }
+
+  export type StatementImportMinAggregateOutputType = {
+    id: string | null
+    fileName: string | null
+    uploadedBy: string | null
+    uploadedAt: Date | null
+    totalRows: number | null
+    totalAmount: Decimal | null
+  }
+
+  export type StatementImportMaxAggregateOutputType = {
+    id: string | null
+    fileName: string | null
+    uploadedBy: string | null
+    uploadedAt: Date | null
+    totalRows: number | null
+    totalAmount: Decimal | null
+  }
+
+  export type StatementImportCountAggregateOutputType = {
+    id: number
+    fileName: number
+    uploadedBy: number
+    uploadedAt: number
+    headers: number
+    totalRows: number
+    totalAmount: number
+    summary: number
+    columnMapping: number
+    _all: number
+  }
+
+
+  export type StatementImportAvgAggregateInputType = {
+    totalRows?: true
+    totalAmount?: true
+  }
+
+  export type StatementImportSumAggregateInputType = {
+    totalRows?: true
+    totalAmount?: true
+  }
+
+  export type StatementImportMinAggregateInputType = {
+    id?: true
+    fileName?: true
+    uploadedBy?: true
+    uploadedAt?: true
+    totalRows?: true
+    totalAmount?: true
+  }
+
+  export type StatementImportMaxAggregateInputType = {
+    id?: true
+    fileName?: true
+    uploadedBy?: true
+    uploadedAt?: true
+    totalRows?: true
+    totalAmount?: true
+  }
+
+  export type StatementImportCountAggregateInputType = {
+    id?: true
+    fileName?: true
+    uploadedBy?: true
+    uploadedAt?: true
+    headers?: true
+    totalRows?: true
+    totalAmount?: true
+    summary?: true
+    columnMapping?: true
+    _all?: true
+  }
+
+  export type StatementImportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StatementImport to aggregate.
+     */
+    where?: StatementImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImports to fetch.
+     */
+    orderBy?: StatementImportOrderByWithRelationInput | StatementImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StatementImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StatementImports
+    **/
+    _count?: true | StatementImportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StatementImportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StatementImportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StatementImportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StatementImportMaxAggregateInputType
+  }
+
+  export type GetStatementImportAggregateType<T extends StatementImportAggregateArgs> = {
+        [P in keyof T & keyof AggregateStatementImport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStatementImport[P]>
+      : GetScalarType<T[P], AggregateStatementImport[P]>
+  }
+
+
+
+
+  export type StatementImportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StatementImportWhereInput
+    orderBy?: StatementImportOrderByWithAggregationInput | StatementImportOrderByWithAggregationInput[]
+    by: StatementImportScalarFieldEnum[] | StatementImportScalarFieldEnum
+    having?: StatementImportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StatementImportCountAggregateInputType | true
+    _avg?: StatementImportAvgAggregateInputType
+    _sum?: StatementImportSumAggregateInputType
+    _min?: StatementImportMinAggregateInputType
+    _max?: StatementImportMaxAggregateInputType
+  }
+
+  export type StatementImportGroupByOutputType = {
+    id: string
+    fileName: string
+    uploadedBy: string
+    uploadedAt: Date
+    headers: string[]
+    totalRows: number
+    totalAmount: Decimal
+    summary: JsonValue
+    columnMapping: JsonValue | null
+    _count: StatementImportCountAggregateOutputType | null
+    _avg: StatementImportAvgAggregateOutputType | null
+    _sum: StatementImportSumAggregateOutputType | null
+    _min: StatementImportMinAggregateOutputType | null
+    _max: StatementImportMaxAggregateOutputType | null
+  }
+
+  type GetStatementImportGroupByPayload<T extends StatementImportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StatementImportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StatementImportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StatementImportGroupByOutputType[P]>
+            : GetScalarType<T[P], StatementImportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StatementImportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    uploadedAt?: boolean
+    headers?: boolean
+    totalRows?: boolean
+    totalAmount?: boolean
+    summary?: boolean
+    columnMapping?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    rows?: boolean | StatementImport$rowsArgs<ExtArgs>
+    _count?: boolean | StatementImportCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["statementImport"]>
+
+  export type StatementImportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    uploadedAt?: boolean
+    headers?: boolean
+    totalRows?: boolean
+    totalAmount?: boolean
+    summary?: boolean
+    columnMapping?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["statementImport"]>
+
+  export type StatementImportSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    uploadedAt?: boolean
+    headers?: boolean
+    totalRows?: boolean
+    totalAmount?: boolean
+    summary?: boolean
+    columnMapping?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["statementImport"]>
+
+  export type StatementImportSelectScalar = {
+    id?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    uploadedAt?: boolean
+    headers?: boolean
+    totalRows?: boolean
+    totalAmount?: boolean
+    summary?: boolean
+    columnMapping?: boolean
+  }
+
+  export type StatementImportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fileName" | "uploadedBy" | "uploadedAt" | "headers" | "totalRows" | "totalAmount" | "summary" | "columnMapping", ExtArgs["result"]["statementImport"]>
+  export type StatementImportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    rows?: boolean | StatementImport$rowsArgs<ExtArgs>
+    _count?: boolean | StatementImportCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type StatementImportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type StatementImportIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $StatementImportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StatementImport"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      rows: Prisma.$StatementImportRowPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      fileName: string
+      uploadedBy: string
+      uploadedAt: Date
+      headers: string[]
+      totalRows: number
+      totalAmount: Prisma.Decimal
+      summary: Prisma.JsonValue
+      columnMapping: Prisma.JsonValue | null
+    }, ExtArgs["result"]["statementImport"]>
+    composites: {}
+  }
+
+  type StatementImportGetPayload<S extends boolean | null | undefined | StatementImportDefaultArgs> = $Result.GetResult<Prisma.$StatementImportPayload, S>
+
+  type StatementImportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StatementImportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StatementImportCountAggregateInputType | true
+    }
+
+  export interface StatementImportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StatementImport'], meta: { name: 'StatementImport' } }
+    /**
+     * Find zero or one StatementImport that matches the filter.
+     * @param {StatementImportFindUniqueArgs} args - Arguments to find a StatementImport
+     * @example
+     * // Get one StatementImport
+     * const statementImport = await prisma.statementImport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StatementImportFindUniqueArgs>(args: SelectSubset<T, StatementImportFindUniqueArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StatementImport that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StatementImportFindUniqueOrThrowArgs} args - Arguments to find a StatementImport
+     * @example
+     * // Get one StatementImport
+     * const statementImport = await prisma.statementImport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StatementImportFindUniqueOrThrowArgs>(args: SelectSubset<T, StatementImportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StatementImport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportFindFirstArgs} args - Arguments to find a StatementImport
+     * @example
+     * // Get one StatementImport
+     * const statementImport = await prisma.statementImport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StatementImportFindFirstArgs>(args?: SelectSubset<T, StatementImportFindFirstArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StatementImport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportFindFirstOrThrowArgs} args - Arguments to find a StatementImport
+     * @example
+     * // Get one StatementImport
+     * const statementImport = await prisma.statementImport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StatementImportFindFirstOrThrowArgs>(args?: SelectSubset<T, StatementImportFindFirstOrThrowArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StatementImports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StatementImports
+     * const statementImports = await prisma.statementImport.findMany()
+     * 
+     * // Get first 10 StatementImports
+     * const statementImports = await prisma.statementImport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const statementImportWithIdOnly = await prisma.statementImport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StatementImportFindManyArgs>(args?: SelectSubset<T, StatementImportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StatementImport.
+     * @param {StatementImportCreateArgs} args - Arguments to create a StatementImport.
+     * @example
+     * // Create one StatementImport
+     * const StatementImport = await prisma.statementImport.create({
+     *   data: {
+     *     // ... data to create a StatementImport
+     *   }
+     * })
+     * 
+     */
+    create<T extends StatementImportCreateArgs>(args: SelectSubset<T, StatementImportCreateArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StatementImports.
+     * @param {StatementImportCreateManyArgs} args - Arguments to create many StatementImports.
+     * @example
+     * // Create many StatementImports
+     * const statementImport = await prisma.statementImport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StatementImportCreateManyArgs>(args?: SelectSubset<T, StatementImportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StatementImports and returns the data saved in the database.
+     * @param {StatementImportCreateManyAndReturnArgs} args - Arguments to create many StatementImports.
+     * @example
+     * // Create many StatementImports
+     * const statementImport = await prisma.statementImport.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StatementImports and only return the `id`
+     * const statementImportWithIdOnly = await prisma.statementImport.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StatementImportCreateManyAndReturnArgs>(args?: SelectSubset<T, StatementImportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StatementImport.
+     * @param {StatementImportDeleteArgs} args - Arguments to delete one StatementImport.
+     * @example
+     * // Delete one StatementImport
+     * const StatementImport = await prisma.statementImport.delete({
+     *   where: {
+     *     // ... filter to delete one StatementImport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StatementImportDeleteArgs>(args: SelectSubset<T, StatementImportDeleteArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StatementImport.
+     * @param {StatementImportUpdateArgs} args - Arguments to update one StatementImport.
+     * @example
+     * // Update one StatementImport
+     * const statementImport = await prisma.statementImport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StatementImportUpdateArgs>(args: SelectSubset<T, StatementImportUpdateArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StatementImports.
+     * @param {StatementImportDeleteManyArgs} args - Arguments to filter StatementImports to delete.
+     * @example
+     * // Delete a few StatementImports
+     * const { count } = await prisma.statementImport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StatementImportDeleteManyArgs>(args?: SelectSubset<T, StatementImportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StatementImports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StatementImports
+     * const statementImport = await prisma.statementImport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StatementImportUpdateManyArgs>(args: SelectSubset<T, StatementImportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StatementImports and returns the data updated in the database.
+     * @param {StatementImportUpdateManyAndReturnArgs} args - Arguments to update many StatementImports.
+     * @example
+     * // Update many StatementImports
+     * const statementImport = await prisma.statementImport.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StatementImports and only return the `id`
+     * const statementImportWithIdOnly = await prisma.statementImport.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StatementImportUpdateManyAndReturnArgs>(args: SelectSubset<T, StatementImportUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StatementImport.
+     * @param {StatementImportUpsertArgs} args - Arguments to update or create a StatementImport.
+     * @example
+     * // Update or create a StatementImport
+     * const statementImport = await prisma.statementImport.upsert({
+     *   create: {
+     *     // ... data to create a StatementImport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StatementImport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StatementImportUpsertArgs>(args: SelectSubset<T, StatementImportUpsertArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StatementImports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportCountArgs} args - Arguments to filter StatementImports to count.
+     * @example
+     * // Count the number of StatementImports
+     * const count = await prisma.statementImport.count({
+     *   where: {
+     *     // ... the filter for the StatementImports we want to count
+     *   }
+     * })
+    **/
+    count<T extends StatementImportCountArgs>(
+      args?: Subset<T, StatementImportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StatementImportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StatementImport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StatementImportAggregateArgs>(args: Subset<T, StatementImportAggregateArgs>): Prisma.PrismaPromise<GetStatementImportAggregateType<T>>
+
+    /**
+     * Group by StatementImport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StatementImportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StatementImportGroupByArgs['orderBy'] }
+        : { orderBy?: StatementImportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StatementImportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStatementImportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StatementImport model
+   */
+  readonly fields: StatementImportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StatementImport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StatementImportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    rows<T extends StatementImport$rowsArgs<ExtArgs> = {}>(args?: Subset<T, StatementImport$rowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StatementImport model
+   */
+  interface StatementImportFieldRefs {
+    readonly id: FieldRef<"StatementImport", 'String'>
+    readonly fileName: FieldRef<"StatementImport", 'String'>
+    readonly uploadedBy: FieldRef<"StatementImport", 'String'>
+    readonly uploadedAt: FieldRef<"StatementImport", 'DateTime'>
+    readonly headers: FieldRef<"StatementImport", 'String[]'>
+    readonly totalRows: FieldRef<"StatementImport", 'Int'>
+    readonly totalAmount: FieldRef<"StatementImport", 'Decimal'>
+    readonly summary: FieldRef<"StatementImport", 'Json'>
+    readonly columnMapping: FieldRef<"StatementImport", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StatementImport findUnique
+   */
+  export type StatementImportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImport to fetch.
+     */
+    where: StatementImportWhereUniqueInput
+  }
+
+  /**
+   * StatementImport findUniqueOrThrow
+   */
+  export type StatementImportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImport to fetch.
+     */
+    where: StatementImportWhereUniqueInput
+  }
+
+  /**
+   * StatementImport findFirst
+   */
+  export type StatementImportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImport to fetch.
+     */
+    where?: StatementImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImports to fetch.
+     */
+    orderBy?: StatementImportOrderByWithRelationInput | StatementImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StatementImports.
+     */
+    cursor?: StatementImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StatementImports.
+     */
+    distinct?: StatementImportScalarFieldEnum | StatementImportScalarFieldEnum[]
+  }
+
+  /**
+   * StatementImport findFirstOrThrow
+   */
+  export type StatementImportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImport to fetch.
+     */
+    where?: StatementImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImports to fetch.
+     */
+    orderBy?: StatementImportOrderByWithRelationInput | StatementImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StatementImports.
+     */
+    cursor?: StatementImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StatementImports.
+     */
+    distinct?: StatementImportScalarFieldEnum | StatementImportScalarFieldEnum[]
+  }
+
+  /**
+   * StatementImport findMany
+   */
+  export type StatementImportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImports to fetch.
+     */
+    where?: StatementImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImports to fetch.
+     */
+    orderBy?: StatementImportOrderByWithRelationInput | StatementImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StatementImports.
+     */
+    cursor?: StatementImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImports.
+     */
+    skip?: number
+    distinct?: StatementImportScalarFieldEnum | StatementImportScalarFieldEnum[]
+  }
+
+  /**
+   * StatementImport create
+   */
+  export type StatementImportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StatementImport.
+     */
+    data: XOR<StatementImportCreateInput, StatementImportUncheckedCreateInput>
+  }
+
+  /**
+   * StatementImport createMany
+   */
+  export type StatementImportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StatementImports.
+     */
+    data: StatementImportCreateManyInput | StatementImportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StatementImport createManyAndReturn
+   */
+  export type StatementImportCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * The data used to create many StatementImports.
+     */
+    data: StatementImportCreateManyInput | StatementImportCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StatementImport update
+   */
+  export type StatementImportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StatementImport.
+     */
+    data: XOR<StatementImportUpdateInput, StatementImportUncheckedUpdateInput>
+    /**
+     * Choose, which StatementImport to update.
+     */
+    where: StatementImportWhereUniqueInput
+  }
+
+  /**
+   * StatementImport updateMany
+   */
+  export type StatementImportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StatementImports.
+     */
+    data: XOR<StatementImportUpdateManyMutationInput, StatementImportUncheckedUpdateManyInput>
+    /**
+     * Filter which StatementImports to update
+     */
+    where?: StatementImportWhereInput
+    /**
+     * Limit how many StatementImports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StatementImport updateManyAndReturn
+   */
+  export type StatementImportUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * The data used to update StatementImports.
+     */
+    data: XOR<StatementImportUpdateManyMutationInput, StatementImportUncheckedUpdateManyInput>
+    /**
+     * Filter which StatementImports to update
+     */
+    where?: StatementImportWhereInput
+    /**
+     * Limit how many StatementImports to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StatementImport upsert
+   */
+  export type StatementImportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StatementImport to update in case it exists.
+     */
+    where: StatementImportWhereUniqueInput
+    /**
+     * In case the StatementImport found by the `where` argument doesn't exist, create a new StatementImport with this data.
+     */
+    create: XOR<StatementImportCreateInput, StatementImportUncheckedCreateInput>
+    /**
+     * In case the StatementImport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StatementImportUpdateInput, StatementImportUncheckedUpdateInput>
+  }
+
+  /**
+   * StatementImport delete
+   */
+  export type StatementImportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+    /**
+     * Filter which StatementImport to delete.
+     */
+    where: StatementImportWhereUniqueInput
+  }
+
+  /**
+   * StatementImport deleteMany
+   */
+  export type StatementImportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StatementImports to delete
+     */
+    where?: StatementImportWhereInput
+    /**
+     * Limit how many StatementImports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StatementImport.rows
+   */
+  export type StatementImport$rowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    where?: StatementImportRowWhereInput
+    orderBy?: StatementImportRowOrderByWithRelationInput | StatementImportRowOrderByWithRelationInput[]
+    cursor?: StatementImportRowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StatementImportRowScalarFieldEnum | StatementImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * StatementImport without action
+   */
+  export type StatementImportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImport
+     */
+    select?: StatementImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImport
+     */
+    omit?: StatementImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StatementImportRow
+   */
+
+  export type AggregateStatementImportRow = {
+    _count: StatementImportRowCountAggregateOutputType | null
+    _avg: StatementImportRowAvgAggregateOutputType | null
+    _sum: StatementImportRowSumAggregateOutputType | null
+    _min: StatementImportRowMinAggregateOutputType | null
+    _max: StatementImportRowMaxAggregateOutputType | null
+  }
+
+  export type StatementImportRowAvgAggregateOutputType = {
+    rowNumber: number | null
+    amount: Decimal | null
+  }
+
+  export type StatementImportRowSumAggregateOutputType = {
+    rowNumber: number | null
+    amount: Decimal | null
+  }
+
+  export type StatementImportRowMinAggregateOutputType = {
+    id: string | null
+    importId: string | null
+    rowNumber: number | null
+    reference: string | null
+    payerName: string | null
+    description: string | null
+    amount: Decimal | null
+    transactionDate: Date | null
+    matchState: string | null
+    resolvedPaymentId: string | null
+    reconciledAt: Date | null
+  }
+
+  export type StatementImportRowMaxAggregateOutputType = {
+    id: string | null
+    importId: string | null
+    rowNumber: number | null
+    reference: string | null
+    payerName: string | null
+    description: string | null
+    amount: Decimal | null
+    transactionDate: Date | null
+    matchState: string | null
+    resolvedPaymentId: string | null
+    reconciledAt: Date | null
+  }
+
+  export type StatementImportRowCountAggregateOutputType = {
+    id: number
+    importId: number
+    rowNumber: number
+    rawData: number
+    reference: number
+    payerName: number
+    description: number
+    amount: number
+    transactionDate: number
+    matchState: number
+    suggestions: number
+    resolvedPaymentId: number
+    reconciledAt: number
+    _all: number
+  }
+
+
+  export type StatementImportRowAvgAggregateInputType = {
+    rowNumber?: true
+    amount?: true
+  }
+
+  export type StatementImportRowSumAggregateInputType = {
+    rowNumber?: true
+    amount?: true
+  }
+
+  export type StatementImportRowMinAggregateInputType = {
+    id?: true
+    importId?: true
+    rowNumber?: true
+    reference?: true
+    payerName?: true
+    description?: true
+    amount?: true
+    transactionDate?: true
+    matchState?: true
+    resolvedPaymentId?: true
+    reconciledAt?: true
+  }
+
+  export type StatementImportRowMaxAggregateInputType = {
+    id?: true
+    importId?: true
+    rowNumber?: true
+    reference?: true
+    payerName?: true
+    description?: true
+    amount?: true
+    transactionDate?: true
+    matchState?: true
+    resolvedPaymentId?: true
+    reconciledAt?: true
+  }
+
+  export type StatementImportRowCountAggregateInputType = {
+    id?: true
+    importId?: true
+    rowNumber?: true
+    rawData?: true
+    reference?: true
+    payerName?: true
+    description?: true
+    amount?: true
+    transactionDate?: true
+    matchState?: true
+    suggestions?: true
+    resolvedPaymentId?: true
+    reconciledAt?: true
+    _all?: true
+  }
+
+  export type StatementImportRowAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StatementImportRow to aggregate.
+     */
+    where?: StatementImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImportRows to fetch.
+     */
+    orderBy?: StatementImportRowOrderByWithRelationInput | StatementImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StatementImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImportRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StatementImportRows
+    **/
+    _count?: true | StatementImportRowCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StatementImportRowAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StatementImportRowSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StatementImportRowMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StatementImportRowMaxAggregateInputType
+  }
+
+  export type GetStatementImportRowAggregateType<T extends StatementImportRowAggregateArgs> = {
+        [P in keyof T & keyof AggregateStatementImportRow]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStatementImportRow[P]>
+      : GetScalarType<T[P], AggregateStatementImportRow[P]>
+  }
+
+
+
+
+  export type StatementImportRowGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StatementImportRowWhereInput
+    orderBy?: StatementImportRowOrderByWithAggregationInput | StatementImportRowOrderByWithAggregationInput[]
+    by: StatementImportRowScalarFieldEnum[] | StatementImportRowScalarFieldEnum
+    having?: StatementImportRowScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StatementImportRowCountAggregateInputType | true
+    _avg?: StatementImportRowAvgAggregateInputType
+    _sum?: StatementImportRowSumAggregateInputType
+    _min?: StatementImportRowMinAggregateInputType
+    _max?: StatementImportRowMaxAggregateInputType
+  }
+
+  export type StatementImportRowGroupByOutputType = {
+    id: string
+    importId: string
+    rowNumber: number
+    rawData: JsonValue
+    reference: string | null
+    payerName: string | null
+    description: string | null
+    amount: Decimal | null
+    transactionDate: Date | null
+    matchState: string
+    suggestions: JsonValue
+    resolvedPaymentId: string | null
+    reconciledAt: Date | null
+    _count: StatementImportRowCountAggregateOutputType | null
+    _avg: StatementImportRowAvgAggregateOutputType | null
+    _sum: StatementImportRowSumAggregateOutputType | null
+    _min: StatementImportRowMinAggregateOutputType | null
+    _max: StatementImportRowMaxAggregateOutputType | null
+  }
+
+  type GetStatementImportRowGroupByPayload<T extends StatementImportRowGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StatementImportRowGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StatementImportRowGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StatementImportRowGroupByOutputType[P]>
+            : GetScalarType<T[P], StatementImportRowGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StatementImportRowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    importId?: boolean
+    rowNumber?: boolean
+    rawData?: boolean
+    reference?: boolean
+    payerName?: boolean
+    description?: boolean
+    amount?: boolean
+    transactionDate?: boolean
+    matchState?: boolean
+    suggestions?: boolean
+    resolvedPaymentId?: boolean
+    reconciledAt?: boolean
+    statementImport?: boolean | StatementImportDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["statementImportRow"]>
+
+  export type StatementImportRowSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    importId?: boolean
+    rowNumber?: boolean
+    rawData?: boolean
+    reference?: boolean
+    payerName?: boolean
+    description?: boolean
+    amount?: boolean
+    transactionDate?: boolean
+    matchState?: boolean
+    suggestions?: boolean
+    resolvedPaymentId?: boolean
+    reconciledAt?: boolean
+    statementImport?: boolean | StatementImportDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["statementImportRow"]>
+
+  export type StatementImportRowSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    importId?: boolean
+    rowNumber?: boolean
+    rawData?: boolean
+    reference?: boolean
+    payerName?: boolean
+    description?: boolean
+    amount?: boolean
+    transactionDate?: boolean
+    matchState?: boolean
+    suggestions?: boolean
+    resolvedPaymentId?: boolean
+    reconciledAt?: boolean
+    statementImport?: boolean | StatementImportDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["statementImportRow"]>
+
+  export type StatementImportRowSelectScalar = {
+    id?: boolean
+    importId?: boolean
+    rowNumber?: boolean
+    rawData?: boolean
+    reference?: boolean
+    payerName?: boolean
+    description?: boolean
+    amount?: boolean
+    transactionDate?: boolean
+    matchState?: boolean
+    suggestions?: boolean
+    resolvedPaymentId?: boolean
+    reconciledAt?: boolean
+  }
+
+  export type StatementImportRowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "importId" | "rowNumber" | "rawData" | "reference" | "payerName" | "description" | "amount" | "transactionDate" | "matchState" | "suggestions" | "resolvedPaymentId" | "reconciledAt", ExtArgs["result"]["statementImportRow"]>
+  export type StatementImportRowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    statementImport?: boolean | StatementImportDefaultArgs<ExtArgs>
+  }
+  export type StatementImportRowIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    statementImport?: boolean | StatementImportDefaultArgs<ExtArgs>
+  }
+  export type StatementImportRowIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    statementImport?: boolean | StatementImportDefaultArgs<ExtArgs>
+  }
+
+  export type $StatementImportRowPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StatementImportRow"
+    objects: {
+      statementImport: Prisma.$StatementImportPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      importId: string
+      rowNumber: number
+      rawData: Prisma.JsonValue
+      reference: string | null
+      payerName: string | null
+      description: string | null
+      amount: Prisma.Decimal | null
+      transactionDate: Date | null
+      matchState: string
+      suggestions: Prisma.JsonValue
+      resolvedPaymentId: string | null
+      reconciledAt: Date | null
+    }, ExtArgs["result"]["statementImportRow"]>
+    composites: {}
+  }
+
+  type StatementImportRowGetPayload<S extends boolean | null | undefined | StatementImportRowDefaultArgs> = $Result.GetResult<Prisma.$StatementImportRowPayload, S>
+
+  type StatementImportRowCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StatementImportRowFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StatementImportRowCountAggregateInputType | true
+    }
+
+  export interface StatementImportRowDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StatementImportRow'], meta: { name: 'StatementImportRow' } }
+    /**
+     * Find zero or one StatementImportRow that matches the filter.
+     * @param {StatementImportRowFindUniqueArgs} args - Arguments to find a StatementImportRow
+     * @example
+     * // Get one StatementImportRow
+     * const statementImportRow = await prisma.statementImportRow.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StatementImportRowFindUniqueArgs>(args: SelectSubset<T, StatementImportRowFindUniqueArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StatementImportRow that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StatementImportRowFindUniqueOrThrowArgs} args - Arguments to find a StatementImportRow
+     * @example
+     * // Get one StatementImportRow
+     * const statementImportRow = await prisma.statementImportRow.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StatementImportRowFindUniqueOrThrowArgs>(args: SelectSubset<T, StatementImportRowFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StatementImportRow that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportRowFindFirstArgs} args - Arguments to find a StatementImportRow
+     * @example
+     * // Get one StatementImportRow
+     * const statementImportRow = await prisma.statementImportRow.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StatementImportRowFindFirstArgs>(args?: SelectSubset<T, StatementImportRowFindFirstArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StatementImportRow that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportRowFindFirstOrThrowArgs} args - Arguments to find a StatementImportRow
+     * @example
+     * // Get one StatementImportRow
+     * const statementImportRow = await prisma.statementImportRow.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StatementImportRowFindFirstOrThrowArgs>(args?: SelectSubset<T, StatementImportRowFindFirstOrThrowArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StatementImportRows that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportRowFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StatementImportRows
+     * const statementImportRows = await prisma.statementImportRow.findMany()
+     * 
+     * // Get first 10 StatementImportRows
+     * const statementImportRows = await prisma.statementImportRow.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const statementImportRowWithIdOnly = await prisma.statementImportRow.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StatementImportRowFindManyArgs>(args?: SelectSubset<T, StatementImportRowFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StatementImportRow.
+     * @param {StatementImportRowCreateArgs} args - Arguments to create a StatementImportRow.
+     * @example
+     * // Create one StatementImportRow
+     * const StatementImportRow = await prisma.statementImportRow.create({
+     *   data: {
+     *     // ... data to create a StatementImportRow
+     *   }
+     * })
+     * 
+     */
+    create<T extends StatementImportRowCreateArgs>(args: SelectSubset<T, StatementImportRowCreateArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StatementImportRows.
+     * @param {StatementImportRowCreateManyArgs} args - Arguments to create many StatementImportRows.
+     * @example
+     * // Create many StatementImportRows
+     * const statementImportRow = await prisma.statementImportRow.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StatementImportRowCreateManyArgs>(args?: SelectSubset<T, StatementImportRowCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StatementImportRows and returns the data saved in the database.
+     * @param {StatementImportRowCreateManyAndReturnArgs} args - Arguments to create many StatementImportRows.
+     * @example
+     * // Create many StatementImportRows
+     * const statementImportRow = await prisma.statementImportRow.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StatementImportRows and only return the `id`
+     * const statementImportRowWithIdOnly = await prisma.statementImportRow.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StatementImportRowCreateManyAndReturnArgs>(args?: SelectSubset<T, StatementImportRowCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StatementImportRow.
+     * @param {StatementImportRowDeleteArgs} args - Arguments to delete one StatementImportRow.
+     * @example
+     * // Delete one StatementImportRow
+     * const StatementImportRow = await prisma.statementImportRow.delete({
+     *   where: {
+     *     // ... filter to delete one StatementImportRow
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StatementImportRowDeleteArgs>(args: SelectSubset<T, StatementImportRowDeleteArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StatementImportRow.
+     * @param {StatementImportRowUpdateArgs} args - Arguments to update one StatementImportRow.
+     * @example
+     * // Update one StatementImportRow
+     * const statementImportRow = await prisma.statementImportRow.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StatementImportRowUpdateArgs>(args: SelectSubset<T, StatementImportRowUpdateArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StatementImportRows.
+     * @param {StatementImportRowDeleteManyArgs} args - Arguments to filter StatementImportRows to delete.
+     * @example
+     * // Delete a few StatementImportRows
+     * const { count } = await prisma.statementImportRow.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StatementImportRowDeleteManyArgs>(args?: SelectSubset<T, StatementImportRowDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StatementImportRows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportRowUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StatementImportRows
+     * const statementImportRow = await prisma.statementImportRow.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StatementImportRowUpdateManyArgs>(args: SelectSubset<T, StatementImportRowUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StatementImportRows and returns the data updated in the database.
+     * @param {StatementImportRowUpdateManyAndReturnArgs} args - Arguments to update many StatementImportRows.
+     * @example
+     * // Update many StatementImportRows
+     * const statementImportRow = await prisma.statementImportRow.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StatementImportRows and only return the `id`
+     * const statementImportRowWithIdOnly = await prisma.statementImportRow.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StatementImportRowUpdateManyAndReturnArgs>(args: SelectSubset<T, StatementImportRowUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StatementImportRow.
+     * @param {StatementImportRowUpsertArgs} args - Arguments to update or create a StatementImportRow.
+     * @example
+     * // Update or create a StatementImportRow
+     * const statementImportRow = await prisma.statementImportRow.upsert({
+     *   create: {
+     *     // ... data to create a StatementImportRow
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StatementImportRow we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StatementImportRowUpsertArgs>(args: SelectSubset<T, StatementImportRowUpsertArgs<ExtArgs>>): Prisma__StatementImportRowClient<$Result.GetResult<Prisma.$StatementImportRowPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StatementImportRows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportRowCountArgs} args - Arguments to filter StatementImportRows to count.
+     * @example
+     * // Count the number of StatementImportRows
+     * const count = await prisma.statementImportRow.count({
+     *   where: {
+     *     // ... the filter for the StatementImportRows we want to count
+     *   }
+     * })
+    **/
+    count<T extends StatementImportRowCountArgs>(
+      args?: Subset<T, StatementImportRowCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StatementImportRowCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StatementImportRow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportRowAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StatementImportRowAggregateArgs>(args: Subset<T, StatementImportRowAggregateArgs>): Prisma.PrismaPromise<GetStatementImportRowAggregateType<T>>
+
+    /**
+     * Group by StatementImportRow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatementImportRowGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StatementImportRowGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StatementImportRowGroupByArgs['orderBy'] }
+        : { orderBy?: StatementImportRowGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StatementImportRowGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStatementImportRowGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StatementImportRow model
+   */
+  readonly fields: StatementImportRowFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StatementImportRow.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StatementImportRowClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    statementImport<T extends StatementImportDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StatementImportDefaultArgs<ExtArgs>>): Prisma__StatementImportClient<$Result.GetResult<Prisma.$StatementImportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StatementImportRow model
+   */
+  interface StatementImportRowFieldRefs {
+    readonly id: FieldRef<"StatementImportRow", 'String'>
+    readonly importId: FieldRef<"StatementImportRow", 'String'>
+    readonly rowNumber: FieldRef<"StatementImportRow", 'Int'>
+    readonly rawData: FieldRef<"StatementImportRow", 'Json'>
+    readonly reference: FieldRef<"StatementImportRow", 'String'>
+    readonly payerName: FieldRef<"StatementImportRow", 'String'>
+    readonly description: FieldRef<"StatementImportRow", 'String'>
+    readonly amount: FieldRef<"StatementImportRow", 'Decimal'>
+    readonly transactionDate: FieldRef<"StatementImportRow", 'DateTime'>
+    readonly matchState: FieldRef<"StatementImportRow", 'String'>
+    readonly suggestions: FieldRef<"StatementImportRow", 'Json'>
+    readonly resolvedPaymentId: FieldRef<"StatementImportRow", 'String'>
+    readonly reconciledAt: FieldRef<"StatementImportRow", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StatementImportRow findUnique
+   */
+  export type StatementImportRowFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImportRow to fetch.
+     */
+    where: StatementImportRowWhereUniqueInput
+  }
+
+  /**
+   * StatementImportRow findUniqueOrThrow
+   */
+  export type StatementImportRowFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImportRow to fetch.
+     */
+    where: StatementImportRowWhereUniqueInput
+  }
+
+  /**
+   * StatementImportRow findFirst
+   */
+  export type StatementImportRowFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImportRow to fetch.
+     */
+    where?: StatementImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImportRows to fetch.
+     */
+    orderBy?: StatementImportRowOrderByWithRelationInput | StatementImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StatementImportRows.
+     */
+    cursor?: StatementImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImportRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StatementImportRows.
+     */
+    distinct?: StatementImportRowScalarFieldEnum | StatementImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * StatementImportRow findFirstOrThrow
+   */
+  export type StatementImportRowFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImportRow to fetch.
+     */
+    where?: StatementImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImportRows to fetch.
+     */
+    orderBy?: StatementImportRowOrderByWithRelationInput | StatementImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StatementImportRows.
+     */
+    cursor?: StatementImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImportRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StatementImportRows.
+     */
+    distinct?: StatementImportRowScalarFieldEnum | StatementImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * StatementImportRow findMany
+   */
+  export type StatementImportRowFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which StatementImportRows to fetch.
+     */
+    where?: StatementImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatementImportRows to fetch.
+     */
+    orderBy?: StatementImportRowOrderByWithRelationInput | StatementImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StatementImportRows.
+     */
+    cursor?: StatementImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatementImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatementImportRows.
+     */
+    skip?: number
+    distinct?: StatementImportRowScalarFieldEnum | StatementImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * StatementImportRow create
+   */
+  export type StatementImportRowCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StatementImportRow.
+     */
+    data: XOR<StatementImportRowCreateInput, StatementImportRowUncheckedCreateInput>
+  }
+
+  /**
+   * StatementImportRow createMany
+   */
+  export type StatementImportRowCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StatementImportRows.
+     */
+    data: StatementImportRowCreateManyInput | StatementImportRowCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StatementImportRow createManyAndReturn
+   */
+  export type StatementImportRowCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * The data used to create many StatementImportRows.
+     */
+    data: StatementImportRowCreateManyInput | StatementImportRowCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StatementImportRow update
+   */
+  export type StatementImportRowUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StatementImportRow.
+     */
+    data: XOR<StatementImportRowUpdateInput, StatementImportRowUncheckedUpdateInput>
+    /**
+     * Choose, which StatementImportRow to update.
+     */
+    where: StatementImportRowWhereUniqueInput
+  }
+
+  /**
+   * StatementImportRow updateMany
+   */
+  export type StatementImportRowUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StatementImportRows.
+     */
+    data: XOR<StatementImportRowUpdateManyMutationInput, StatementImportRowUncheckedUpdateManyInput>
+    /**
+     * Filter which StatementImportRows to update
+     */
+    where?: StatementImportRowWhereInput
+    /**
+     * Limit how many StatementImportRows to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StatementImportRow updateManyAndReturn
+   */
+  export type StatementImportRowUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * The data used to update StatementImportRows.
+     */
+    data: XOR<StatementImportRowUpdateManyMutationInput, StatementImportRowUncheckedUpdateManyInput>
+    /**
+     * Filter which StatementImportRows to update
+     */
+    where?: StatementImportRowWhereInput
+    /**
+     * Limit how many StatementImportRows to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StatementImportRow upsert
+   */
+  export type StatementImportRowUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StatementImportRow to update in case it exists.
+     */
+    where: StatementImportRowWhereUniqueInput
+    /**
+     * In case the StatementImportRow found by the `where` argument doesn't exist, create a new StatementImportRow with this data.
+     */
+    create: XOR<StatementImportRowCreateInput, StatementImportRowUncheckedCreateInput>
+    /**
+     * In case the StatementImportRow was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StatementImportRowUpdateInput, StatementImportRowUncheckedUpdateInput>
+  }
+
+  /**
+   * StatementImportRow delete
+   */
+  export type StatementImportRowDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+    /**
+     * Filter which StatementImportRow to delete.
+     */
+    where: StatementImportRowWhereUniqueInput
+  }
+
+  /**
+   * StatementImportRow deleteMany
+   */
+  export type StatementImportRowDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StatementImportRows to delete
+     */
+    where?: StatementImportRowWhereInput
+    /**
+     * Limit how many StatementImportRows to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StatementImportRow without action
+   */
+  export type StatementImportRowDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatementImportRow
+     */
+    select?: StatementImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatementImportRow
+     */
+    omit?: StatementImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatementImportRowInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model GeneratedReport
    */
 
@@ -10044,6 +12652,40 @@ export namespace Prisma {
   export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
+  export const StatementImportScalarFieldEnum: {
+    id: 'id',
+    fileName: 'fileName',
+    uploadedBy: 'uploadedBy',
+    uploadedAt: 'uploadedAt',
+    headers: 'headers',
+    totalRows: 'totalRows',
+    totalAmount: 'totalAmount',
+    summary: 'summary',
+    columnMapping: 'columnMapping'
+  };
+
+  export type StatementImportScalarFieldEnum = (typeof StatementImportScalarFieldEnum)[keyof typeof StatementImportScalarFieldEnum]
+
+
+  export const StatementImportRowScalarFieldEnum: {
+    id: 'id',
+    importId: 'importId',
+    rowNumber: 'rowNumber',
+    rawData: 'rawData',
+    reference: 'reference',
+    payerName: 'payerName',
+    description: 'description',
+    amount: 'amount',
+    transactionDate: 'transactionDate',
+    matchState: 'matchState',
+    suggestions: 'suggestions',
+    resolvedPaymentId: 'resolvedPaymentId',
+    reconciledAt: 'reconciledAt'
+  };
+
+  export type StatementImportRowScalarFieldEnum = (typeof StatementImportRowScalarFieldEnum)[keyof typeof StatementImportRowScalarFieldEnum]
+
+
   export const GeneratedReportScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -10270,6 +12912,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -10284,16 +12940,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
+   * Reference to a field of type 'Float'
    */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
   /**
-   * Reference to a field of type 'Int[]'
+   * Reference to a field of type 'Float[]'
    */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -10320,6 +12976,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentListRelationFilter
     reviewedPayments?: PaymentListRelationFilter
     reconciledPayments?: PaymentListRelationFilter
+    statementImports?: StatementImportListRelationFilter
     generatedReports?: GeneratedReportListRelationFilter
     notifications?: NotificationListRelationFilter
   }
@@ -10341,6 +12998,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentOrderByRelationAggregateInput
     reviewedPayments?: PaymentOrderByRelationAggregateInput
     reconciledPayments?: PaymentOrderByRelationAggregateInput
+    statementImports?: StatementImportOrderByRelationAggregateInput
     generatedReports?: GeneratedReportOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
   }
@@ -10365,6 +13023,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentListRelationFilter
     reviewedPayments?: PaymentListRelationFilter
     reconciledPayments?: PaymentListRelationFilter
+    statementImports?: StatementImportListRelationFilter
     generatedReports?: GeneratedReportListRelationFilter
     notifications?: NotificationListRelationFilter
   }, "id" | "email">
@@ -10795,6 +13454,183 @@ export namespace Prisma {
     semester?: StringNullableWithAggregatesFilter<"Payment"> | string | null
   }
 
+  export type StatementImportWhereInput = {
+    AND?: StatementImportWhereInput | StatementImportWhereInput[]
+    OR?: StatementImportWhereInput[]
+    NOT?: StatementImportWhereInput | StatementImportWhereInput[]
+    id?: StringFilter<"StatementImport"> | string
+    fileName?: StringFilter<"StatementImport"> | string
+    uploadedBy?: StringFilter<"StatementImport"> | string
+    uploadedAt?: DateTimeFilter<"StatementImport"> | Date | string
+    headers?: StringNullableListFilter<"StatementImport">
+    totalRows?: IntFilter<"StatementImport"> | number
+    totalAmount?: DecimalFilter<"StatementImport"> | Decimal | DecimalJsLike | number | string
+    summary?: JsonFilter<"StatementImport">
+    columnMapping?: JsonNullableFilter<"StatementImport">
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    rows?: StatementImportRowListRelationFilter
+  }
+
+  export type StatementImportOrderByWithRelationInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    uploadedAt?: SortOrder
+    headers?: SortOrder
+    totalRows?: SortOrder
+    totalAmount?: SortOrder
+    summary?: SortOrder
+    columnMapping?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    rows?: StatementImportRowOrderByRelationAggregateInput
+  }
+
+  export type StatementImportWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StatementImportWhereInput | StatementImportWhereInput[]
+    OR?: StatementImportWhereInput[]
+    NOT?: StatementImportWhereInput | StatementImportWhereInput[]
+    fileName?: StringFilter<"StatementImport"> | string
+    uploadedBy?: StringFilter<"StatementImport"> | string
+    uploadedAt?: DateTimeFilter<"StatementImport"> | Date | string
+    headers?: StringNullableListFilter<"StatementImport">
+    totalRows?: IntFilter<"StatementImport"> | number
+    totalAmount?: DecimalFilter<"StatementImport"> | Decimal | DecimalJsLike | number | string
+    summary?: JsonFilter<"StatementImport">
+    columnMapping?: JsonNullableFilter<"StatementImport">
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    rows?: StatementImportRowListRelationFilter
+  }, "id">
+
+  export type StatementImportOrderByWithAggregationInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    uploadedAt?: SortOrder
+    headers?: SortOrder
+    totalRows?: SortOrder
+    totalAmount?: SortOrder
+    summary?: SortOrder
+    columnMapping?: SortOrderInput | SortOrder
+    _count?: StatementImportCountOrderByAggregateInput
+    _avg?: StatementImportAvgOrderByAggregateInput
+    _max?: StatementImportMaxOrderByAggregateInput
+    _min?: StatementImportMinOrderByAggregateInput
+    _sum?: StatementImportSumOrderByAggregateInput
+  }
+
+  export type StatementImportScalarWhereWithAggregatesInput = {
+    AND?: StatementImportScalarWhereWithAggregatesInput | StatementImportScalarWhereWithAggregatesInput[]
+    OR?: StatementImportScalarWhereWithAggregatesInput[]
+    NOT?: StatementImportScalarWhereWithAggregatesInput | StatementImportScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StatementImport"> | string
+    fileName?: StringWithAggregatesFilter<"StatementImport"> | string
+    uploadedBy?: StringWithAggregatesFilter<"StatementImport"> | string
+    uploadedAt?: DateTimeWithAggregatesFilter<"StatementImport"> | Date | string
+    headers?: StringNullableListFilter<"StatementImport">
+    totalRows?: IntWithAggregatesFilter<"StatementImport"> | number
+    totalAmount?: DecimalWithAggregatesFilter<"StatementImport"> | Decimal | DecimalJsLike | number | string
+    summary?: JsonWithAggregatesFilter<"StatementImport">
+    columnMapping?: JsonNullableWithAggregatesFilter<"StatementImport">
+  }
+
+  export type StatementImportRowWhereInput = {
+    AND?: StatementImportRowWhereInput | StatementImportRowWhereInput[]
+    OR?: StatementImportRowWhereInput[]
+    NOT?: StatementImportRowWhereInput | StatementImportRowWhereInput[]
+    id?: StringFilter<"StatementImportRow"> | string
+    importId?: StringFilter<"StatementImportRow"> | string
+    rowNumber?: IntFilter<"StatementImportRow"> | number
+    rawData?: JsonFilter<"StatementImportRow">
+    reference?: StringNullableFilter<"StatementImportRow"> | string | null
+    payerName?: StringNullableFilter<"StatementImportRow"> | string | null
+    description?: StringNullableFilter<"StatementImportRow"> | string | null
+    amount?: DecimalNullableFilter<"StatementImportRow"> | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: DateTimeNullableFilter<"StatementImportRow"> | Date | string | null
+    matchState?: StringFilter<"StatementImportRow"> | string
+    suggestions?: JsonFilter<"StatementImportRow">
+    resolvedPaymentId?: StringNullableFilter<"StatementImportRow"> | string | null
+    reconciledAt?: DateTimeNullableFilter<"StatementImportRow"> | Date | string | null
+    statementImport?: XOR<StatementImportScalarRelationFilter, StatementImportWhereInput>
+  }
+
+  export type StatementImportRowOrderByWithRelationInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    rowNumber?: SortOrder
+    rawData?: SortOrder
+    reference?: SortOrderInput | SortOrder
+    payerName?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    transactionDate?: SortOrderInput | SortOrder
+    matchState?: SortOrder
+    suggestions?: SortOrder
+    resolvedPaymentId?: SortOrderInput | SortOrder
+    reconciledAt?: SortOrderInput | SortOrder
+    statementImport?: StatementImportOrderByWithRelationInput
+  }
+
+  export type StatementImportRowWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StatementImportRowWhereInput | StatementImportRowWhereInput[]
+    OR?: StatementImportRowWhereInput[]
+    NOT?: StatementImportRowWhereInput | StatementImportRowWhereInput[]
+    importId?: StringFilter<"StatementImportRow"> | string
+    rowNumber?: IntFilter<"StatementImportRow"> | number
+    rawData?: JsonFilter<"StatementImportRow">
+    reference?: StringNullableFilter<"StatementImportRow"> | string | null
+    payerName?: StringNullableFilter<"StatementImportRow"> | string | null
+    description?: StringNullableFilter<"StatementImportRow"> | string | null
+    amount?: DecimalNullableFilter<"StatementImportRow"> | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: DateTimeNullableFilter<"StatementImportRow"> | Date | string | null
+    matchState?: StringFilter<"StatementImportRow"> | string
+    suggestions?: JsonFilter<"StatementImportRow">
+    resolvedPaymentId?: StringNullableFilter<"StatementImportRow"> | string | null
+    reconciledAt?: DateTimeNullableFilter<"StatementImportRow"> | Date | string | null
+    statementImport?: XOR<StatementImportScalarRelationFilter, StatementImportWhereInput>
+  }, "id">
+
+  export type StatementImportRowOrderByWithAggregationInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    rowNumber?: SortOrder
+    rawData?: SortOrder
+    reference?: SortOrderInput | SortOrder
+    payerName?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    transactionDate?: SortOrderInput | SortOrder
+    matchState?: SortOrder
+    suggestions?: SortOrder
+    resolvedPaymentId?: SortOrderInput | SortOrder
+    reconciledAt?: SortOrderInput | SortOrder
+    _count?: StatementImportRowCountOrderByAggregateInput
+    _avg?: StatementImportRowAvgOrderByAggregateInput
+    _max?: StatementImportRowMaxOrderByAggregateInput
+    _min?: StatementImportRowMinOrderByAggregateInput
+    _sum?: StatementImportRowSumOrderByAggregateInput
+  }
+
+  export type StatementImportRowScalarWhereWithAggregatesInput = {
+    AND?: StatementImportRowScalarWhereWithAggregatesInput | StatementImportRowScalarWhereWithAggregatesInput[]
+    OR?: StatementImportRowScalarWhereWithAggregatesInput[]
+    NOT?: StatementImportRowScalarWhereWithAggregatesInput | StatementImportRowScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StatementImportRow"> | string
+    importId?: StringWithAggregatesFilter<"StatementImportRow"> | string
+    rowNumber?: IntWithAggregatesFilter<"StatementImportRow"> | number
+    rawData?: JsonWithAggregatesFilter<"StatementImportRow">
+    reference?: StringNullableWithAggregatesFilter<"StatementImportRow"> | string | null
+    payerName?: StringNullableWithAggregatesFilter<"StatementImportRow"> | string | null
+    description?: StringNullableWithAggregatesFilter<"StatementImportRow"> | string | null
+    amount?: DecimalNullableWithAggregatesFilter<"StatementImportRow"> | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: DateTimeNullableWithAggregatesFilter<"StatementImportRow"> | Date | string | null
+    matchState?: StringWithAggregatesFilter<"StatementImportRow"> | string
+    suggestions?: JsonWithAggregatesFilter<"StatementImportRow">
+    resolvedPaymentId?: StringNullableWithAggregatesFilter<"StatementImportRow"> | string | null
+    reconciledAt?: DateTimeNullableWithAggregatesFilter<"StatementImportRow"> | Date | string | null
+  }
+
   export type GeneratedReportWhereInput = {
     AND?: GeneratedReportWhereInput | GeneratedReportWhereInput[]
     OR?: GeneratedReportWhereInput[]
@@ -11004,6 +13840,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -11025,6 +13862,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -11046,6 +13884,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -11067,6 +13906,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -11577,6 +14417,204 @@ export namespace Prisma {
     semester?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type StatementImportCreateInput = {
+    id?: string
+    fileName: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutStatementImportsInput
+    rows?: StatementImportRowCreateNestedManyWithoutStatementImportInput
+  }
+
+  export type StatementImportUncheckedCreateInput = {
+    id?: string
+    fileName: string
+    uploadedBy: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    rows?: StatementImportRowUncheckedCreateNestedManyWithoutStatementImportInput
+  }
+
+  export type StatementImportUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutStatementImportsNestedInput
+    rows?: StatementImportRowUpdateManyWithoutStatementImportNestedInput
+  }
+
+  export type StatementImportUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    rows?: StatementImportRowUncheckedUpdateManyWithoutStatementImportNestedInput
+  }
+
+  export type StatementImportCreateManyInput = {
+    id?: string
+    fileName: string
+    uploadedBy: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type StatementImportUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type StatementImportUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type StatementImportRowCreateInput = {
+    id?: string
+    rowNumber: number
+    rawData: JsonNullValueInput | InputJsonValue
+    reference?: string | null
+    payerName?: string | null
+    description?: string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+    transactionDate?: Date | string | null
+    matchState: string
+    suggestions: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: string | null
+    reconciledAt?: Date | string | null
+    statementImport: StatementImportCreateNestedOneWithoutRowsInput
+  }
+
+  export type StatementImportRowUncheckedCreateInput = {
+    id?: string
+    importId: string
+    rowNumber: number
+    rawData: JsonNullValueInput | InputJsonValue
+    reference?: string | null
+    payerName?: string | null
+    description?: string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+    transactionDate?: Date | string | null
+    matchState: string
+    suggestions: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: string | null
+    reconciledAt?: Date | string | null
+  }
+
+  export type StatementImportRowUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    rawData?: JsonNullValueInput | InputJsonValue
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    matchState?: StringFieldUpdateOperationsInput | string
+    suggestions?: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statementImport?: StatementImportUpdateOneRequiredWithoutRowsNestedInput
+  }
+
+  export type StatementImportRowUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    rawData?: JsonNullValueInput | InputJsonValue
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    matchState?: StringFieldUpdateOperationsInput | string
+    suggestions?: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StatementImportRowCreateManyInput = {
+    id?: string
+    importId: string
+    rowNumber: number
+    rawData: JsonNullValueInput | InputJsonValue
+    reference?: string | null
+    payerName?: string | null
+    description?: string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+    transactionDate?: Date | string | null
+    matchState: string
+    suggestions: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: string | null
+    reconciledAt?: Date | string | null
+  }
+
+  export type StatementImportRowUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    rawData?: JsonNullValueInput | InputJsonValue
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    matchState?: StringFieldUpdateOperationsInput | string
+    suggestions?: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StatementImportRowUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    rawData?: JsonNullValueInput | InputJsonValue
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    matchState?: StringFieldUpdateOperationsInput | string
+    suggestions?: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type GeneratedReportCreateInput = {
     id?: string
     title: string
@@ -11862,6 +14900,12 @@ export namespace Prisma {
     none?: PaymentWhereInput
   }
 
+  export type StatementImportListRelationFilter = {
+    every?: StatementImportWhereInput
+    some?: StatementImportWhereInput
+    none?: StatementImportWhereInput
+  }
+
   export type GeneratedReportListRelationFilter = {
     every?: GeneratedReportWhereInput
     some?: GeneratedReportWhereInput
@@ -11880,6 +14924,10 @@ export namespace Prisma {
   }
 
   export type PaymentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StatementImportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12393,6 +15441,25 @@ export namespace Prisma {
     _min?: NestedEnumReconciliationStatusFilter<$PrismaModel>
     _max?: NestedEnumReconciliationStatusFilter<$PrismaModel>
   }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -12440,30 +15507,70 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type GeneratedReportCountOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    reportType?: SortOrder
-    filters?: SortOrder
-    data?: SortOrder
-    generatedBy?: SortOrder
-    createdAt?: SortOrder
+  export type StatementImportRowListRelationFilter = {
+    every?: StatementImportRowWhereInput
+    some?: StatementImportRowWhereInput
+    none?: StatementImportRowWhereInput
   }
 
-  export type GeneratedReportMaxOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    reportType?: SortOrder
-    generatedBy?: SortOrder
-    createdAt?: SortOrder
+  export type StatementImportRowOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
-  export type GeneratedReportMinOrderByAggregateInput = {
+  export type StatementImportCountOrderByAggregateInput = {
     id?: SortOrder
-    title?: SortOrder
-    reportType?: SortOrder
-    generatedBy?: SortOrder
-    createdAt?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    uploadedAt?: SortOrder
+    headers?: SortOrder
+    totalRows?: SortOrder
+    totalAmount?: SortOrder
+    summary?: SortOrder
+    columnMapping?: SortOrder
+  }
+
+  export type StatementImportAvgOrderByAggregateInput = {
+    totalRows?: SortOrder
+    totalAmount?: SortOrder
+  }
+
+  export type StatementImportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    uploadedAt?: SortOrder
+    totalRows?: SortOrder
+    totalAmount?: SortOrder
+  }
+
+  export type StatementImportMinOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    uploadedAt?: SortOrder
+    totalRows?: SortOrder
+    totalAmount?: SortOrder
+  }
+
+  export type StatementImportSumOrderByAggregateInput = {
+    totalRows?: SortOrder
+    totalAmount?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -12516,6 +15623,91 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type StatementImportScalarRelationFilter = {
+    is?: StatementImportWhereInput
+    isNot?: StatementImportWhereInput
+  }
+
+  export type StatementImportRowCountOrderByAggregateInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    rowNumber?: SortOrder
+    rawData?: SortOrder
+    reference?: SortOrder
+    payerName?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    matchState?: SortOrder
+    suggestions?: SortOrder
+    resolvedPaymentId?: SortOrder
+    reconciledAt?: SortOrder
+  }
+
+  export type StatementImportRowAvgOrderByAggregateInput = {
+    rowNumber?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type StatementImportRowMaxOrderByAggregateInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    rowNumber?: SortOrder
+    reference?: SortOrder
+    payerName?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    matchState?: SortOrder
+    resolvedPaymentId?: SortOrder
+    reconciledAt?: SortOrder
+  }
+
+  export type StatementImportRowMinOrderByAggregateInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    rowNumber?: SortOrder
+    reference?: SortOrder
+    payerName?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    matchState?: SortOrder
+    resolvedPaymentId?: SortOrder
+    reconciledAt?: SortOrder
+  }
+
+  export type StatementImportRowSumOrderByAggregateInput = {
+    rowNumber?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type GeneratedReportCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    reportType?: SortOrder
+    filters?: SortOrder
+    data?: SortOrder
+    generatedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GeneratedReportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    reportType?: SortOrder
+    generatedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GeneratedReportMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    reportType?: SortOrder
+    generatedBy?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type NotificationCountOrderByAggregateInput = {
@@ -12605,6 +15797,13 @@ export namespace Prisma {
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
+  export type StatementImportCreateNestedManyWithoutUserInput = {
+    create?: XOR<StatementImportCreateWithoutUserInput, StatementImportUncheckedCreateWithoutUserInput> | StatementImportCreateWithoutUserInput[] | StatementImportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StatementImportCreateOrConnectWithoutUserInput | StatementImportCreateOrConnectWithoutUserInput[]
+    createMany?: StatementImportCreateManyUserInputEnvelope
+    connect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+  }
+
   export type GeneratedReportCreateNestedManyWithoutUserInput = {
     create?: XOR<GeneratedReportCreateWithoutUserInput, GeneratedReportUncheckedCreateWithoutUserInput> | GeneratedReportCreateWithoutUserInput[] | GeneratedReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: GeneratedReportCreateOrConnectWithoutUserInput | GeneratedReportCreateOrConnectWithoutUserInput[]
@@ -12644,6 +15843,13 @@ export namespace Prisma {
     connectOrCreate?: PaymentCreateOrConnectWithoutReconcilerInput | PaymentCreateOrConnectWithoutReconcilerInput[]
     createMany?: PaymentCreateManyReconcilerInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type StatementImportUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<StatementImportCreateWithoutUserInput, StatementImportUncheckedCreateWithoutUserInput> | StatementImportCreateWithoutUserInput[] | StatementImportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StatementImportCreateOrConnectWithoutUserInput | StatementImportCreateOrConnectWithoutUserInput[]
+    createMany?: StatementImportCreateManyUserInputEnvelope
+    connect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
   }
 
   export type GeneratedReportUncheckedCreateNestedManyWithoutUserInput = {
@@ -12736,6 +15942,20 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
+  export type StatementImportUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StatementImportCreateWithoutUserInput, StatementImportUncheckedCreateWithoutUserInput> | StatementImportCreateWithoutUserInput[] | StatementImportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StatementImportCreateOrConnectWithoutUserInput | StatementImportCreateOrConnectWithoutUserInput[]
+    upsert?: StatementImportUpsertWithWhereUniqueWithoutUserInput | StatementImportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StatementImportCreateManyUserInputEnvelope
+    set?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    disconnect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    delete?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    connect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    update?: StatementImportUpdateWithWhereUniqueWithoutUserInput | StatementImportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StatementImportUpdateManyWithWhereWithoutUserInput | StatementImportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StatementImportScalarWhereInput | StatementImportScalarWhereInput[]
+  }
+
   export type GeneratedReportUpdateManyWithoutUserNestedInput = {
     create?: XOR<GeneratedReportCreateWithoutUserInput, GeneratedReportUncheckedCreateWithoutUserInput> | GeneratedReportCreateWithoutUserInput[] | GeneratedReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: GeneratedReportCreateOrConnectWithoutUserInput | GeneratedReportCreateOrConnectWithoutUserInput[]
@@ -12814,6 +16034,20 @@ export namespace Prisma {
     update?: PaymentUpdateWithWhereUniqueWithoutReconcilerInput | PaymentUpdateWithWhereUniqueWithoutReconcilerInput[]
     updateMany?: PaymentUpdateManyWithWhereWithoutReconcilerInput | PaymentUpdateManyWithWhereWithoutReconcilerInput[]
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
+  export type StatementImportUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StatementImportCreateWithoutUserInput, StatementImportUncheckedCreateWithoutUserInput> | StatementImportCreateWithoutUserInput[] | StatementImportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StatementImportCreateOrConnectWithoutUserInput | StatementImportCreateOrConnectWithoutUserInput[]
+    upsert?: StatementImportUpsertWithWhereUniqueWithoutUserInput | StatementImportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StatementImportCreateManyUserInputEnvelope
+    set?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    disconnect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    delete?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    connect?: StatementImportWhereUniqueInput | StatementImportWhereUniqueInput[]
+    update?: StatementImportUpdateWithWhereUniqueWithoutUserInput | StatementImportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StatementImportUpdateManyWithWhereWithoutUserInput | StatementImportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StatementImportScalarWhereInput | StatementImportScalarWhereInput[]
   }
 
   export type GeneratedReportUncheckedUpdateManyWithoutUserNestedInput = {
@@ -12996,6 +16230,93 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewedPaymentsInput, UserUpdateWithoutReviewedPaymentsInput>, UserUncheckedUpdateWithoutReviewedPaymentsInput>
+  }
+
+  export type StatementImportCreateheadersInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutStatementImportsInput = {
+    create?: XOR<UserCreateWithoutStatementImportsInput, UserUncheckedCreateWithoutStatementImportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStatementImportsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type StatementImportRowCreateNestedManyWithoutStatementImportInput = {
+    create?: XOR<StatementImportRowCreateWithoutStatementImportInput, StatementImportRowUncheckedCreateWithoutStatementImportInput> | StatementImportRowCreateWithoutStatementImportInput[] | StatementImportRowUncheckedCreateWithoutStatementImportInput[]
+    connectOrCreate?: StatementImportRowCreateOrConnectWithoutStatementImportInput | StatementImportRowCreateOrConnectWithoutStatementImportInput[]
+    createMany?: StatementImportRowCreateManyStatementImportInputEnvelope
+    connect?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+  }
+
+  export type StatementImportRowUncheckedCreateNestedManyWithoutStatementImportInput = {
+    create?: XOR<StatementImportRowCreateWithoutStatementImportInput, StatementImportRowUncheckedCreateWithoutStatementImportInput> | StatementImportRowCreateWithoutStatementImportInput[] | StatementImportRowUncheckedCreateWithoutStatementImportInput[]
+    connectOrCreate?: StatementImportRowCreateOrConnectWithoutStatementImportInput | StatementImportRowCreateOrConnectWithoutStatementImportInput[]
+    createMany?: StatementImportRowCreateManyStatementImportInputEnvelope
+    connect?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+  }
+
+  export type StatementImportUpdateheadersInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutStatementImportsNestedInput = {
+    create?: XOR<UserCreateWithoutStatementImportsInput, UserUncheckedCreateWithoutStatementImportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStatementImportsInput
+    upsert?: UserUpsertWithoutStatementImportsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStatementImportsInput, UserUpdateWithoutStatementImportsInput>, UserUncheckedUpdateWithoutStatementImportsInput>
+  }
+
+  export type StatementImportRowUpdateManyWithoutStatementImportNestedInput = {
+    create?: XOR<StatementImportRowCreateWithoutStatementImportInput, StatementImportRowUncheckedCreateWithoutStatementImportInput> | StatementImportRowCreateWithoutStatementImportInput[] | StatementImportRowUncheckedCreateWithoutStatementImportInput[]
+    connectOrCreate?: StatementImportRowCreateOrConnectWithoutStatementImportInput | StatementImportRowCreateOrConnectWithoutStatementImportInput[]
+    upsert?: StatementImportRowUpsertWithWhereUniqueWithoutStatementImportInput | StatementImportRowUpsertWithWhereUniqueWithoutStatementImportInput[]
+    createMany?: StatementImportRowCreateManyStatementImportInputEnvelope
+    set?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    disconnect?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    delete?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    connect?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    update?: StatementImportRowUpdateWithWhereUniqueWithoutStatementImportInput | StatementImportRowUpdateWithWhereUniqueWithoutStatementImportInput[]
+    updateMany?: StatementImportRowUpdateManyWithWhereWithoutStatementImportInput | StatementImportRowUpdateManyWithWhereWithoutStatementImportInput[]
+    deleteMany?: StatementImportRowScalarWhereInput | StatementImportRowScalarWhereInput[]
+  }
+
+  export type StatementImportRowUncheckedUpdateManyWithoutStatementImportNestedInput = {
+    create?: XOR<StatementImportRowCreateWithoutStatementImportInput, StatementImportRowUncheckedCreateWithoutStatementImportInput> | StatementImportRowCreateWithoutStatementImportInput[] | StatementImportRowUncheckedCreateWithoutStatementImportInput[]
+    connectOrCreate?: StatementImportRowCreateOrConnectWithoutStatementImportInput | StatementImportRowCreateOrConnectWithoutStatementImportInput[]
+    upsert?: StatementImportRowUpsertWithWhereUniqueWithoutStatementImportInput | StatementImportRowUpsertWithWhereUniqueWithoutStatementImportInput[]
+    createMany?: StatementImportRowCreateManyStatementImportInputEnvelope
+    set?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    disconnect?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    delete?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    connect?: StatementImportRowWhereUniqueInput | StatementImportRowWhereUniqueInput[]
+    update?: StatementImportRowUpdateWithWhereUniqueWithoutStatementImportInput | StatementImportRowUpdateWithWhereUniqueWithoutStatementImportInput[]
+    updateMany?: StatementImportRowUpdateManyWithWhereWithoutStatementImportInput | StatementImportRowUpdateManyWithWhereWithoutStatementImportInput[]
+    deleteMany?: StatementImportRowScalarWhereInput | StatementImportRowScalarWhereInput[]
+  }
+
+  export type StatementImportCreateNestedOneWithoutRowsInput = {
+    create?: XOR<StatementImportCreateWithoutRowsInput, StatementImportUncheckedCreateWithoutRowsInput>
+    connectOrCreate?: StatementImportCreateOrConnectWithoutRowsInput
+    connect?: StatementImportWhereUniqueInput
+  }
+
+  export type StatementImportUpdateOneRequiredWithoutRowsNestedInput = {
+    create?: XOR<StatementImportCreateWithoutRowsInput, StatementImportUncheckedCreateWithoutRowsInput>
+    connectOrCreate?: StatementImportCreateOrConnectWithoutRowsInput
+    upsert?: StatementImportUpsertWithoutRowsInput
+    connect?: StatementImportWhereUniqueInput
+    update?: XOR<XOR<StatementImportUpdateToOneWithWhereWithoutRowsInput, StatementImportUpdateWithoutRowsInput>, StatementImportUncheckedUpdateWithoutRowsInput>
   }
 
   export type UserCreateNestedOneWithoutGeneratedReportsInput = {
@@ -13328,6 +16649,33 @@ export namespace Prisma {
     _min?: NestedEnumReconciliationStatusFilter<$PrismaModel>
     _max?: NestedEnumReconciliationStatusFilter<$PrismaModel>
   }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -13642,6 +16990,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StatementImportCreateWithoutUserInput = {
+    id?: string
+    fileName: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    rows?: StatementImportRowCreateNestedManyWithoutStatementImportInput
+  }
+
+  export type StatementImportUncheckedCreateWithoutUserInput = {
+    id?: string
+    fileName: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    rows?: StatementImportRowUncheckedCreateNestedManyWithoutStatementImportInput
+  }
+
+  export type StatementImportCreateOrConnectWithoutUserInput = {
+    where: StatementImportWhereUniqueInput
+    create: XOR<StatementImportCreateWithoutUserInput, StatementImportUncheckedCreateWithoutUserInput>
+  }
+
+  export type StatementImportCreateManyUserInputEnvelope = {
+    data: StatementImportCreateManyUserInput | StatementImportCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type GeneratedReportCreateWithoutUserInput = {
     id?: string
     title: string
@@ -13828,6 +17210,37 @@ export namespace Prisma {
     data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutReconcilerInput>
   }
 
+  export type StatementImportUpsertWithWhereUniqueWithoutUserInput = {
+    where: StatementImportWhereUniqueInput
+    update: XOR<StatementImportUpdateWithoutUserInput, StatementImportUncheckedUpdateWithoutUserInput>
+    create: XOR<StatementImportCreateWithoutUserInput, StatementImportUncheckedCreateWithoutUserInput>
+  }
+
+  export type StatementImportUpdateWithWhereUniqueWithoutUserInput = {
+    where: StatementImportWhereUniqueInput
+    data: XOR<StatementImportUpdateWithoutUserInput, StatementImportUncheckedUpdateWithoutUserInput>
+  }
+
+  export type StatementImportUpdateManyWithWhereWithoutUserInput = {
+    where: StatementImportScalarWhereInput
+    data: XOR<StatementImportUpdateManyMutationInput, StatementImportUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type StatementImportScalarWhereInput = {
+    AND?: StatementImportScalarWhereInput | StatementImportScalarWhereInput[]
+    OR?: StatementImportScalarWhereInput[]
+    NOT?: StatementImportScalarWhereInput | StatementImportScalarWhereInput[]
+    id?: StringFilter<"StatementImport"> | string
+    fileName?: StringFilter<"StatementImport"> | string
+    uploadedBy?: StringFilter<"StatementImport"> | string
+    uploadedAt?: DateTimeFilter<"StatementImport"> | Date | string
+    headers?: StringNullableListFilter<"StatementImport">
+    totalRows?: IntFilter<"StatementImport"> | number
+    totalAmount?: DecimalFilter<"StatementImport"> | Decimal | DecimalJsLike | number | string
+    summary?: JsonFilter<"StatementImport">
+    columnMapping?: JsonNullableFilter<"StatementImport">
+  }
+
   export type GeneratedReportUpsertWithWhereUniqueWithoutUserInput = {
     where: GeneratedReportWhereUniqueInput
     update: XOR<GeneratedReportUpdateWithoutUserInput, GeneratedReportUncheckedUpdateWithoutUserInput>
@@ -13902,6 +17315,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -13922,6 +17336,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -14034,6 +17449,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -14054,6 +17470,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -14129,6 +17546,7 @@ export namespace Prisma {
     student?: StudentCreateNestedOneWithoutUserInput
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -14149,6 +17567,7 @@ export namespace Prisma {
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -14174,6 +17593,7 @@ export namespace Prisma {
     student?: StudentCreateNestedOneWithoutUserInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -14194,6 +17614,7 @@ export namespace Prisma {
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -14219,6 +17640,7 @@ export namespace Prisma {
     student?: StudentCreateNestedOneWithoutUserInput
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
@@ -14239,6 +17661,7 @@ export namespace Prisma {
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
@@ -14320,6 +17743,7 @@ export namespace Prisma {
     student?: StudentUpdateOneWithoutUserNestedInput
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -14340,6 +17764,7 @@ export namespace Prisma {
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -14371,6 +17796,7 @@ export namespace Prisma {
     student?: StudentUpdateOneWithoutUserNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -14391,6 +17817,7 @@ export namespace Prisma {
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -14422,6 +17849,7 @@ export namespace Prisma {
     student?: StudentUpdateOneWithoutUserNestedInput
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
@@ -14442,8 +17870,248 @@ export namespace Prisma {
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutStatementImportsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName?: string | null
+    lastName?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
+    profilePictureUrl?: string | null
+    currentSessionId?: string | null
+    sessionExpires?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student?: StudentCreateNestedOneWithoutUserInput
+    verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
+    reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
+    reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutStatementImportsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName?: string | null
+    lastName?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
+    profilePictureUrl?: string | null
+    currentSessionId?: string | null
+    sessionExpires?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student?: StudentUncheckedCreateNestedOneWithoutUserInput
+    verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
+    reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
+    reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutStatementImportsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStatementImportsInput, UserUncheckedCreateWithoutStatementImportsInput>
+  }
+
+  export type StatementImportRowCreateWithoutStatementImportInput = {
+    id?: string
+    rowNumber: number
+    rawData: JsonNullValueInput | InputJsonValue
+    reference?: string | null
+    payerName?: string | null
+    description?: string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+    transactionDate?: Date | string | null
+    matchState: string
+    suggestions: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: string | null
+    reconciledAt?: Date | string | null
+  }
+
+  export type StatementImportRowUncheckedCreateWithoutStatementImportInput = {
+    id?: string
+    rowNumber: number
+    rawData: JsonNullValueInput | InputJsonValue
+    reference?: string | null
+    payerName?: string | null
+    description?: string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+    transactionDate?: Date | string | null
+    matchState: string
+    suggestions: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: string | null
+    reconciledAt?: Date | string | null
+  }
+
+  export type StatementImportRowCreateOrConnectWithoutStatementImportInput = {
+    where: StatementImportRowWhereUniqueInput
+    create: XOR<StatementImportRowCreateWithoutStatementImportInput, StatementImportRowUncheckedCreateWithoutStatementImportInput>
+  }
+
+  export type StatementImportRowCreateManyStatementImportInputEnvelope = {
+    data: StatementImportRowCreateManyStatementImportInput | StatementImportRowCreateManyStatementImportInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutStatementImportsInput = {
+    update: XOR<UserUpdateWithoutStatementImportsInput, UserUncheckedUpdateWithoutStatementImportsInput>
+    create: XOR<UserCreateWithoutStatementImportsInput, UserUncheckedCreateWithoutStatementImportsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStatementImportsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStatementImportsInput, UserUncheckedUpdateWithoutStatementImportsInput>
+  }
+
+  export type UserUpdateWithoutStatementImportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUpdateOneWithoutUserNestedInput
+    verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
+    reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
+    reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStatementImportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUncheckedUpdateOneWithoutUserNestedInput
+    verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
+    reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
+    reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type StatementImportRowUpsertWithWhereUniqueWithoutStatementImportInput = {
+    where: StatementImportRowWhereUniqueInput
+    update: XOR<StatementImportRowUpdateWithoutStatementImportInput, StatementImportRowUncheckedUpdateWithoutStatementImportInput>
+    create: XOR<StatementImportRowCreateWithoutStatementImportInput, StatementImportRowUncheckedCreateWithoutStatementImportInput>
+  }
+
+  export type StatementImportRowUpdateWithWhereUniqueWithoutStatementImportInput = {
+    where: StatementImportRowWhereUniqueInput
+    data: XOR<StatementImportRowUpdateWithoutStatementImportInput, StatementImportRowUncheckedUpdateWithoutStatementImportInput>
+  }
+
+  export type StatementImportRowUpdateManyWithWhereWithoutStatementImportInput = {
+    where: StatementImportRowScalarWhereInput
+    data: XOR<StatementImportRowUpdateManyMutationInput, StatementImportRowUncheckedUpdateManyWithoutStatementImportInput>
+  }
+
+  export type StatementImportRowScalarWhereInput = {
+    AND?: StatementImportRowScalarWhereInput | StatementImportRowScalarWhereInput[]
+    OR?: StatementImportRowScalarWhereInput[]
+    NOT?: StatementImportRowScalarWhereInput | StatementImportRowScalarWhereInput[]
+    id?: StringFilter<"StatementImportRow"> | string
+    importId?: StringFilter<"StatementImportRow"> | string
+    rowNumber?: IntFilter<"StatementImportRow"> | number
+    rawData?: JsonFilter<"StatementImportRow">
+    reference?: StringNullableFilter<"StatementImportRow"> | string | null
+    payerName?: StringNullableFilter<"StatementImportRow"> | string | null
+    description?: StringNullableFilter<"StatementImportRow"> | string | null
+    amount?: DecimalNullableFilter<"StatementImportRow"> | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: DateTimeNullableFilter<"StatementImportRow"> | Date | string | null
+    matchState?: StringFilter<"StatementImportRow"> | string
+    suggestions?: JsonFilter<"StatementImportRow">
+    resolvedPaymentId?: StringNullableFilter<"StatementImportRow"> | string | null
+    reconciledAt?: DateTimeNullableFilter<"StatementImportRow"> | Date | string | null
+  }
+
+  export type StatementImportCreateWithoutRowsInput = {
+    id?: string
+    fileName: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutStatementImportsInput
+  }
+
+  export type StatementImportUncheckedCreateWithoutRowsInput = {
+    id?: string
+    fileName: string
+    uploadedBy: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type StatementImportCreateOrConnectWithoutRowsInput = {
+    where: StatementImportWhereUniqueInput
+    create: XOR<StatementImportCreateWithoutRowsInput, StatementImportUncheckedCreateWithoutRowsInput>
+  }
+
+  export type StatementImportUpsertWithoutRowsInput = {
+    update: XOR<StatementImportUpdateWithoutRowsInput, StatementImportUncheckedUpdateWithoutRowsInput>
+    create: XOR<StatementImportCreateWithoutRowsInput, StatementImportUncheckedCreateWithoutRowsInput>
+    where?: StatementImportWhereInput
+  }
+
+  export type StatementImportUpdateToOneWithWhereWithoutRowsInput = {
+    where?: StatementImportWhereInput
+    data: XOR<StatementImportUpdateWithoutRowsInput, StatementImportUncheckedUpdateWithoutRowsInput>
+  }
+
+  export type StatementImportUpdateWithoutRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutStatementImportsNestedInput
+  }
+
+  export type StatementImportUncheckedUpdateWithoutRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserCreateWithoutGeneratedReportsInput = {
@@ -14463,6 +18131,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
@@ -14483,6 +18152,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -14519,6 +18189,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
@@ -14539,6 +18210,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -14559,6 +18231,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
   }
 
@@ -14579,6 +18252,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
     reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
     reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -14615,6 +18289,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
   }
 
@@ -14635,6 +18310,7 @@ export namespace Prisma {
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
     reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
     reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -14735,6 +18411,17 @@ export namespace Prisma {
     academicYear?: string | null
     term?: string | null
     semester?: string | null
+  }
+
+  export type StatementImportCreateManyUserInput = {
+    id?: string
+    fileName: string
+    uploadedAt?: Date | string
+    headers?: StatementImportCreateheadersInput | string[]
+    totalRows?: number
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    summary: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type GeneratedReportCreateManyUserInput = {
@@ -15052,6 +18739,41 @@ export namespace Prisma {
     semester?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type StatementImportUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    rows?: StatementImportRowUpdateManyWithoutStatementImportNestedInput
+  }
+
+  export type StatementImportUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+    rows?: StatementImportRowUncheckedUpdateManyWithoutStatementImportNestedInput
+  }
+
+  export type StatementImportUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    headers?: StatementImportUpdateheadersInput | string[]
+    totalRows?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    summary?: JsonNullValueInput | InputJsonValue
+    columnMapping?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type GeneratedReportUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -15236,6 +18958,66 @@ export namespace Prisma {
     academicYear?: NullableStringFieldUpdateOperationsInput | string | null
     term?: NullableStringFieldUpdateOperationsInput | string | null
     semester?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type StatementImportRowCreateManyStatementImportInput = {
+    id?: string
+    rowNumber: number
+    rawData: JsonNullValueInput | InputJsonValue
+    reference?: string | null
+    payerName?: string | null
+    description?: string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+    transactionDate?: Date | string | null
+    matchState: string
+    suggestions: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: string | null
+    reconciledAt?: Date | string | null
+  }
+
+  export type StatementImportRowUpdateWithoutStatementImportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    rawData?: JsonNullValueInput | InputJsonValue
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    matchState?: StringFieldUpdateOperationsInput | string
+    suggestions?: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StatementImportRowUncheckedUpdateWithoutStatementImportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    rawData?: JsonNullValueInput | InputJsonValue
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    matchState?: StringFieldUpdateOperationsInput | string
+    suggestions?: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StatementImportRowUncheckedUpdateManyWithoutStatementImportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    rawData?: JsonNullValueInput | InputJsonValue
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    matchState?: StringFieldUpdateOperationsInput | string
+    suggestions?: JsonNullValueInput | InputJsonValue
+    resolvedPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

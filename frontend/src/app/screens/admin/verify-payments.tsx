@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Search,
   RotateCw,
@@ -12,6 +12,12 @@ import {
   ArrowDownUp,
   Link2,
   NotebookPen,
+  Upload,
+  FileSpreadsheet,
+  CheckCircle2,
+  History,
+  SlidersHorizontal,
+  Sparkles,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -64,6 +70,18 @@ export function VerifyPaymentsPage() {
   const [viewingStudentHistory, setViewingStudentHistory] = useState<any>(null);
   const [actionLoading, setActionLoading] = useState<string | undefined>(undefined);
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
+  const [statementImport, setStatementImport] = useState<any>(null);
+  const [statementImportLoading, setStatementImportLoading] = useState(false);
+  const [statementImports, setStatementImports] = useState<any[]>([]);
+  const [statementMapping, setStatementMapping] = useState<any>({
+    reference: '',
+    payerName: '',
+    description: '',
+    amount: '',
+    transactionDate: '',
+  });
+  const [mappingLoading, setMappingLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const isAdminOrAccountant = user?.role === 'admin' || user?.role === 'accounts';
   const isAccounts = user?.role === 'accounts';
@@ -73,6 +91,7 @@ export function VerifyPaymentsPage() {
 
   useEffect(() => {
     loadPayments();
+    loadStatementImports();
   }, []);
 
   const loadPayments = async () => {
@@ -85,6 +104,15 @@ export function VerifyPaymentsPage() {
     } finally {
       setLoading(false);
       setSelectedIds([]);
+    }
+  };
+
+  const loadStatementImports = async () => {
+    try {
+      const result = await apiFetch<any[]>('/admin/reconciliation/imports');
+      setStatementImports(result || []);
+    } catch {
+      toast.error('Failed to load statement imports');
     }
   };
 
@@ -215,6 +243,22 @@ export function VerifyPaymentsPage() {
     }
   };
 
+  const saveReconciliation = async (paymentId: string, status: 'MATCHED' | 'UNMATCHED', note: string) => {
+    setActionLoading(paymentId);
+    try {
+      await apiFetch(`/admin/payments/${paymentId}/reconcile`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          reconciliationStatus: status,
+          reconciliationNote: note,
+        }),
+      });
+      await loadPayments();
+    } finally {
+      setActionLoading(undefined);
+    }
+  };
+
   const clearReconciliation = async (paymentId: string) => {
     setActionLoading(paymentId);
     try {
@@ -229,6 +273,115 @@ export function VerifyPaymentsPage() {
       await loadPayments();
     } catch (err: any) {
       toast.error(err.message || 'Could not clear reconciliation status');
+    } finally {
+      setActionLoading(undefined);
+    }
+  };
+
+  const handleImportStatement = async (file?: File) => {
+    if (!file) return;
+
+    setStatementImportLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('statement', file);
+      const preview = await apiFetch<any>('/admin/reconciliation/import-statement', {
+        method: 'POST',
+        body: formData,
+      });
+      setStatementImport(preview);
+      setStatementMapping(preview.columnMapping || {});
+      await loadStatementImports();
+      toast.success('Statement imported and matched');
+    } catch (err: any) {
+      toast.error(err.message || 'Statement import failed');
+    } finally {
+      setStatementImportLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const openStatementImport = async (importId: string) => {
+    setStatementImportLoading(true);
+    try {
+      const result = await apiFetch<any>(`/admin/reconciliation/imports/${importId}`);
+      setStatementImport(result);
+      setStatementMapping(result.columnMapping || {});
+    } catch (err: any) {
+      toast.error(err.message || 'Could not open statement import');
+    } finally {
+      setStatementImportLoading(false);
+    }
+  };
+
+  const applyStatementMapping = async () => {
+    if (!statementImport?.id) return;
+
+    setMappingLoading(true);
+    try {
+      const remapped = await apiFetch<any>(`/admin/reconciliation/imports/${statementImport.id}/mapping`, {
+        method: 'PATCH',
+        body: JSON.stringify(statementMapping),
+      });
+      setStatementImport(remapped);
+      setStatementMapping(remapped.columnMapping || {});
+      await loadStatementImports();
+      toast.success('Column mapping applied');
+    } catch (err: any) {
+      toast.error(err.message || 'Could not apply mapping');
+    } finally {
+      setMappingLoading(false);
+    }
+  };
+
+  const reconcileFromStatement = async (row: any, suggestion: any) => {
+    const note = [
+      'Matched from imported statement',
+      statementImport?.fileName ? `file: ${statementImport.fileName}` : null,
+      row?.rowNumber ? `row: ${row.rowNumber}` : null,
+      row?.reference ? `reference: ${row.reference}` : null,
+      row?.payerName ? `name: ${row.payerName}` : null,
+      row?.transactionDate ? `date: ${row.transactionDate}` : null,
+    ]
+      .filter(Boolean)
+      .join(' | ');
+
+    try {
+      await saveReconciliation(suggestion.id, 'MATCHED', note);
+      const updatedImport = await apiFetch<any>(`/admin/reconciliation/imports/${statementImport.id}/rows/${row.id}/resolve`, {
+        method: 'PATCH',
+        body: JSON.stringify({ paymentId: suggestion.id }),
+      });
+      setStatementImport(updatedImport);
+      await loadStatementImports();
+      toast.success(`Matched ${suggestion.student?.firstName} ${suggestion.student?.lastName}`);
+    } catch (err: any) {
+      toast.error(err.message || 'Could not reconcile suggested payment');
+    }
+  };
+
+  const assistApproveFromStatement = async (row: any, suggestion: any) => {
+    const confirmed = window.confirm(
+      `Approve ${suggestion.student?.firstName} ${suggestion.student?.lastName}'s payment in one step?\n\nThis will reconcile, verify, and approve the payment based on the strong statement match.`
+    );
+
+    if (!confirmed) return;
+
+    setActionLoading(suggestion.id);
+    try {
+      const updatedImport = await apiFetch<any>(
+        `/admin/reconciliation/imports/${statementImport.id}/rows/${row.id}/assist-approve`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify({ paymentId: suggestion.id }),
+        }
+      );
+      setStatementImport(updatedImport);
+      await loadPayments();
+      await loadStatementImports();
+      toast.success(`Payment approved for ${suggestion.student?.firstName} ${suggestion.student?.lastName}`);
+    } catch (err: any) {
+      toast.error(err.message || 'Could not auto-approve the payment');
     } finally {
       setActionLoading(undefined);
     }
@@ -359,6 +512,242 @@ export function VerifyPaymentsPage() {
           </Card>
         ))}
       </div>
+
+      {isAdminOrAccountant && (
+        <Card>
+          <CardContent className="space-y-4 p-4">
+            <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+              <div className="space-y-4 rounded-xl border bg-muted/10 p-4">
+                <div>
+                  <h2 className="text-[15px] font-semibold text-foreground">Statement Import</h2>
+                  <p className="mt-1 text-[12px] text-muted-foreground">
+                    Upload a bank or mobile money CSV, remap columns if needed, and reopen recent imports.
+                  </p>
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv"
+                  className="hidden"
+                  onChange={(event) => handleImportStatement(event.target.files?.[0] || undefined)}
+                />
+                <Button
+                  variant="outline"
+                  className="h-9 w-full gap-2"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={statementImportLoading}
+                >
+                  {statementImportLoading ? <RotateCw className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  Import CSV Statement
+                </Button>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <History className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-[13px] font-medium">Recent Imports</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {statementImports.length > 0 ? (
+                      statementImports.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          className={`w-full rounded-lg border p-3 text-left transition-colors hover:bg-muted/40 ${
+                            statementImport?.id === item.id ? 'border-primary bg-primary/5' : ''
+                          }`}
+                          onClick={() => openStatementImport(item.id)}
+                        >
+                          <p className="text-[12px] font-medium">{item.fileName}</p>
+                          <p className="mt-1 text-[11px] text-muted-foreground">
+                            {item.summary?.strongMatches || 0} strong, {item.summary?.possibleMatches || 0} possible
+                          </p>
+                          <p className="mt-1 text-[11px] text-muted-foreground">
+                            {new Date(item.uploadedAt).toLocaleString()}
+                          </p>
+                        </button>
+                      ))
+                    ) : (
+                      <p className="text-[12px] text-muted-foreground">No statement imports yet.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {statementImport ? (
+                <div className="space-y-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="h-9 px-3 text-[11px]">
+                      <FileSpreadsheet className="mr-2 h-3.5 w-3.5" />
+                      {statementImport.fileName}
+                    </Badge>
+                    <Badge variant="outline" className="h-9 px-3 text-[11px]">
+                      {statementImport.totalRows || statementImport.summary?.totalRows || 0} rows
+                    </Badge>
+                  </div>
+
+                  <div className="rounded-xl border p-4">
+                    <div className="mb-3 flex items-center gap-2">
+                      <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+                      <h3 className="text-[13px] font-medium">Column Mapping</h3>
+                    </div>
+                    <div className="grid gap-3 md:grid-cols-5">
+                      {[
+                        { key: 'reference', label: 'Reference' },
+                        { key: 'payerName', label: 'Payer Name' },
+                        { key: 'amount', label: 'Amount' },
+                        { key: 'transactionDate', label: 'Date' },
+                        { key: 'description', label: 'Description' },
+                      ].map((field) => (
+                        <div key={field.key} className="space-y-1.5">
+                          <label className="text-[11px] font-medium text-muted-foreground">{field.label}</label>
+                          <Select
+                            value={statementMapping?.[field.key] || ''}
+                            onValueChange={(value) => setStatementMapping((current: any) => ({ ...current, [field.key]: value }))}
+                          >
+                            <SelectTrigger className="h-9">
+                              <SelectValue placeholder="Select column" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {(statementImport.headers || []).map((header: string) => (
+                                <SelectItem key={`${field.key}-${header}`} value={header}>
+                                  {header}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 flex justify-end">
+                      <Button variant="outline" className="h-9 gap-2" onClick={applyStatementMapping} disabled={mappingLoading}>
+                        {mappingLoading ? <RotateCw className="h-4 w-4 animate-spin" /> : <SlidersHorizontal className="h-4 w-4" />}
+                        Apply Mapping
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                  <Card>
+                    <CardContent className="p-3">
+                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Rows</p>
+                      <p className="mt-1 text-[20px] font-semibold">{statementImport.summary?.totalRows ?? 0}</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-3">
+                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Strong Matches</p>
+                      <p className="mt-1 text-[20px] font-semibold text-success">{statementImport.summary?.strongMatches ?? 0}</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-3">
+                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Possible Matches</p>
+                      <p className="mt-1 text-[20px] font-semibold text-warning">{statementImport.summary?.possibleMatches ?? 0}</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-3">
+                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">No Matches</p>
+                      <p className="mt-1 text-[20px] font-semibold text-muted-foreground">{statementImport.summary?.noMatches ?? 0}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="rounded-xl border">
+                  <div className="border-b p-3">
+                    <h3 className="text-[13px] font-medium">Top Statement Rows</h3>
+                  </div>
+                  <div className="divide-y">
+                    {statementImport.rows?.slice(0, 6).map((row: any) => (
+                      <div key={row.id} className="space-y-3 p-3">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Badge
+                                variant="outline"
+                                className={`text-[10px] ${
+                                  row.matchState === 'STRONG_MATCH'
+                                    ? 'bg-success/10 text-success border-success/20'
+                                    : row.matchState === 'POSSIBLE_MATCH'
+                                      ? 'bg-warning/10 text-warning border-warning/20'
+                                      : 'bg-muted text-muted-foreground'
+                                }`}
+                              >
+                                {row.matchState === 'STRONG_MATCH'
+                                  ? 'Strong Match'
+                                  : row.matchState === 'POSSIBLE_MATCH'
+                                    ? 'Possible Match'
+                                    : 'No Match'}
+                              </Badge>
+                              {row.resolvedPaymentId && (
+                                <Badge variant="outline" className="text-[10px] bg-success/10 text-success border-success/20">
+                                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                                  Reconciled
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="mt-2 text-[13px] font-medium">
+                              {row.payerName || 'Unknown payer'} {row.reference ? `• ${row.reference}` : ''}
+                            </p>
+                            <p className="mt-1 text-[12px] text-muted-foreground">
+                              {formatCurrency(Number(row.amount || 0))}
+                              {row.transactionDate ? ` • ${new Date(row.transactionDate).toLocaleDateString()}` : ''}
+                              {row.description ? ` • ${row.description}` : ''}
+                            </p>
+                          </div>
+                        </div>
+
+                        {row.suggestions?.length > 0 ? (
+                          <div className="space-y-2">
+                            {row.suggestions.map((suggestion: any) => (
+                              <div key={suggestion.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/20 p-3">
+                                <div>
+                                  <p className="text-[13px] font-medium">
+                                    {suggestion.student?.firstName} {suggestion.student?.lastName}
+                                  </p>
+                                  <p className="text-[11px] text-muted-foreground">
+                                    {suggestion.student?.studentCode} • {suggestion.reference} • score {suggestion.score}
+                                  </p>
+                                  <p className="mt-1 text-[11px] text-muted-foreground">{suggestion.reasons?.join(', ')}</p>
+                                </div>
+                                <Button
+                                  size="sm"
+                                  className="h-8 gap-1.5"
+                                  disabled={!!row.resolvedPaymentId || actionLoading === suggestion.id}
+                                  onClick={() => reconcileFromStatement(row, suggestion)}
+                                >
+                                  {actionLoading === suggestion.id ? <RotateCw className="h-3.5 w-3.5 animate-spin" /> : <Link2 className="h-3.5 w-3.5" />}
+                                  Match Payment
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-[12px] text-muted-foreground">No likely pending payment matches were found for this row.</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed text-center">
+                  <div className="space-y-2 px-6">
+                    <FileSpreadsheet className="mx-auto h-8 w-8 text-muted-foreground/60" />
+                    <p className="text-[13px] font-medium">Import a statement to start matching transactions</p>
+                    <p className="text-[12px] text-muted-foreground">
+                      After upload, you can reopen past imports and remap CSV columns if the bank export headers are unusual.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-[200px] flex-1 max-w-[320px]">

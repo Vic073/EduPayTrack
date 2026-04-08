@@ -202,6 +202,34 @@ exports.Prisma.PaymentScalarFieldEnum = {
   semester: 'semester'
 };
 
+exports.Prisma.StatementImportScalarFieldEnum = {
+  id: 'id',
+  fileName: 'fileName',
+  uploadedBy: 'uploadedBy',
+  uploadedAt: 'uploadedAt',
+  headers: 'headers',
+  totalRows: 'totalRows',
+  totalAmount: 'totalAmount',
+  summary: 'summary',
+  columnMapping: 'columnMapping'
+};
+
+exports.Prisma.StatementImportRowScalarFieldEnum = {
+  id: 'id',
+  importId: 'importId',
+  rowNumber: 'rowNumber',
+  rawData: 'rawData',
+  reference: 'reference',
+  payerName: 'payerName',
+  description: 'description',
+  amount: 'amount',
+  transactionDate: 'transactionDate',
+  matchState: 'matchState',
+  suggestions: 'suggestions',
+  resolvedPaymentId: 'resolvedPaymentId',
+  reconciledAt: 'reconciledAt'
+};
+
 exports.Prisma.GeneratedReportScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -301,6 +329,8 @@ exports.Prisma.ModelName = {
   Student: 'Student',
   FeeStructure: 'FeeStructure',
   Payment: 'Payment',
+  StatementImport: 'StatementImport',
+  StatementImportRow: 'StatementImportRow',
   GeneratedReport: 'GeneratedReport',
   Notification: 'Notification',
   SystemRegistry: 'SystemRegistry'
