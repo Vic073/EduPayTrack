@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { apiFetch } from '../../lib/api';
+import { apiFetch, downloadApiFile } from '../../lib/api';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
@@ -253,6 +253,15 @@ export function StudentManagementPage() {
       toast.success('Opening email client...');
     } else {
       toast.error('Student has no email address associated.');
+    }
+  };
+
+  const handleDownloadStudentDocument = async (studentId: string, type: 'statement' | 'clearance-letter') => {
+    try {
+      await downloadApiFile(`/admin/students/${studentId}/${type}.pdf`, `${type}.pdf`);
+      toast.success(type === 'statement' ? 'Statement downloaded' : 'Clearance letter downloaded');
+    } catch (err: any) {
+      toast.error(err.message || 'Download failed');
     }
   };
 
@@ -712,10 +721,10 @@ export function StudentManagementPage() {
               </Card>
 
               {/* Actions */}
-              <div className="flex gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Button 
                   variant="outline" 
-                  className="flex-1"
+                  className="w-full"
                   onClick={() => {
                     setViewingStudentDetails(null);
                     setViewingStudentHistory(viewingStudentDetails);
@@ -726,12 +735,29 @@ export function StudentManagementPage() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="flex-1"
+                  className="w-full"
                   onClick={() => handleEmailRemainder(viewingStudentDetails)}
                   disabled={!viewingStudentDetails.user?.email || viewingStudentDetails.currentBalance <= 0}
                 >
                   <Mail className="h-4 w-4 mr-2" />
                   Send Reminder
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleDownloadStudentDocument(viewingStudentDetails.id, 'statement')}
+                >
+                  <Receipt className="h-4 w-4 mr-2" />
+                  Download Statement
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleDownloadStudentDocument(viewingStudentDetails.id, 'clearance-letter')}
+                  disabled={Number(viewingStudentDetails.currentBalance) > 0}
+                >
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Clearance Letter
                 </Button>
               </div>
             </div>

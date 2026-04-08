@@ -15,6 +15,12 @@ import { listPaymentsForReview, reviewPayment, verifyPayment, getPaymentDetailsB
 import { createStaffUser, listSystemUsers, resetUserPassword, suspendUser, deactivateUser, deleteUser, activateUser, updateSystemUser } from '../services/user.service';
 import { getRegistry, updateRegistry } from '../services/registry.service';
 import { readAuditLogs, deleteAuditLogs } from '../utils/audit-log';
+import {
+    generateStudentClearanceLetterPdf,
+    generateStudentStatementPdf,
+    getStudentDocumentFilename,
+    getStudentDocumentPayloadByStudentId,
+} from '../services/document.service';
 
 export const adminRouter = Router();
 
@@ -171,6 +177,30 @@ adminRouter.get(
         });
 
         res.status(200).json(payments);
+    })
+);
+
+adminRouter.get(
+    '/students/:studentId/statement.pdf',
+    asyncHandler(async (req, res) => {
+        const payload = await getStudentDocumentPayloadByStudentId(req.params.studentId);
+        const pdf = await generateStudentStatementPdf(req.params.studentId);
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${getStudentDocumentFilename('statement', payload.student)}"`);
+        res.status(200).send(pdf);
+    })
+);
+
+adminRouter.get(
+    '/students/:studentId/clearance-letter.pdf',
+    asyncHandler(async (req, res) => {
+        const payload = await getStudentDocumentPayloadByStudentId(req.params.studentId);
+        const pdf = await generateStudentClearanceLetterPdf(req.params.studentId);
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${getStudentDocumentFilename('clearance-letter', payload.student)}"`);
+        res.status(200).send(pdf);
     })
 );
 

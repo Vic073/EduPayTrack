@@ -4,7 +4,7 @@ import { Upload, TrendingDown, CheckCircle, DollarSign, Loader2, FileImage, X, A
 import { toast } from 'sonner';
 
 import { useAuth } from '../state/auth-context';
-import { apiFetch } from '../lib/api';
+import { apiFetch, downloadApiFile } from '../lib/api';
 import { Card, CardContent } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
@@ -37,6 +37,7 @@ export function StudentDashboardPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [downloadingClearance, setDownloadingClearance] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -78,48 +79,21 @@ export function StudentDashboardPage() {
   const paidPercent = totalFees > 0 ? Math.round((totalPaid / totalFees) * 100) : 0;
   const isCleared = Number(remaining) <= 0;
 
-  const downloadClearanceLetter = () => {
+  const downloadClearanceLetter = async () => {
     if (!isCleared) {
       toast.error('Clearance letter is only available when your balance is fully cleared.');
       return;
     }
 
-    const printWindow = window.open('', '_blank', 'width=900,height=700');
-    if (!printWindow) {
-      toast.error('Unable to open clearance letter window');
-      return;
+    setDownloadingClearance(true);
+    try {
+      await downloadApiFile('/students/me/clearance-letter.pdf', 'clearance-letter.pdf');
+      toast.success('Clearance letter downloaded');
+    } catch (err: any) {
+      toast.error(err.message || 'Unable to download clearance letter');
+    } finally {
+      setDownloadingClearance(false);
     }
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Fee Clearance Letter</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
-            h1, h2, p { margin: 0; }
-            .header { margin-bottom: 28px; }
-            .box { border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin: 24px 0; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>EduPayTrack Fee Clearance Letter</h1>
-            <p>Issued on ${new Date().toLocaleDateString()}</p>
-          </div>
-          <p>This letter confirms that <strong>${user?.name || 'Student'}</strong> (${data.student?.studentCode || user?.studentId || 'N/A'}) has fully settled the required school fees.</p>
-          <div class="box">
-            <p><strong>Program:</strong> ${data.student?.program || 'N/A'}</p>
-            <p><strong>Academic Year:</strong> ${data.student?.academicYear || 'N/A'}</p>
-            <p><strong>Total Paid:</strong> ${formatCurrency(Number(data.summary?.totalPaid || 0))}</p>
-            <p><strong>Outstanding Balance:</strong> ${formatCurrency(Number(data.summary?.currentBalance || 0))}</p>
-          </div>
-          <p>The student is financially cleared as of the issue date shown above.</p>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
   };
 
   return (
@@ -193,10 +167,10 @@ export function StudentDashboardPage() {
           <Button
             variant={isCleared ? 'default' : 'outline'}
             className="gap-2"
-            disabled={!isCleared}
+            disabled={!isCleared || downloadingClearance}
             onClick={downloadClearanceLetter}
           >
-            <Download className="h-4 w-4" />
+            {downloadingClearance ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
             Download Clearance Letter
           </Button>
         </CardContent>
@@ -564,12 +538,12 @@ export function UploadPaymentPage() {
 /* ===== PAYMENT HISTORY ===== */
 
 export function PaymentHistoryPage() {
-  const { user } = useAuth();
   const [dashboard, setDashboard] = useState<any>(null);
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
+  const [downloadingStatement, setDownloadingStatement] = useState(false);
 
   useEffect(() => {
     apiFetch<any>('/students/me')
@@ -595,67 +569,16 @@ export function PaymentHistoryPage() {
     return { icon: Clock3, label: 'Awaiting verification', className: 'text-warning bg-warning/10 border-warning/20' };
   };
 
-  const downloadStatement = () => {
-    if (!dashboard) return;
-
-    const printWindow = window.open('', '_blank', 'width=960,height=720');
-    if (!printWindow) {
-      toast.error('Unable to open statement window');
-      return;
+  const downloadStatement = async () => {
+    setDownloadingStatement(true);
+    try {
+      await downloadApiFile('/students/me/statement.pdf', 'statement.pdf');
+      toast.success('Statement downloaded');
+    } catch (err: any) {
+      toast.error(err.message || 'Unable to download statement');
+    } finally {
+      setDownloadingStatement(false);
     }
-
-    const rows = filtered.map((payment: any) => `
-      <tr>
-        <td>${formatDate(payment.paymentDate || payment.submittedAt)}</td>
-        <td>${payment.receiptNumber || payment.externalReference || 'N/A'}</td>
-        <td>${payment.method?.replace(/_/g, ' ') || 'N/A'}</td>
-        <td>${Number(payment.amount || 0).toLocaleString()}</td>
-        <td>${payment.status}</td>
-      </tr>
-    `).join('');
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>EduPayTrack Fee Statement</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 32px; color: #111; }
-            h1, h2, p { margin: 0; }
-            .summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 20px 0 28px; }
-            .card { border: 1px solid #dcdcdc; border-radius: 8px; padding: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 13px; }
-            th { background: #f6f6f6; }
-          </style>
-        </head>
-        <body>
-          <h1>EduPayTrack Fee Statement</h1>
-          <p style="margin-top: 6px;">Generated for ${user?.name || 'Student'}</p>
-          <div class="summary">
-            <div class="card"><strong>Student ID</strong><br/>${dashboard.student?.studentCode || user?.studentId || 'N/A'}</div>
-            <div class="card"><strong>Program</strong><br/>${dashboard.student?.program || 'N/A'}</div>
-            <div class="card"><strong>Total Paid</strong><br/>${formatCurrency(Number(dashboard.summary?.totalPaid || 0))}</div>
-            <div class="card"><strong>Current Balance</strong><br/>${formatCurrency(Number(dashboard.summary?.currentBalance || 0))}</div>
-          </div>
-          <h2>Payment Activity</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Reference</th>
-                <th>Method</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
   };
 
   if (loading) {
@@ -688,8 +611,8 @@ export function PaymentHistoryPage() {
               <SelectItem value="REJECTED">Rejected</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" className="h-9 gap-2" onClick={downloadStatement}>
-            <Download className="h-4 w-4" />
+          <Button variant="outline" className="h-9 gap-2" onClick={downloadStatement} disabled={downloadingStatement}>
+            {downloadingStatement ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
             Download Statement
           </Button>
         </div>

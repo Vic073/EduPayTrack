@@ -100,3 +100,39 @@ export async function apiFetch<T>(
     clearTimeout(timeoutId);
   }
 }
+
+export async function downloadApiFile(
+  endpoint: string,
+  fallbackFilename: string
+): Promise<void> {
+  const token = getToken();
+  const headers: Record<string, string> = {};
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    headers,
+  });
+
+  if (!response.ok) {
+    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const rawData = isJson ? await response.json() : null;
+    throw new ApiError(rawData?.message || `Request failed (${response.status})`, response.status, rawData);
+  }
+
+  const blob = await response.blob();
+  const contentDisposition = response.headers.get('content-disposition') || '';
+  const filenameMatch = contentDisposition.match(/filename="(.+?)"/i);
+  const filename = filenameMatch?.[1] || fallbackFilename;
+  const objectUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+
+  anchor.href = objectUrl;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(objectUrl);
+}
