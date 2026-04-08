@@ -56,6 +56,9 @@ export function VerifyPaymentsPage() {
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
 
   const isAdminOrAccountant = user?.role === 'admin' || user?.role === 'accounts';
+  const receiptUrl = viewingReceipt?.proofUrl ? getFullImageUrl(viewingReceipt.proofUrl) : '';
+  const isImageReceipt = /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(viewingReceipt?.proofUrl || '');
+  const isPdfReceipt = /\.pdf$/i.test(viewingReceipt?.proofUrl || '');
 
   useEffect(() => {
     loadPayments();
@@ -253,7 +256,24 @@ export function VerifyPaymentsPage() {
           </DialogHeader>
           <div className="bg-muted/30 rounded-lg p-2 min-h-[300px] flex items-center justify-center relative">
             {viewingReceipt?.proofUrl ? (
-              <img src={getFullImageUrl(viewingReceipt.proofUrl)} alt="Receipt" className="max-w-full max-h-[70vh] rounded shadow-lg" />
+              isImageReceipt ? (
+                <img src={receiptUrl} alt="Receipt" className="max-w-full max-h-[70vh] rounded shadow-lg" />
+              ) : isPdfReceipt ? (
+                <iframe
+                  src={receiptUrl}
+                  title="Receipt PDF"
+                  className="h-[70vh] w-full rounded bg-white"
+                />
+              ) : (
+                <a
+                  href={receiptUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary hover:underline"
+                >
+                  Open receipt in a new tab
+                </a>
+              )
             ) : (
               <p className="text-muted-foreground text-sm">No image available</p>
             )}

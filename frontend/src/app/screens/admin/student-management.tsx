@@ -7,7 +7,6 @@ import {
   History, 
   Mail, 
   Eye, 
-  X,
   GraduationCap,
   Phone,
   MapPin,
@@ -41,6 +40,7 @@ import {
 } from '../../../components/ui/dropdown-menu';
 import { formatCurrency, formatDate } from '../../../lib/utils';
 import { PaymentStatusBadge } from '../../components/admin/common/payment-helpers';
+import { getFullImageUrl } from '../../components/admin/common/payment-helpers';
 
 interface Payment {
   id: string;
@@ -281,7 +281,11 @@ export function StudentManagementPage() {
                   {studentPayments.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell className="text-[13px]">
-                        {p.paymentDate ? formatDate(p.paymentDate) : formatDate(p.submittedAt)}
+                        {p.paymentDate
+                          ? formatDate(p.paymentDate)
+                          : p.submittedAt
+                            ? formatDate(p.submittedAt)
+                            : 'N/A'}
                       </TableCell>
                       <TableCell className="text-[13px] font-mono">
                         {p.receiptNumber || p.externalReference || '—'}
@@ -497,7 +501,13 @@ export function StudentManagementPage() {
                 </div>
                 <div>
                   <span className="text-muted-foreground">Date</span>
-                  <p className="font-medium">{selectedPayment.paymentDate ? formatDate(selectedPayment.paymentDate) : formatDate(selectedPayment.submittedAt)}</p>
+                  <p className="font-medium">
+                    {selectedPayment.paymentDate
+                      ? formatDate(selectedPayment.paymentDate)
+                      : selectedPayment.submittedAt
+                        ? formatDate(selectedPayment.submittedAt)
+                        : 'N/A'}
+                  </p>
                 </div>
               </div>
               {selectedPayment.notes && (
@@ -510,7 +520,7 @@ export function StudentManagementPage() {
                 <div className="p-3 border rounded-lg">
                   <span className="text-[12px] text-muted-foreground">Receipt Image</span>
                   <a 
-                    href={selectedPayment.proofUrl} 
+                    href={getFullImageUrl(selectedPayment.proofUrl)} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="block mt-2 text-[13px] text-primary hover:underline"

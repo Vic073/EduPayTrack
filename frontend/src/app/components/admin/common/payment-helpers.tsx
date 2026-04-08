@@ -1,4 +1,5 @@
 import { Badge } from '../../../../components/ui/badge';
+import { API_ORIGIN } from '../../../lib/api';
 
 export function PaymentStatusBadge({ status }: { status: string }) {
   const s = status?.toUpperCase() || 'PENDING';
@@ -17,6 +18,6 @@ export function PaymentStatusBadge({ status }: { status: string }) {
 export function getFullImageUrl(url?: string): string {
   if (!url) return '';
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  if (url.startsWith('/')) return url;
-  return `/${url}`;
+  if (url.startsWith('/')) return `${API_ORIGIN}${url}`;
+  return `${API_ORIGIN}/${url}`;
 }

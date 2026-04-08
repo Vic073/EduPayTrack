@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+export const API_BASE_URL = 'http://localhost:5000/api';
+export const API_ORIGIN = new URL(API_BASE_URL).origin;
 const TOKEN_KEY = 'edu-pay-track-token';
 
 /**

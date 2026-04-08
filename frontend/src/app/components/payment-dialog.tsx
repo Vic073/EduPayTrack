@@ -4,6 +4,7 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
 import { formatCurrency, formatDate } from '../../lib/utils';
 import { FileImage, ExternalLink, Download, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { getFullImageUrl } from './admin/common/payment-helpers';
 
 export interface Payment {
   id: string;
@@ -47,6 +48,8 @@ export function PaymentDialog({
   showActions = false 
 }: PaymentDialogProps) {
   if (!payment) return null;
+
+  const receiptUrl = getFullImageUrl(payment.proofUrl);
 
   const statusConfig = {
     PENDING: { icon: AlertCircle, color: 'text-warning bg-warning/10 border-warning/20', label: 'Pending Review' },
@@ -176,20 +179,20 @@ export function PaymentDialog({
                 <p className="text-[12px] text-muted-foreground uppercase tracking-wide font-medium mb-3">Receipt / Proof</p>
                 {payment.proofUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                   <a 
-                    href={payment.proofUrl} 
+                    href={receiptUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="block border rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
                   >
                     <img 
-                      src={payment.proofUrl} 
+                      src={receiptUrl} 
                       alt="Payment receipt" 
                       className="w-full h-48 object-cover"
                     />
                   </a>
                 ) : (
                   <a 
-                    href={payment.proofUrl}
+                    href={receiptUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
@@ -208,7 +211,7 @@ export function PaymentDialog({
                   variant="outline" 
                   size="sm" 
                   className="w-full mt-3 gap-2"
-                  onClick={() => window.open(payment.proofUrl, '_blank')}
+                  onClick={() => window.open(receiptUrl, '_blank')}
                 >
                   <Download className="h-4 w-4" />
                   Download Receipt
