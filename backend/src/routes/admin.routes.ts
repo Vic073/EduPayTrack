@@ -141,23 +141,6 @@ adminRouter.get(
         const payments = await prisma.payment.findMany({
             where: { studentId },
             orderBy: { createdAt: 'desc' },
-            include: {
-                student: {
-                    include: {
-                        user: {
-                            select: {
-                                name: true,
-                                email: true,
-                            },
-                        },
-                    },
-                },
-                reviewedBy: {
-                    select: {
-                        name: true,
-                    },
-                },
-            },
         });
         res.status(200).json(payments);
     })
