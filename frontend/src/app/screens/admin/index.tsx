@@ -1,4 +1,5 @@
 export * from './dashboard';
+export * from './reconciliation-exceptions';
 export * from './reconciliation-history';
 export * from './verify-payments';
 export * from './student-management';

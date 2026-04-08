@@ -26,6 +26,7 @@ import {
     assistApproveStatementImportRow,
     createStatementImport,
     getStatementImportById,
+    listReconciliationExceptions,
     listStatementImports,
     markStatementImportRowResolved,
     updateStatementImportMapping,
@@ -248,6 +249,15 @@ adminRouter.get(
     asyncHandler(async (_req, res) => {
         const imports = await listStatementImports();
         res.status(200).json(imports);
+    })
+);
+
+adminRouter.get(
+    '/reconciliation/exceptions',
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
+    asyncHandler(async (_req, res) => {
+        const exceptions = await listReconciliationExceptions();
+        res.status(200).json(exceptions);
     })
 );
 

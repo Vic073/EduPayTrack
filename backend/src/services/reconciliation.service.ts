@@ -425,6 +425,91 @@ export const markStatementImportRowResolved = async (importId: string, rowId: st
     return getStatementImportById(importId);
 };
 
+export const listReconciliationExceptions = async () => {
+    const rows = await prisma.statementImportRow.findMany({
+        where: {
+            resolvedPaymentId: null,
+        },
+        include: {
+            statementImport: {
+                select: {
+                    id: true,
+                    fileName: true,
+                    uploadedAt: true,
+                },
+            },
+        },
+        orderBy: [
+            { transactionDate: 'desc' },
+            { rowNumber: 'asc' },
+        ],
+        take: 250,
+    });
+
+    const exceptions = rows
+        .map((row) => {
+            const suggestions = (row.suggestions as any[]) || [];
+            const topSuggestion = suggestions[0];
+            const secondSuggestion = suggestions[1];
+
+            let exceptionType: 'NO_MATCH' | 'MULTIPLE_MATCHES' | 'NEAR_AUTO_APPROVE' | null = null;
+            let reason = '';
+
+            if (row.matchState === 'NO_MATCH' || suggestions.length === 0) {
+                exceptionType = 'NO_MATCH';
+                reason = 'No pending payment matched this statement row.';
+            } else if (
+                suggestions.length > 1 &&
+                topSuggestion &&
+                secondSuggestion &&
+                Math.abs(Number(topSuggestion.score || 0) - Number(secondSuggestion.score || 0)) <= 10
+            ) {
+                exceptionType = 'MULTIPLE_MATCHES';
+                reason = 'Multiple student payments scored similarly and need staff judgment.';
+            } else if (
+                topSuggestion &&
+                Number(topSuggestion.score || 0) >= 80 &&
+                !topSuggestion.canAutoApprove
+            ) {
+                exceptionType = 'NEAR_AUTO_APPROVE';
+                reason = 'This row is close to assisted approval but missed at least one guardrail.';
+            }
+
+            if (!exceptionType) return null;
+
+            return {
+                id: row.id,
+                importId: row.statementImport.id,
+                importFileName: row.statementImport.fileName,
+                importedAt: row.statementImport.uploadedAt,
+                rowNumber: row.rowNumber,
+                reference: row.reference,
+                payerName: row.payerName,
+                description: row.description,
+                amount: Number(row.amount || 0),
+                transactionDate: row.transactionDate,
+                matchState: row.matchState,
+                exceptionType,
+                reason,
+                suggestions,
+                topSuggestion,
+            };
+        })
+        .filter(Boolean);
+
+    const summary = {
+        total: exceptions.length,
+        noMatch: exceptions.filter((item: any) => item.exceptionType === 'NO_MATCH').length,
+        multipleMatches: exceptions.filter((item: any) => item.exceptionType === 'MULTIPLE_MATCHES').length,
+        nearAutoApprove: exceptions.filter((item: any) => item.exceptionType === 'NEAR_AUTO_APPROVE').length,
+    };
+
+    return {
+        summary,
+        items: exceptions,
+    };
+};
+
 export const assistApproveStatementImportRow = async (importId: string, rowId: string, paymentId: string, actorId: string) => {
     const statementRow = await prisma.statementImportRow.findFirst({
         where: {
