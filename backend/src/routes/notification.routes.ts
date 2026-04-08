@@ -75,3 +75,42 @@ notificationRouter.post(
         res.status(200).json({ message: `Sent ${notifications.length} reminders.` });
     })
 );
+
+// Delete a single notification
+notificationRouter.delete(
+    '/:id',
+    asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const userId = req.user!.userId;
+
+        // Verify the notification belongs to this user
+        const notification = await prisma.notification.findFirst({
+            where: { id, userId }
+        });
+
+        if (!notification) {
+            res.status(404).json({ message: 'Notification not found' });
+            return;
+        }
+
+        await prisma.notification.delete({
+            where: { id }
+        });
+
+        res.status(200).json({ message: 'Notification deleted' });
+    })
+);
+
+// Delete all notifications for the user
+notificationRouter.delete(
+    '/',
+    asyncHandler(async (req, res) => {
+        const userId = req.user!.userId;
+
+        const { count } = await prisma.notification.deleteMany({
+            where: { userId }
+        });
+
+        res.status(200).json({ message: `Deleted ${count} notifications` });
+    })
+);

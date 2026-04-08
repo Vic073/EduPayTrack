@@ -454,7 +454,7 @@ export function AdminNotificationsPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-6 max-h-[calc(100vh-450px)] overflow-y-auto pr-1">
+        <div className="space-y-6">
           {renderNotificationGroup('Today', groupedNotifications.today)}
           {renderNotificationGroup('Yesterday', groupedNotifications.yesterday)}
           {renderNotificationGroup('This Week', groupedNotifications.thisWeek)}
