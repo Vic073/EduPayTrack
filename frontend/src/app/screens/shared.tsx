@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText, Clock, Search, Filter, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
@@ -10,68 +10,330 @@ import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 
 /* ===== NOTIFICATIONS ===== */
 
+const notificationConfig: Record<string, { icon: any; color: string; bg: string; label: string }> = {
+  fee_assigned: { icon: FileText, color: 'text-primary', bg: 'bg-primary/10', label: 'Fee Assigned' },
+  payment_submitted: { icon: CheckCheck, color: 'text-info', bg: 'bg-info/10', label: 'Payment Submitted' },
+  payment_approved: { icon: CheckCheck, color: 'text-success', bg: 'bg-success/10', label: 'Payment Approved' },
+  payment_rejected: { icon: XCircle, color: 'text-destructive', bg: 'bg-destructive/10', label: 'Payment Rejected' },
+  balance_reminder: { icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning/10', label: 'Balance Reminder' },
+  system: { icon: Bell, color: 'text-muted-foreground', bg: 'bg-muted', label: 'System' },
+};
+
+const getNotificationConfig = (type: string) => {
+  return notificationConfig[type] || notificationConfig.system;
+};
+
+const groupNotificationsByDate = (notifications: any[]) => {
+  const groups: Record<string, any[]> = { today: [], yesterday: [], thisWeek: [], earlier: [] };
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const weekAgo = new Date(today);
+  weekAgo.setDate(weekAgo.getDate() - 7);
+
+  notifications.forEach(n => {
+    const date = new Date(n.createdAt || n.time);
+    if (date >= today) {
+      groups.today.push(n);
+    } else if (date >= yesterday) {
+      groups.yesterday.push(n);
+    } else if (date >= weekAgo) {
+      groups.thisWeek.push(n);
+    } else {
+      groups.earlier.push(n);
+    }
+  });
+
+  return groups;
+};
+
 export function NotificationsPage() {
   const { notifications, markAllRead } = useAuth();
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const [activeTab, setActiveTab] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const typeIcons: Record<string, any> = {
-    fee_assigned: <FileText className="h-5 w-5 text-primary" />,
-    payment_submitted: <CheckCheck className="h-5 w-5 text-info" />,
-    payment_approved: <CheckCheck className="h-5 w-5 text-success" />,
-    payment_rejected: <XCircle className="h-5 w-5 text-destructive" />,
-    balance_reminder: <AlertTriangle className="h-5 w-5 text-warning" />,
-    system: <Bell className="h-5 w-5 text-muted-foreground" />,
+  const unreadCount = notifications.filter(n => !n.read).length;
+  const readCount = notifications.filter(n => n.read).length;
+
+  // Filter notifications based on tab, type, and search
+  const filteredNotifications = useMemo(() => {
+    return notifications.filter(n => {
+      // Tab filter
+      if (activeTab === 'unread' && n.read) return false;
+      if (activeTab === 'read' && !n.read) return false;
+
+      // Type filter
+      if (typeFilter !== 'all' && n.type !== typeFilter) return false;
+
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const searchable = `${n.title} ${n.description}`.toLowerCase();
+        if (!searchable.includes(query)) return false;
+      }
+
+      return true;
+    });
+  }, [notifications, activeTab, typeFilter, searchQuery]);
+
+  const groupedNotifications = useMemo(() => {
+    return groupNotificationsByDate(filteredNotifications);
+  }, [filteredNotifications]);
+
+  const handleMarkOneRead = async (id: string) => {
+    try {
+      await apiFetch(`/notifications/${id}/read`, { method: 'POST' });
+      // The auth context should refresh notifications
+    } catch {
+      toast.error('Failed to mark as read');
+    }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Delete this notification?')) return;
+    try {
+      await apiFetch(`/notifications/${id}`, { method: 'DELETE' });
+      toast.success('Notification deleted');
+    } catch {
+      toast.error('Failed to delete notification');
+    }
+  };
+
+  const handleClearAll = async () => {
+    if (!window.confirm('Delete all notifications? This cannot be undone.')) return;
+    try {
+      await apiFetch('/notifications', { method: 'DELETE' });
+      toast.success('All notifications cleared');
+    } catch {
+      toast.error('Failed to clear notifications');
+    }
+  };
+
+  const renderNotificationGroup = (title: string, notifications: any[]) => {
+    if (notifications.length === 0) return null;
+
+    return (
+      <div key={title} className="space-y-2">
+        <h3 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground px-1 sticky top-0 bg-background/95 backdrop-blur py-2 z-10">
+          {title} ({notifications.length})
+        </h3>
+        <div className="space-y-2">
+          {notifications.map((n) => {
+            const config = getNotificationConfig(n.type);
+            const Icon = config.icon;
+
+            return (
+              <Card
+                key={n.id}
+                className={`transition-all hover:shadow-sm group ${
+                  !n.read ? 'border-primary/30 bg-primary/[0.03]' : 'border-border/50'
+                }`}
+              >
+                <CardContent className="py-3 px-4">
+                  <div className="flex items-start gap-3">
+                    <div className={`h-10 w-10 rounded-xl ${config.bg} flex items-center justify-center flex-shrink-0`}>
+                      <Icon className={`h-5 w-5 ${config.color}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className={`text-[13px] ${!n.read ? 'font-semibold' : 'font-medium'}`}>
+                              {n.title}
+                            </p>
+                            {!n.read && (
+                              <Badge variant="default" className="text-[10px] h-5 px-1.5 bg-primary">
+                                New
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-[12px] text-muted-foreground mt-0.5 line-clamp-2">
+                            {n.description}
+                          </p>
+                          <div className="flex items-center gap-3 mt-2">
+                            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {n.time}
+                            </span>
+                            <Badge variant="outline" className={`text-[10px] h-5 ${config.color} border-current`}>
+                              {config.label}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          {!n.read && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => handleMarkOneRead(n.id)}
+                              title="Mark as read"
+                            >
+                              <CheckCheck className="h-4 w-4" />
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-destructive hover:text-destructive"
+                            onClick={() => handleDelete(n.id)}
+                            title="Delete"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const hasNotifications = filteredNotifications.length > 0;
+  const hasAnyNotifications = notifications.length > 0;
+
   return (
-    <div className="p-4 md:p-6 space-y-6 max-w-[800px] animate-fade-in">
-      <div className="flex items-start justify-between">
+    <div className="p-4 md:p-6 space-y-6 max-w-[900px] animate-fade-in">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[20px] font-semibold tracking-tight text-foreground flex items-center gap-2">
-            <Bell className="h-5 w-5 text-primary" />
+          <h1 className="text-[22px] font-semibold tracking-tight text-foreground flex items-center gap-2">
+            <Bell className="h-6 w-6 text-primary" />
             Notifications
           </h1>
           <p className="text-[13px] text-muted-foreground mt-0.5">
-            {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}` : 'All caught up!'}
+            {unreadCount > 0 ? (
+              <span className="text-primary font-medium">{unreadCount} unread</span>
+            ) : (
+              'All caught up!'
+            )}
+            {readCount > 0 && ` • ${readCount} read`}
           </p>
         </div>
-        {unreadCount > 0 && (
-          <Button variant="outline" size="sm" className="gap-1.5 h-8 text-[12px]" onClick={markAllRead}>
-            <CheckCheck className="h-3.5 w-3.5" /> Mark all read
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {unreadCount > 0 && (
+            <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={markAllRead}>
+              <CheckCheck className="h-4 w-4" /> Mark all read
+            </Button>
+          )}
+          {hasAnyNotifications && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 h-9 text-destructive hover:text-destructive"
+              onClick={handleClearAll}
+            >
+              <Trash2 className="h-4 w-4" /> Clear all
+            </Button>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-2">
-        {notifications.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center text-[13px] text-muted-foreground">
-              No notifications yet.
-            </CardContent>
-          </Card>
-        ) : (
-          notifications.map((n) => (
-            <Card key={n.id} className={`transition-colors ${!n.read ? 'border-primary/20 bg-primary/[0.02]' : ''}`}>
-              <CardContent className="py-3 px-4 flex items-start gap-3">
-                <div className="mt-0.5">{typeIcons[n.type] || <Bell className="h-5 w-5 text-muted-foreground" />}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-[13px] font-medium">{n.title}</p>
-                    {!n.read && (
-                      <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                    )}
-                  </div>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{n.description}</p>
-                  <p className="text-[11px] text-muted-foreground mt-1">{n.time}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
+      {/* Tabs & Filters */}
+      <div className="space-y-3">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex">
+            <TabsTrigger value="all" className="gap-2 text-[13px]">
+              All
+              <Badge variant="secondary" className="text-[10px] h-5">{notifications.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="unread" className="gap-2 text-[13px]">
+              Unread
+              {unreadCount > 0 && (
+                <Badge variant="default" className="text-[10px] h-5 bg-primary">{unreadCount}</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="read" className="gap-2 text-[13px]">
+              Read
+              {readCount > 0 && (
+                <Badge variant="secondary" className="text-[10px] h-5">{readCount}</Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <div className="flex flex-wrap gap-2">
+          <div className="relative flex-1 min-w-[200px] max-w-[300px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search notifications..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9"
+            />
+          </div>
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="w-[160px] h-9">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Filter by type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="payment_approved">Payment Approved</SelectItem>
+              <SelectItem value="payment_rejected">Payment Rejected</SelectItem>
+              <SelectItem value="payment_submitted">Payment Submitted</SelectItem>
+              <SelectItem value="fee_assigned">Fee Assigned</SelectItem>
+              <SelectItem value="balance_reminder">Balance Reminder</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+      {/* Notifications List */}
+      {!hasAnyNotifications ? (
+        <Card className="border-dashed">
+          <CardContent className="py-16 text-center">
+            <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+              <Bell className="h-8 w-8 text-muted-foreground/50" />
+            </div>
+            <p className="text-[15px] font-medium text-muted-foreground">No notifications yet</p>
+            <p className="text-[13px] text-muted-foreground/70 mt-1">
+              When you get notifications, they&apos;ll appear here
+            </p>
+          </CardContent>
+        </Card>
+      ) : !hasNotifications ? (
+        <Card className="border-dashed">
+          <CardContent className="py-12 text-center">
+            <Search className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
+            <p className="text-[15px] font-medium text-muted-foreground">No matching notifications</p>
+            <p className="text-[13px] text-muted-foreground/70 mt-1">
+              Try adjusting your filters or search query
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4"
+              onClick={() => {
+                setActiveTab('all');
+                setTypeFilter('all');
+                setSearchQuery('');
+              }}
+            >
+              Clear filters
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-6 max-h-[calc(100vh-300px)] overflow-y-auto pr-1">
+          {renderNotificationGroup('Today', groupedNotifications.today)}
+          {renderNotificationGroup('Yesterday', groupedNotifications.yesterday)}
+          {renderNotificationGroup('This Week', groupedNotifications.thisWeek)}
+          {renderNotificationGroup('Earlier', groupedNotifications.earlier)}
+        </div>
+      )}
     </div>
   );
 }
