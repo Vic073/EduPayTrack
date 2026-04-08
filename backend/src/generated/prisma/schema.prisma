@@ -21,10 +21,9 @@ enum UserStatus {
 }
 
 enum PaymentMethod {
-  BANK
-  MOBILE_MONEY
   CASH
-  OTHER
+  BANK_TRANSFER
+  MOBILE_CREDIT_CARD
 }
 
 enum PaymentStatus {

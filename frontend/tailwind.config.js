@@ -1,73 +1,108 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [
-        "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx}",
-    ],
-    theme: {
-        extend: {
-            colors: {
-                "on-tertiary-container": "#ffdedf",
-                "tertiary-fixed-dim": "#ffb2b7",
-                "on-primary": "#ffffff",
-                "on-secondary": "#ffffff",
-                "surface-container-highest": "#d3e4fe",
-                "on-primary-fixed": "#001b3d",
-                "on-secondary-container": "#00714d",
-                "secondary": "#006c49",
-                "outline-variant": "#c1c6d4",
-                "on-error": "#ffffff",
-                "secondary-fixed": "#6ffbbe",
-                "on-primary-fixed-variant": "#00468a",
-                "on-surface-variant": "#414752",
-                "background": "#f8f9ff",
-                "on-secondary-fixed": "#002113",
-                "outline": "#727783",
-                "tertiary-fixed": "#ffdadb",
-                "on-primary-container": "#dbe6ff",
-                "inverse-primary": "#a8c8ff",
-                "primary-fixed": "#d6e3ff",
-                "inverse-surface": "#213145",
-                "surface-bright": "#f8f9ff",
-                "surface-variant": "#d3e4fe",
-                "on-tertiary-fixed-variant": "#92002a",
-                "error-container": "#ffdad6",
-                "on-surface": "#0b1c30",
-                "on-background": "#0b1c30",
-                "on-secondary-fixed-variant": "#005236",
-                "surface-container-low": "#eff4ff",
-                "primary": "#004e99",
-                "surface-tint": "#005eb5",
-                "surface-container-high": "#dce9ff",
-                "secondary-fixed-dim": "#4edea3",
-                "primary-container": "#0a66c2",
-                "surface-dim": "#cbdbf5",
-                "tertiary-container": "#c81a42",
-                "error": "#ba1a1a",
-                "tertiary": "#a0002f",
-                "secondary-container": "#6cf8bb",
-                "surface": "#f8f9ff",
-                "on-error-container": "#93000a",
-                "inverse-on-surface": "#eaf1ff",
-                "primary-fixed-dim": "#a8c8ff",
-                "on-tertiary-fixed": "#40000d",
-                "surface-container-lowest": "#ffffff",
-                "surface-container": "#e5eeff",
-                "on-tertiary": "#ffffff",
-            },
-            fontFamily: {
-                headline: ["Inter", "sans-serif"],
-                body: ["Inter", "sans-serif"],
-                label: ["Inter", "sans-serif"],
-            },
-            borderRadius: {
-                DEFAULT: "0.25rem",
-                lg: "0.5rem",
-                xl: "0.75rem",
-                "2xl": "1rem",
-                full: "9999px",
-            },
+  darkMode: 'class',
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+        },
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: ['Geist', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      keyframes: {
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'slide-in-right': {
+          '0%': { opacity: '0', transform: 'translateX(20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'gradient-x': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center',
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center',
+          },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 0.4s ease-out forwards',
+        'slide-in-right': 'slide-in-right 0.4s ease-out forwards',
+        'scale-in': 'scale-in 0.3s ease-out forwards',
+        'gradient-x': 'gradient-x 5s ease infinite',
+      },
+      backgroundSize: {
+        '200%': '200%',
+      },
     },
-    plugins: [],
+  },
+  plugins: [],
 };

@@ -1,0 +1,101 @@
+const API_BASE_URL = 'http://localhost:5000/api';
+const TOKEN_KEY = 'edu-pay-track-token';
+
+/**
+ * Retrieve the stored JWT token.
+ */
+export function getToken(): string | null {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+/**
+ * Store a JWT token.
+ */
+export function setToken(token: string): void {
+  localStorage.setItem(TOKEN_KEY, token);
+}
+
+/**
+ * Remove the stored JWT token.
+ */
+export function clearToken(): void {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+/**
+ * Structured API error with status code and server data.
+ */
+export class ApiError extends Error {
+  status: number;
+  data: any;
+
+  constructor(message: string, status: number, data?: any) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.data = data;
+  }
+}
+
+/**
+ * Low-level API client.
+ * - Automatically attaches JWT Bearer token
+ * - Handles JSON and FormData payloads
+ * - 30-second timeout via AbortController
+ */
+export async function apiFetch<T>(
+  endpoint: string,
+  options: RequestInit = {},
+  timeoutMs = 30000
+): Promise<T> {
+  const token = getToken();
+  const isFormData = options.body instanceof FormData;
+
+  const headers: Record<string, string> = {
+    // Don't set Content-Type for FormData — browser sets it with boundary
+    ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
+    ...(options.headers as Record<string, string>),
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    });
+
+    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const rawData = isJson ? await response.json() : null;
+
+    if (!response.ok) {
+      // Backend now sends { success: false, message?: string, ... }
+      const errorMessage = rawData?.message || `Request failed (${response.status})`;
+      throw new ApiError(errorMessage, response.status, rawData);
+    }
+
+    // Unwrap standard { success, data, message } wrapper
+    if (rawData && typeof rawData === 'object' && 'success' in rawData) {
+      return rawData.data as T;
+    }
+
+    return rawData as T;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    if ((error as Error).name === 'AbortError') {
+      throw new ApiError('Request timed out', 408);
+    }
+    throw new ApiError(
+      (error as Error).message || 'Network error',
+      0
+    );
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}

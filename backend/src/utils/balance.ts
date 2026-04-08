@@ -19,25 +19,53 @@ export const recalculateStudentBalance = async (studentId: string) => {
         throw new AppError('Student not found', 404);
     }
 
+    const normalizedProgram = student.program?.trim() || null;
+    const normalizedClassLevel = student.classLevel?.trim() || null;
+    const normalizedAcademicYear = student.academicYear?.trim() || null;
+
+    console.log(`[Balance Calc] Student ${studentId}:`, {
+        program: normalizedProgram,
+        classLevel: normalizedClassLevel,
+        academicYear: normalizedAcademicYear,
+    });
+
     const applicableFeeStructures = await prisma.feeStructure.findMany({
         where: {
             active: true,
             AND: [
                 {
-                    OR: [{ program: null }, { program: student.program }],
+                    OR: [
+                        { program: null },
+                        { program: '' },
+                        { program: normalizedProgram },
+                    ],
                 },
                 {
-                    OR: [{ classLevel: null }, { classLevel: student.classLevel }],
+                    OR: [
+                        { classLevel: null },
+                        { classLevel: '' },
+                        { classLevel: normalizedClassLevel },
+                    ],
                 },
                 {
-                    OR: [{ academicYear: null }, { academicYear: student.academicYear }],
+                    OR: [
+                        { academicYear: null },
+                        { academicYear: '' },
+                        { academicYear: normalizedAcademicYear },
+                    ],
                 },
             ],
         },
     });
 
+    console.log(`[Balance Calc] Found ${applicableFeeStructures.length} fee structures for student ${studentId}:`,
+        applicableFeeStructures.map(f => ({ id: f.id, title: f.title, amount: f.amount, program: f.program, classLevel: f.classLevel, academicYear: f.academicYear }))
+    );
+
     const expectedTotal = applicableFeeStructures.reduce((sum, fee) => sum + Number(fee.amount), 0);
     const paidTotal = student.payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+
+    console.log(`[Balance Calc] Student ${studentId}: expectedTotal=${expectedTotal}, paidTotal=${paidTotal}, newBalance=${expectedTotal - paidTotal}`);
 
     return prisma.student.update({
         where: { id: studentId },

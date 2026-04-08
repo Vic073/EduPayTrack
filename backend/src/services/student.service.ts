@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import { AppError } from '../middleware/error-handler';
+import { recalculateStudentBalance } from '../utils/balance';
 
 export const getStudentDashboard = async (userId: string) => {
     const user = await prisma.user.findUnique({
@@ -21,6 +22,9 @@ export const getStudentDashboard = async (userId: string) => {
         throw new AppError('Student profile not found', 404);
     }
 
+    // Recalculate balance to ensure it's up-to-date
+    const updatedStudent = await recalculateStudentBalance(user.student.id);
+
     const approvedPayments = user.student.payments.filter(
         (payment) => payment.status === 'APPROVED'
     );
@@ -37,10 +41,10 @@ export const getStudentDashboard = async (userId: string) => {
     const installmentCount = approvedPayments.length;
 
     return {
-        student: user.student,
+        student: updatedStudent,
         summary: {
             totalPaid,
-            currentBalance: Number(user.student.currentBalance),
+            currentBalance: Number(updatedStudent.currentBalance),
             installmentCount,
             pendingVerifications: pendingPayments.length,
             rejectedSubmissions: rejectedPayments.length,

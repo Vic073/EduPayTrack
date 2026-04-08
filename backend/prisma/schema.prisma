@@ -55,6 +55,7 @@ model User {
   verifiedPayments Payment[] @relation("PaymentVerifier")
   reviewedPayments Payment[] @relation("PaymentReviewer")
   generatedReports GeneratedReport[]
+  notifications    Notification[]
 }
 
 model Student {
@@ -141,6 +142,19 @@ model GeneratedReport {
   user         User     @relation(fields: [generatedBy], references: [id], onDelete: Cascade)
 
   @@index([generatedBy])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // e.g., 'FEE_ASSIGNED', 'PAYMENT_SUBMITTED', 'PAYMENT_APPROVED', 'SYSTEM'
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
 }
 
 model SystemRegistry {

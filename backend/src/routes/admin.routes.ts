@@ -2,6 +2,7 @@ import { PaymentStatus, UserRole } from '../generated/prisma';
 import { Router } from 'express';
 
 import { asyncHandler } from '../lib/async-handler';
+import { prisma } from '../lib/prisma';
 import { requireAuth, requireRole } from '../middleware/auth';
 import {
     createFeeStructure,
@@ -18,6 +19,33 @@ import { readAuditLogs, deleteAuditLogs } from '../utils/audit-log';
 export const adminRouter = Router();
 
 adminRouter.use(requireAuth, requireRole(UserRole.ADMIN, UserRole.ACCOUNTS));
+
+// Dashboard statistics — live aggregated data
+adminRouter.get(
+    '/dashboard-stats',
+    asyncHandler(async (_req, res) => {
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        const [studentCount, pendingCount, approvedTodayCount, monthlyRevenue] = await Promise.all([
+            prisma.student.count(),
+            prisma.payment.count({ where: { status: 'PENDING' } }),
+            prisma.payment.count({ where: { status: 'APPROVED', reviewedAt: { gte: startOfDay } } }),
+            prisma.payment.aggregate({
+                where: { status: 'APPROVED', reviewedAt: { gte: startOfMonth } },
+                _sum: { amount: true },
+            }),
+        ]);
+
+        res.status(200).json({
+            totalStudents: studentCount,
+            pendingPayments: pendingCount,
+            approvedToday: approvedTodayCount,
+            monthlyRevenue: Number(monthlyRevenue._sum.amount || 0),
+        });
+    })
+);
 
 adminRouter.get(
     '/payments',
@@ -38,7 +66,7 @@ adminRouter.get(
 
 adminRouter.patch(
     '/payments/:paymentId/review',
-    requireRole(UserRole.ADMIN),
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
     asyncHandler(async (req, res) => {
         const payment = await reviewPayment(
             req.params.paymentId,
@@ -52,7 +80,7 @@ adminRouter.patch(
 
 adminRouter.patch(
     '/payments/:paymentId/verify',
-    requireRole(UserRole.ACCOUNTS),
+    requireRole(UserRole.ADMIN, UserRole.ACCOUNTS),
     asyncHandler(async (req, res) => {
         const payment = await verifyPayment(
             req.params.paymentId,
@@ -151,6 +179,20 @@ adminRouter.post(
     })
 );
 
+adminRouter.put(
+    '/users/:userId/role',
+    requireRole(UserRole.ADMIN),
+    asyncHandler(async (req, res) => {
+        const { userId } = req.params;
+        const { role } = req.body;
+        const user = await prisma.user.update({
+            where: { id: userId },
+            data: { role },
+        });
+        res.status(200).json(user);
+    })
+);
+
 adminRouter.post(
     '/users/:userId/suspend',
     requireRole(UserRole.ADMIN),
@@ -178,6 +220,15 @@ adminRouter.post(
     })
 );
 
+adminRouter.post(
+    '/users/:userId/reactivate',
+    requireRole(UserRole.ADMIN),
+    asyncHandler(async (req, res) => {
+        const result = await activateUser(req.params.userId, req.body.reason);
+        res.status(200).json(result);
+    })
+);
+
 adminRouter.delete(
     '/users/:userId',
     requireRole(UserRole.ADMIN),
@@ -201,5 +252,18 @@ adminRouter.patch(
     asyncHandler(async (req, res) => {
         const result = await updateRegistry(req.body);
         res.status(200).json(result);
+    })
+);
+
+adminRouter.delete(
+    '/users/:id',
+    requireRole(UserRole.ADMIN),
+    asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        if (id === req.user?.userId) {
+            return res.status(403).json({ message: 'Cannot delete your own admin account.' });
+        }
+        await prisma.user.delete({ where: { id } });
+        res.status(200).json({ message: 'User deleted successfully' });
     })
 );

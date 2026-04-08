@@ -1,10 +1,11 @@
-import { PaymentMethod, PaymentStatus, VerificationStatus } from '../generated/prisma';
+import { PaymentMethod, PaymentStatus, VerificationStatus, UserRole } from '../generated/prisma';
 import { z } from 'zod';
 
 import { prisma } from '../lib/prisma';
 import { AppError } from '../middleware/error-handler';
 import { writeAuditLog } from '../utils/audit-log';
 import { recalculateStudentBalance } from '../utils/balance';
+import { createNotification, createBulkNotifications } from './notification.service';
 
 const submitPaymentSchema = z.object({
     amount: z.coerce.number().positive(),
@@ -13,7 +14,7 @@ const submitPaymentSchema = z.object({
     externalReference: z.string().min(1).optional().or(z.literal('')),
     receiptNumber: z.string().min(1).optional().or(z.literal('')),
     paymentDate: z.coerce.date(),
-    proofUrl: z.string().url(),
+    proofUrl: z.string().min(5),
     payerName: z.string().min(2).optional().or(z.literal('')),
     notes: z.string().max(500).optional().or(z.literal('')),
     ocrText: z.string().optional().or(z.literal('')),
@@ -106,6 +107,30 @@ export const submitPayment = async (userId: string, input: unknown) => {
             duplicateFlag: payment.duplicateFlag,
         },
     });
+
+    // Notify Student
+    await createNotification({
+        userId,
+        title: 'Payment Submitted',
+        message: `Your payment of MK ${Number(payment.amount).toLocaleString()} has been submitted and is pending review.`,
+        type: 'PAYMENT_SUBMITTED',
+    });
+
+    // Notify Admins
+    const staff = await prisma.user.findMany({
+        where: { role: { in: ['ADMIN', 'ACCOUNTS'] } },
+        select: { id: true },
+    });
+    if (staff.length > 0) {
+        await createBulkNotifications(
+            staff.map((s) => ({
+                userId: s.id,
+                title: 'New Payment Pending Review',
+                message: `${user.student?.firstName} ${user.student?.lastName} submitted a payment of MK ${Number(payment.amount).toLocaleString()}.`,
+                type: 'PAYMENT_SUBMITTED',
+            }))
+        );
+    }
 
     return payment;
 };
@@ -263,13 +288,22 @@ export const reviewPayment = async (
         throw new AppError('Only pending payments can be reviewed', 409);
     }
 
-    // ENFORCE 2-STEP WORKFLOW: Payment must be VERIFIED before ADMIN can approve
-    if (existingPayment.verificationStatus === VerificationStatus.UNVERIFIED) {
-        throw new AppError('Payment must be verified by ACCOUNTS before approval', 412);
-    }
+    // Get reviewer's role
+    const reviewer = await prisma.user.findUnique({
+        where: { id: reviewerId },
+        select: { role: true },
+    });
 
-    if (existingPayment.verificationStatus === VerificationStatus.FLAGGED && data.status === PaymentStatus.APPROVED) {
-        throw new AppError('Cannot approve payments flagged as suspicious. Review ACCOUNTS verification notes.', 400);
+    // ACCOUNTS users can approve/reject directly (skip verification requirement)
+    // ADMIN users must follow 2-step workflow (payment must be verified first)
+    if (reviewer?.role === UserRole.ADMIN) {
+        if (existingPayment.verificationStatus === VerificationStatus.UNVERIFIED) {
+            throw new AppError('Payment must be verified by ACCOUNTS before approval', 412);
+        }
+
+        if (existingPayment.verificationStatus === VerificationStatus.FLAGGED && data.status === PaymentStatus.APPROVED) {
+            throw new AppError('Cannot approve payments flagged as suspicious. Review ACCOUNTS verification notes.', 400);
+        }
     }
 
     const payment = await prisma.payment.update({
@@ -279,6 +313,12 @@ export const reviewPayment = async (
             reviewNotes: data.reviewNotes,
             reviewedAt: new Date(),
             reviewerId,
+            // If ACCOUNTS is approving, auto-set verification to VERIFIED
+            ...(reviewer?.role === UserRole.ACCOUNTS && data.status === PaymentStatus.APPROVED && {
+                verificationStatus: VerificationStatus.VERIFIED,
+                verifiedAt: new Date(),
+                verifiedBy: reviewerId,
+            }),
         },
         include: {
             student: true,
@@ -305,7 +345,7 @@ export const reviewPayment = async (
         action: `payment.${data.status.toLowerCase()}`,
         actor: {
             userId: reviewerId,
-            role: 'ADMIN',
+            role: reviewer?.role || 'UNKNOWN',
         },
         targetType: 'payment',
         targetId: payment.id,
@@ -315,6 +355,15 @@ export const reviewPayment = async (
             verificationStatus: payment.verificationStatus,
             reviewNotes: payment.reviewNotes,
         },
+    });
+
+    await createNotification({
+        userId: payment.student.userId,
+        title: `Payment ${data.status === PaymentStatus.APPROVED ? 'Approved' : 'Rejected'}`,
+        message: data.status === PaymentStatus.APPROVED 
+            ? `Your payment of MK ${Number(payment.amount).toLocaleString()} has been approved. Your balance has been updated.`
+            : `Your payment of MK ${Number(payment.amount).toLocaleString()} was rejected: ${data.reviewNotes || 'Invalid receipt'}`,
+        type: data.status === PaymentStatus.APPROVED ? 'PAYMENT_APPROVED' : 'PAYMENT_REJECTED',
     });
 
     return payment;

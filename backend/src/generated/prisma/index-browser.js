@@ -208,6 +208,16 @@ exports.Prisma.GeneratedReportScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  type: 'type',
+  read: 'read',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SystemRegistryScalarFieldEnum = {
   id: 'id',
   institutionName: 'institutionName',
@@ -260,10 +270,9 @@ exports.UserStatus = exports.$Enums.UserStatus = {
 };
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {
-  BANK: 'BANK',
-  MOBILE_MONEY: 'MOBILE_MONEY',
   CASH: 'CASH',
-  OTHER: 'OTHER'
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  MOBILE_CREDIT_CARD: 'MOBILE_CREDIT_CARD'
 };
 
 exports.PaymentStatus = exports.$Enums.PaymentStatus = {
@@ -284,6 +293,7 @@ exports.Prisma.ModelName = {
   FeeStructure: 'FeeStructure',
   Payment: 'Payment',
   GeneratedReport: 'GeneratedReport',
+  Notification: 'Notification',
   SystemRegistry: 'SystemRegistry'
 };
 

@@ -17,6 +17,38 @@ import { recalculateStudentBalance } from '../utils/balance';
 // [SECTION: MEMORY STORAGE] - For temporary reset codes (when SMTP is not configured)
 const resetCodes = new Map<string, { code: string; expires: number }>();
 
+/**
+ * Retrieve the current authenticated user's profile from their JWT payload.
+ * Used by GET /auth/me for session restoration on page reload.
+ */
+export const getCurrentUser = async (userId: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { student: true },
+    });
+
+    if (!user) {
+        throw new AppError('User not found', 404);
+    }
+
+    if (user.status !== 'ACTIVE') {
+        throw new AppError('Account is not active', 403);
+    }
+
+    return {
+        user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+            status: user.status,
+            profilePictureUrl: normalizeProfilePictureUrl(user.profilePictureUrl),
+            student: user.student,
+        },
+    };
+};
+
 // Normalize profilePictureUrl to valid URL format
 function normalizeProfilePictureUrl(url: string | null | undefined): string | null {
     if (!url) return null;
@@ -97,7 +129,8 @@ export const registerStudent = async (input: unknown, ipAddress?: string) => {
         },
     });
 
-    await recalculateStudentBalance(user.student!.id);
+    const updatedStudent = await recalculateStudentBalance(user.student!.id);
+    user.student = updatedStudent;
 
     writeAuditLog({
         action: 'student.registered',

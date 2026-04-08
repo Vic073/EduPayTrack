@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
-const { PrismaClient, UserRole, PaymentMethod, PaymentStatus } = require('@prisma/client');
+const { PrismaClient, UserRole, PaymentMethod, PaymentStatus } = require('../src/generated/prisma');
 
 const prisma = new PrismaClient();
 
@@ -91,7 +91,7 @@ async function main() {
                 studentId: studentUser.student.id,
                 amount: 150000,
                 currency: 'MWK',
-                method: PaymentMethod.BANK,
+                method: "BANK_TRANSFER",
                 externalReference: 'DEMO-BANK-001',
                 receiptNumber: 'RCPT-001',
                 proofUrl: 'http://localhost:5000/uploads/demo-proof-1.pdf',
@@ -112,7 +112,7 @@ async function main() {
                 studentId: studentUser.student.id,
                 amount: 100000,
                 currency: 'MWK',
-                method: PaymentMethod.MOBILE_MONEY,
+                method: "MOBILE_CREDIT_CARD",
                 externalReference: 'DEMO-MM-002',
                 receiptNumber: 'RCPT-002',
                 proofUrl: 'http://localhost:5000/uploads/demo-proof-2.jpg',

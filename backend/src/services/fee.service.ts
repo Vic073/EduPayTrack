@@ -4,6 +4,7 @@ import { prisma } from '../lib/prisma';
 import { AppError } from '../middleware/error-handler';
 import { writeAuditLog } from '../utils/audit-log';
 import { recalculateStudentBalance } from '../utils/balance';
+import { createBulkNotifications } from './notification.service';
 
 const feeStructureSchema = z.object({
     title: z.string().min(3),
@@ -21,24 +22,55 @@ const feeStructureUpdateSchema = feeStructureSchema.partial();
 
 export const createFeeStructure = async (input: unknown) => {
     const data = feeStructureSchema.parse(input);
-    const feeStructure = await prisma.feeStructure.create({ data });
 
-    const affectedStudents = await prisma.student.findMany({
-        where: {
-            AND: [
-                data.program ? { program: data.program } : {},
-                data.classLevel ? { classLevel: data.classLevel } : {},
-                data.academicYear ? { academicYear: data.academicYear } : {},
-            ],
-        },
-        select: {
-            id: true,
-        },
+    // DEACTIVATE older fee structures that match this criteria
+    // Only deactivate if at least one criterion is specified
+    if (data.program || data.academicYear || data.classLevel) {
+        const deactivateWhere: any = { active: true };
+        if (data.program !== undefined) deactivateWhere.program = data.program;
+        if (data.academicYear !== undefined) deactivateWhere.academicYear = data.academicYear;
+        if (data.classLevel !== undefined) deactivateWhere.classLevel = data.classLevel;
+
+        console.log('[FeeService] Deactivating fee structures with criteria:', deactivateWhere);
+
+        await prisma.feeStructure.updateMany({
+            where: deactivateWhere,
+            data: { active: false },
+        });
+    }
+
+    const feeStructure = await prisma.feeStructure.create({ data });
+    console.log('[FeeService] Created fee structure:', { id: feeStructure.id, title: feeStructure.title, program: feeStructure.program, classLevel: feeStructure.classLevel, academicYear: feeStructure.academicYear });
+
+    // Recalculate balances for ALL students since deactivation may have affected anyone
+    const allStudents = await prisma.student.findMany({
+        select: { id: true, userId: true, program: true, classLevel: true, academicYear: true },
     });
 
+    console.log(`[FeeService] Recalculating balances for ${allStudents.length} students`);
+
     await Promise.all(
-        affectedStudents.map(async (student) => recalculateStudentBalance(student.id))
+        allStudents.map(async (student) => recalculateStudentBalance(student.id))
     );
+
+    // Notify students who match this fee structure's criteria
+    const matchingStudents = allStudents.filter(s => {
+        const programMatch = !data.program || s.program === data.program;
+        const classLevelMatch = !data.classLevel || s.classLevel === data.classLevel;
+        const academicYearMatch = !data.academicYear || s.academicYear === data.academicYear;
+        return programMatch && classLevelMatch && academicYearMatch;
+    });
+
+    if (matchingStudents.length > 0) {
+        await createBulkNotifications(
+            matchingStudents.map((s) => ({
+                userId: s.userId,
+                title: 'New Fee Structure Assigned',
+                message: `A new fee structure "${feeStructure.title}" (MK ${Number(feeStructure.amount).toLocaleString()}) has been assigned to your program.`,
+                type: 'FEE_ASSIGNED',
+            }))
+        );
+    }
 
     writeAuditLog({
         action: 'fee_structure.created',

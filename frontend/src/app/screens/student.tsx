@@ -1,0 +1,576 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { Upload, TrendingDown, CheckCircle, DollarSign, Loader2, FileImage, X, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { useAuth } from '../state/auth-context';
+import { apiFetch } from '../lib/api';
+import { Card, CardContent } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Skeleton } from '../../components/ui/skeleton';
+import { formatCurrency, formatDate } from '../../lib/utils';
+
+/* ---- Status badge helper ---- */
+function PaymentStatusBadge({ status }: { status: string }) {
+  const s = status.toUpperCase();
+  const map: Record<string, string> = {
+    APPROVED: 'bg-success/10 text-success border-success/20',
+    PENDING: 'bg-warning/10 text-warning border-warning/20',
+    REJECTED: 'bg-destructive/10 text-destructive border-destructive/20',
+  };
+  return (
+    <Badge variant="outline" className={`text-[11px] font-medium ${map[s] || ''}`}>
+      {s.charAt(0) + s.slice(1).toLowerCase()}
+    </Badge>
+  );
+}
+
+/* ===== STUDENT DASHBOARD ===== */
+
+export function StudentDashboardPage() {
+  const { user } = useAuth();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    apiFetch('/students/me')
+      .then((res) => setData(res))
+      .catch((err) => setError(err.message || 'Failed to load dashboard'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-4 md:p-6 space-y-6 max-w-[1000px] animate-fade-in">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-5 w-48" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[1, 2, 3].map(i => <Skeleton key={i} className="h-28 rounded-lg" />)}
+        </div>
+        <Skeleton className="h-10 rounded-lg" />
+        <Skeleton className="h-48 rounded-lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 flex flex-col items-center justify-center gap-3 text-center">
+        <AlertCircle className="h-10 w-10 text-destructive/60" />
+        <p className="text-sm text-muted-foreground max-w-md">{error}</p>
+        <Button size="sm" variant="outline" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
+      </div>
+    );
+  }
+
+  const totalPaid = data.summary.totalPaid;
+  const remaining = data.summary.currentBalance;
+  const totalFees = totalPaid + remaining;
+  const paidPercent = totalFees > 0 ? Math.round((totalPaid / totalFees) * 100) : 0;
+
+  return (
+    <div className="p-4 md:p-6 space-y-6 max-w-[1000px] animate-fade-in relative">
+      {/* Ambient glow */}
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-info/10 blur-[100px] rounded-full pointer-events-none -z-10" />
+
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-[24px] font-semibold tracking-tight text-foreground flex items-center gap-2">
+            Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0] || 'Student'}</span>
+          </h1>
+          <p className="text-[14px] text-muted-foreground mt-1 font-medium">
+            {data.student?.program || 'Student'} • {data.student?.academicYear || 'Academic Year 2025/2026'}
+          </p>
+        </div>
+        <Link to="/student/upload-payment" className="animate-scale-in animate-delay-100">
+          <Button size="default" className="gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
+            <Upload className="h-4 w-4" />Upload Payment
+          </Button>
+        </Link>
+      </div>
+
+      {/* Stats cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card className="glass-card animate-slide-in-right animate-delay-100">
+          <CardContent className="pt-5 pb-5 px-5">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <span className="text-[13px] text-muted-foreground uppercase tracking-wider font-semibold">Total Fees</span>
+            </div>
+            <span className="text-[28px] font-bold tracking-tight">{formatCurrency(totalFees)}</span>
+          </CardContent>
+        </Card>
+        <Card className="glass-card animate-slide-in-right animate-delay-200">
+          <CardContent className="pt-5 pb-5 px-5">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="h-4 w-4 text-success" />
+              <span className="text-[13px] text-muted-foreground uppercase tracking-wider font-semibold">Paid</span>
+            </div>
+            <span className="text-[28px] font-bold tracking-tight text-success">{formatCurrency(totalPaid)}</span>
+          </CardContent>
+        </Card>
+        <Card className="glass-card animate-slide-in-right animate-delay-300">
+          <CardContent className="pt-5 pb-5 px-5">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingDown className="h-4 w-4 text-warning" />
+              <span className="text-[13px] text-muted-foreground uppercase tracking-wider font-semibold">Remaining</span>
+            </div>
+            <span className="text-[28px] font-bold tracking-tight">{formatCurrency(remaining)}</span>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Progress bar */}
+      <Card>
+        <CardContent className="pt-4 pb-4 px-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[13px] text-muted-foreground">Payment progress</span>
+            <span className="text-[13px] font-medium">{paidPercent}%</span>
+          </div>
+          <div className="h-2.5 bg-muted rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-success to-success/80 rounded-full transition-all duration-700"
+              style={{ width: `${paidPercent}%` }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Summary row */}
+      <div className="grid grid-cols-3 gap-3">
+        <Card>
+          <CardContent className="py-3 px-4 text-center">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide">Installments</p>
+            <p className="text-lg font-semibold">{data.summary.installmentCount}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-3 px-4 text-center">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide">Pending</p>
+            <p className="text-lg font-semibold text-warning">{data.summary.pendingVerifications}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-3 px-4 text-center">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide">Rejected</p>
+            <p className="text-lg font-semibold text-destructive">{data.summary.rejectedSubmissions}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent payments */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-[15px] font-medium text-foreground">Recent Payments</h2>
+          <Link to="/student/payment-history">
+            <Button variant="ghost" size="sm" className="text-[12px] text-primary">
+              View all →
+            </Button>
+          </Link>
+        </div>
+        <Card>
+          <CardContent className="p-0">
+            {data.payments.length === 0 ? (
+              <div className="py-12 text-center text-[13px] text-muted-foreground">
+                No payments submitted yet. Upload your first payment receipt to get started.
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Reference</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.payments.slice(0, 5).map((p: any) => (
+                    <TableRow key={p.id}>
+                      <TableCell className="text-[13px]">{formatDate(p.paymentDate || p.submittedAt)}</TableCell>
+                      <TableCell className="text-[13px] text-muted-foreground font-mono">{p.receiptNumber || p.externalReference || 'N/A'}</TableCell>
+                      <TableCell className="text-[13px] font-medium">{formatCurrency(Number(p.amount))}</TableCell>
+                      <TableCell><PaymentStatusBadge status={p.status} /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+/* ===== UPLOAD PAYMENT ===== */
+
+export function UploadPaymentPage() {
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [proofUrl, setProofUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Form state
+  const [amount, setAmount] = useState('');
+  const [method, setMethod] = useState('');
+  const [reference, setReference] = useState('');
+  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
+  const [payerName, setPayerName] = useState('');
+  const [notes, setNotes] = useState('');
+
+  const handleFileSelect = useCallback((selectedFile: File) => {
+    setFile(selectedFile);
+    // Create preview for images
+    if (selectedFile.type.startsWith('image/')) {
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    const f = e.dataTransfer.files?.[0];
+    if (f) handleFileSelect(f);
+  }, [handleFileSelect]);
+
+  const uploadFile = async () => {
+    if (!file) return;
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('receipt', file);
+      const result = await apiFetch<any>('/payments/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      setProofUrl(result.proofUrl);
+      toast.success('Receipt uploaded successfully');
+    } catch (err: any) {
+      toast.error(err.message || 'Upload failed');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!proofUrl) {
+      toast.error('Please upload a receipt first');
+      return;
+    }
+    if (!amount || !method || !paymentDate) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await apiFetch('/payments', {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: Number(amount),
+          method,
+          externalReference: reference,
+          paymentDate,
+          proofUrl,
+          payerName,
+          notes,
+        }),
+      });
+      toast.success('Payment submitted for review!');
+      // Reset form
+      setFile(null);
+      setPreviewUrl(null);
+
+      setProofUrl(null);
+      setAmount('');
+      setMethod('');
+      setReference('');
+      setPayerName('');
+      setNotes('');
+    } catch (err: any) {
+      toast.error(err.message || 'Submission failed');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="p-4 md:p-6 space-y-6 max-w-[680px] animate-fade-in">
+      <div>
+        <h1 className="text-[20px] font-semibold tracking-tight text-foreground">Upload Payment</h1>
+        <p className="text-[13px] text-muted-foreground mt-0.5">Submit a receipt for review and approval</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* File upload zone */}
+        <Card>
+          <CardContent className="p-5">
+            <label className="text-[13px] font-medium mb-2 block">Receipt Image / PDF</label>
+            {!file ? (
+              <div
+                className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-lg py-10 bg-muted/30 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+              >
+                <Upload className="h-8 w-8 text-muted-foreground mb-3" />
+                <p className="text-[14px] font-medium">Click or drag receipt here</p>
+                <p className="text-[12px] text-muted-foreground mt-1">Accepts JPG, PNG, PDF up to 5MB</p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleFileSelect(f);
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="border border-border rounded-lg p-4 relative">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 h-6 w-6"
+                  onClick={() => {
+                    setFile(null);
+                    setPreviewUrl(null);
+                    setProofUrl(null);
+                  }}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+                <div className="flex items-center gap-3">
+                  {previewUrl ? (
+                    <img src={previewUrl} alt="Receipt preview" className="h-20 w-20 object-cover rounded-md border" />
+                  ) : (
+                    <div className="h-20 w-20 rounded-md border bg-muted flex items-center justify-center">
+                      <FileImage className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-medium truncate">{file.name}</p>
+                    <p className="text-[12px] text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</p>
+                    {proofUrl ? (
+                      <Badge variant="outline" className="text-[11px] mt-1 bg-success/10 text-success border-success/20">
+                        ✓ Uploaded
+                      </Badge>
+                    ) : (
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="mt-2 h-7 text-[12px]"
+                        disabled={isUploading}
+                        onClick={uploadFile}
+                      >
+                        {isUploading ? (
+                          <><Loader2 className="h-3 w-3 animate-spin mr-1" />Uploading...</>
+                        ) : (
+                          'Upload receipt'
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Payment details */}
+        <Card>
+          <CardContent className="p-5 space-y-4">
+            <label className="text-[13px] font-medium block">Payment Details</label>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-[12px] text-muted-foreground font-medium">Amount (MWK) *</label>
+                <Input
+                  type="number"
+                  placeholder="450000"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="h-10"
+                  required
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[12px] text-muted-foreground font-medium">Payment Method *</label>
+                <Select value={method} onValueChange={setMethod}>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="BANK_TRANSFER">Bank Transfer</SelectItem>
+                    <SelectItem value="MOBILE_CREDIT_CARD">Mobile / Card</SelectItem>
+                    <SelectItem value="CASH">Cash</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-[12px] text-muted-foreground font-medium">Reference Number</label>
+                <Input
+                  placeholder="NBM-782331"
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  className="h-10"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[12px] text-muted-foreground font-medium">Payment Date *</label>
+                <Input
+                  type="date"
+                  value={paymentDate}
+                  onChange={(e) => setPaymentDate(e.target.value)}
+                  className="h-10"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[12px] text-muted-foreground font-medium">Payer Name</label>
+              <Input
+                placeholder="Name on the transaction"
+                value={payerName}
+                onChange={(e) => setPayerName(e.target.value)}
+                className="h-10"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[12px] text-muted-foreground font-medium">Notes</label>
+              <Input
+                placeholder="Any additional notes..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="h-10"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Button
+          type="submit"
+          className="w-full h-10 font-medium"
+          disabled={isSubmitting || !proofUrl}
+        >
+          {isSubmitting ? (
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting...</>
+          ) : (
+            'Submit Payment for Review'
+          )}
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+/* ===== PAYMENT HISTORY ===== */
+
+export function PaymentHistoryPage() {
+  const [payments, setPayments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+
+  useEffect(() => {
+    apiFetch<any>('/students/me')
+      .then((data) => setPayments(data.payments || []))
+      .catch(() => toast.error('Failed to load payment history'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filtered = statusFilter === 'ALL'
+    ? payments
+    : payments.filter(p => p.status === statusFilter);
+
+  if (loading) {
+    return (
+      <div className="p-4 md:p-6 space-y-4 max-w-[1000px]">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-64 rounded-lg" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 md:p-6 space-y-6 max-w-[1000px] animate-fade-in">
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-[20px] font-semibold tracking-tight text-foreground">Payment History</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">
+            {payments.length} payment{payments.length !== 1 ? 's' : ''} submitted
+          </p>
+        </div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-[140px] h-9">
+            <SelectValue placeholder="Filter..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All statuses</SelectItem>
+            <SelectItem value="PENDING">Pending</SelectItem>
+            <SelectItem value="APPROVED">Approved</SelectItem>
+            <SelectItem value="REJECTED">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Card>
+        <CardContent className="p-0">
+          {filtered.length === 0 ? (
+            <div className="py-12 text-center text-[13px] text-muted-foreground">
+              {statusFilter !== 'ALL'
+                ? `No ${statusFilter.toLowerCase()} payments found.`
+                : 'No payments submitted yet.'}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Reference</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((p: any) => (
+                  <TableRow key={p.id}>
+                    <TableCell className="text-[13px]">{formatDate(p.paymentDate || p.submittedAt)}</TableCell>
+                    <TableCell className="text-[13px] text-muted-foreground font-mono">{p.receiptNumber || p.externalReference || 'N/A'}</TableCell>
+                    <TableCell className="text-[13px]">{p.method?.replace(/_/g, ' ')}</TableCell>
+                    <TableCell className="text-[13px] font-medium">{formatCurrency(Number(p.amount))}</TableCell>
+                    <TableCell><PaymentStatusBadge status={p.status} /></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

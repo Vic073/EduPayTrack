@@ -3,9 +3,20 @@ import { Router } from 'express';
 import { asyncHandler } from '../lib/async-handler';
 import { requireAuth } from '../middleware/auth';
 import { uploadReceipt, uploadProfilePicture } from '../middleware/upload';
-import { changePassword, loginUser, logoutUser, registerStudent, updateProfilePicture, forgotPassword, resetPassword, terminateActiveSession } from '../services/auth.service';
+import { changePassword, getCurrentUser, loginUser, logoutUser, registerStudent, updateProfilePicture, forgotPassword, resetPassword, terminateActiveSession } from '../services/auth.service';
+import { prisma } from '../lib/prisma';
 
 export const authRouter = Router();
+
+// Session restore — validates JWT and returns current user profile
+authRouter.get(
+    '/me',
+    requireAuth,
+    asyncHandler(async (req, res) => {
+        const result = await getCurrentUser(req.user!.userId);
+        res.status(200).json(result);
+    })
+);
 
 authRouter.post(
     '/register/student',
@@ -84,5 +95,21 @@ authRouter.delete(
     asyncHandler(async (req, res) => {
         const result = await updateProfilePicture(req.user!.userId, null);
         res.status(200).json(result);
+    })
+);
+
+authRouter.delete(
+    '/me',
+    requireAuth,
+    asyncHandler(async (req, res) => {
+        const userId = req.user!.userId;
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        
+        if (user?.role === 'ADMIN') {
+            return res.status(403).json({ message: 'Admins cannot delete their own accounts via this method.' });
+        }
+        
+        await prisma.user.delete({ where: { id: userId } });
+        res.status(200).json({ message: 'Account deleted successfully' });
     })
 );
