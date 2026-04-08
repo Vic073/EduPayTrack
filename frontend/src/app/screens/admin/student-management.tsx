@@ -7,6 +7,14 @@ import {
   History, 
   Mail, 
   Eye, 
+  X,
+  GraduationCap,
+  Phone,
+  MapPin,
+  Calendar,
+  CreditCard,
+  User,
+  Receipt,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -15,6 +23,8 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Skeleton } from '../../../components/ui/skeleton';
+import { Badge } from '../../../components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../../components/ui/dialog';
 import { 
   Table, 
   TableHeader, 
@@ -29,8 +39,22 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '../../../components/ui/dropdown-menu';
-import { formatCurrency } from '../../../lib/utils';
-import { StudentPaymentHistoryDialog } from '../../components/admin/common/student-history-dialog';
+import { formatCurrency, formatDate } from '../../../lib/utils';
+import { PaymentStatusBadge } from '../../components/admin/common/payment-helpers';
+
+interface Payment {
+  id: string;
+  amount: number;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  method: string;
+  externalReference?: string;
+  receiptNumber?: string;
+  paymentDate?: string;
+  submittedAt?: string;
+  proofUrl?: string;
+  payerName?: string;
+  notes?: string;
+}
 
 export function StudentManagementPage() {
   const [students, setStudents] = useState<any[]>([]);
@@ -38,10 +62,20 @@ export function StudentManagementPage() {
   const [search, setSearch] = useState('');
   const [sendingAlerts, setSendingAlerts] = useState(false);
   const [viewingStudentHistory, setViewingStudentHistory] = useState<any>(null);
+  const [viewingStudentDetails, setViewingStudentDetails] = useState<any>(null);
+  const [studentPayments, setStudentPayments] = useState<Payment[]>([]);
+  const [paymentsLoading, setPaymentsLoading] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 
   useEffect(() => {
     loadStudents();
   }, []);
+
+  useEffect(() => {
+    if (viewingStudentHistory?.id) {
+      loadStudentPayments(viewingStudentHistory.id);
+    }
+  }, [viewingStudentHistory?.id]);
 
   const loadStudents = async () => {
     setLoading(true);
@@ -52,6 +86,18 @@ export function StudentManagementPage() {
       toast.error('Failed to load students');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadStudentPayments = async (studentId: string) => {
+    setPaymentsLoading(true);
+    try {
+      const result = await apiFetch<Payment[]>(`/admin/students/${studentId}/payments`);
+      setStudentPayments(result || []);
+    } catch {
+      toast.error('Failed to load payment history');
+    } finally {
+      setPaymentsLoading(false);
     }
   };
 
@@ -84,12 +130,24 @@ export function StudentManagementPage() {
   const handleEmailRemainder = (s: any) => {
     if (s.user?.email) {
       const subject = 'Payment Reminder';
-      const body = `Dear ${s.firstName},\n\n This is a reminder about your outstanding balance of ${formatCurrency(Number(s.currentBalance))}. Please make payment at your earliest convenience.\n\n Thank you.`;
+      const body = `Dear ${s.firstName},\n\nThis is a reminder about your outstanding balance of ${formatCurrency(Number(s.currentBalance))}. Please make payment at your earliest convenience.\n\nThank you.`;
       window.location.href = `mailto:${s.user.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       toast.success('Opening email client...');
     } else {
       toast.error('Student has no email address associated.');
     }
+  };
+
+  const getStatusColor = (balance: number) => {
+    if (balance === 0) return 'bg-success/10 text-success border-success/20';
+    if (balance > 0 && balance <= 50000) return 'bg-warning/10 text-warning border-warning/20';
+    return 'bg-destructive/10 text-destructive border-destructive/20';
+  };
+
+  const getStatusLabel = (balance: number) => {
+    if (balance === 0) return 'Fully Paid';
+    if (balance > 0 && balance <= 50000) return 'Partial';
+    return 'Outstanding';
   };
 
   return (
@@ -124,7 +182,7 @@ export function StudentManagementPage() {
                   <TableHead>Program</TableHead>
                   <TableHead>Year</TableHead>
                   <TableHead>Balance</TableHead>
-                  <TableHead>Email</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -132,10 +190,7 @@ export function StudentManagementPage() {
                 {filtered.map(s => (
                   <TableRow key={s.id}>
                     <TableCell className="text-[13px] font-mono">{s.studentCode}</TableCell>
-                    <TableCell 
-                      className="text-[13px] font-medium cursor-pointer hover:text-primary hover:underline"
-                      onClick={() => setViewingStudentHistory(s)}
-                    >
+                    <TableCell className="text-[13px] font-medium">
                       {s.firstName} {s.lastName}
                     </TableCell>
                     <TableCell className="text-[13px]">{s.program}</TableCell>
@@ -145,16 +200,29 @@ export function StudentManagementPage() {
                          {formatCurrency(Number(s.currentBalance))}
                       </span>
                     </TableCell>
-                    <TableCell className="text-[13px] text-muted-foreground">{s.user?.email || '—'}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={`text-[10px] ${getStatusColor(Number(s.currentBalance))}`}>
+                        {getStatusLabel(Number(s.currentBalance))}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[180px]">
-                          <DropdownMenuItem onClick={() => setViewingStudentHistory(s)}><History className="h-4 w-4 mr-2" /> Payment History</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEmailRemainder(s)} disabled={!s.user?.email || s.currentBalance <= 0}><Mail className="h-4 w-4 mr-2" /> Send Reminder</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => toast.info(`Viewing ${s.firstName} detail...`)}><Eye className="h-4 w-4 mr-2" /> View Details</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setViewingStudentHistory(s)}>
+                            <History className="h-4 w-4 mr-2" /> Payment History
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setViewingStudentDetails(s)}>
+                            <Eye className="h-4 w-4 mr-2" /> View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleEmailRemainder(s)} 
+                            disabled={!s.user?.email || s.currentBalance <= 0}
+                          >
+                            <Mail className="h-4 w-4 mr-2" /> Send Reminder
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -165,8 +233,296 @@ export function StudentManagementPage() {
           )}
         </CardContent>
       </Card>
-      
-      <StudentPaymentHistoryDialog student={viewingStudentHistory} open={!!viewingStudentHistory} onOpenChange={(open: boolean) => !open && setViewingStudentHistory(null)} />
+
+      {/* Payment History Dialog */}
+      <Dialog open={!!viewingStudentHistory} onOpenChange={(open) => !open && setViewingStudentHistory(null)}>
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Receipt className="h-5 w-5 text-primary" />
+              Payment History
+            </DialogTitle>
+            <DialogDescription>
+              {viewingStudentHistory && (
+                <>
+                  {viewingStudentHistory.firstName} {viewingStudentHistory.lastName} • {viewingStudentHistory.studentCode || 'No ID'}
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            {paymentsLoading ? (
+              <div className="space-y-3">
+                <Skeleton className="h-12" />
+                <Skeleton className="h-12" />
+                <Skeleton className="h-12" />
+              </div>
+            ) : studentPayments.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center text-muted-foreground">
+                  <Receipt className="h-12 w-12 mx-auto mb-3 text-muted-foreground/50" />
+                  <p>No payments found for this student.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Reference</TableHead>
+                    <TableHead>Method</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {studentPayments.map((p) => (
+                    <TableRow key={p.id}>
+                      <TableCell className="text-[13px]">
+                        {p.paymentDate ? formatDate(p.paymentDate) : formatDate(p.submittedAt)}
+                      </TableCell>
+                      <TableCell className="text-[13px] font-mono">
+                        {p.receiptNumber || p.externalReference || '—'}
+                      </TableCell>
+                      <TableCell className="text-[13px]">
+                        {p.method?.replace(/_/g, ' ') || '—'}
+                      </TableCell>
+                      <TableCell className="text-[13px] font-medium">
+                        {formatCurrency(Number(p.amount))}
+                      </TableCell>
+                      <TableCell>
+                        <PaymentStatusBadge status={p.status} />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8"
+                          onClick={() => setSelectedPayment(p)}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Details Dialog */}
+      <Dialog open={!!viewingStudentDetails} onOpenChange={(open) => !open && setViewingStudentDetails(null)}>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <User className="h-5 w-5 text-primary" />
+              Student Details
+            </DialogTitle>
+          </DialogHeader>
+
+          {viewingStudentDetails && (
+            <div className="space-y-6 py-2">
+              {/* Header Card */}
+              <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xl font-bold">
+                      {viewingStudentDetails.firstName?.charAt(0)}{viewingStudentDetails.lastName?.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-[18px] font-semibold">
+                        {viewingStudentDetails.firstName} {viewingStudentDetails.lastName}
+                      </h3>
+                      <p className="text-[13px] text-muted-foreground">{viewingStudentDetails.studentCode}</p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <Badge variant="outline" className={`text-[10px] ${getStatusColor(Number(viewingStudentDetails.currentBalance))}`}>
+                          {getStatusLabel(Number(viewingStudentDetails.currentBalance))}
+                        </Badge>
+                        <Badge variant="outline" className="text-[10px]">
+                          {viewingStudentDetails.program}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Info Grid */}
+              <div className="grid grid-cols-2 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                      <GraduationCap className="h-4 w-4" />
+                      <span className="text-[12px] uppercase tracking-wide">Program</span>
+                    </div>
+                    <p className="text-[14px] font-medium">{viewingStudentDetails.program || '—'}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                      <Calendar className="h-4 w-4" />
+                      <span className="text-[12px] uppercase tracking-wide">Academic Year</span>
+                    </div>
+                    <p className="text-[14px] font-medium">{viewingStudentDetails.classLevel || viewingStudentDetails.academicYear || '—'}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                      <Mail className="h-4 w-4" />
+                      <span className="text-[12px] uppercase tracking-wide">Email</span>
+                    </div>
+                    <p className="text-[14px] font-medium">{viewingStudentDetails.user?.email || '—'}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                      <Phone className="h-4 w-4" />
+                      <span className="text-[12px] uppercase tracking-wide">Phone</span>
+                    </div>
+                    <p className="text-[14px] font-medium">{viewingStudentDetails.phoneNumber || viewingStudentDetails.user?.phone || '—'}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                      <MapPin className="h-4 w-4" />
+                      <span className="text-[12px] uppercase tracking-wide">Address</span>
+                    </div>
+                    <p className="text-[14px] font-medium">{viewingStudentDetails.address || '—'}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                      <CreditCard className="h-4 w-4" />
+                      <span className="text-[12px] uppercase tracking-wide">Current Balance</span>
+                    </div>
+                    <p className={`text-[14px] font-medium ${Number(viewingStudentDetails.currentBalance) > 0 ? 'text-warning' : 'text-success'}`}>
+                      {formatCurrency(Number(viewingStudentDetails.currentBalance))}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Additional Info */}
+              <Card>
+                <CardContent className="p-4 space-y-3">
+                  <h4 className="text-[14px] font-medium">Additional Information</h4>
+                  <div className="grid grid-cols-2 gap-4 text-[13px]">
+                    <div>
+                      <span className="text-muted-foreground">Enrollment Date:</span>
+                      <p className="font-medium">{viewingStudentDetails.enrollmentDate ? formatDate(viewingStudentDetails.enrollmentDate) : '—'}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Date of Birth:</span>
+                      <p className="font-medium">{viewingStudentDetails.dateOfBirth ? formatDate(viewingStudentDetails.dateOfBirth) : '—'}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Gender:</span>
+                      <p className="font-medium">{viewingStudentDetails.gender || '—'}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Nationality:</span>
+                      <p className="font-medium">{viewingStudentDetails.nationality || '—'}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Actions */}
+              <div className="flex gap-3">
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => {
+                    setViewingStudentDetails(null);
+                    setViewingStudentHistory(viewingStudentDetails);
+                  }}
+                >
+                  <History className="h-4 w-4 mr-2" />
+                  View Payment History
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => handleEmailRemainder(viewingStudentDetails)}
+                  disabled={!viewingStudentDetails.user?.email || viewingStudentDetails.currentBalance <= 0}
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Send Reminder
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment Detail Dialog */}
+      <Dialog open={!!selectedPayment} onOpenChange={(open) => !open && setSelectedPayment(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Payment Details</DialogTitle>
+          </DialogHeader>
+          {selectedPayment && (
+            <div className="space-y-4 py-2">
+              <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                <span className="text-[13px] text-muted-foreground">Amount</span>
+                <span className="text-[18px] font-bold">{formatCurrency(Number(selectedPayment.amount))}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-[13px]">
+                <div>
+                  <span className="text-muted-foreground">Status</span>
+                  <p className="font-medium"><PaymentStatusBadge status={selectedPayment.status} /></p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Method</span>
+                  <p className="font-medium">{selectedPayment.method?.replace(/_/g, ' ') || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Reference</span>
+                  <p className="font-medium font-mono">{selectedPayment.receiptNumber || selectedPayment.externalReference || '—'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Date</span>
+                  <p className="font-medium">{selectedPayment.paymentDate ? formatDate(selectedPayment.paymentDate) : formatDate(selectedPayment.submittedAt)}</p>
+                </div>
+              </div>
+              {selectedPayment.notes && (
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <span className="text-[12px] text-muted-foreground">Notes</span>
+                  <p className="text-[13px] mt-1">{selectedPayment.notes}</p>
+                </div>
+              )}
+              {selectedPayment.proofUrl && (
+                <div className="p-3 border rounded-lg">
+                  <span className="text-[12px] text-muted-foreground">Receipt Image</span>
+                  <a 
+                    href={selectedPayment.proofUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block mt-2 text-[13px] text-primary hover:underline"
+                  >
+                    View Receipt
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
