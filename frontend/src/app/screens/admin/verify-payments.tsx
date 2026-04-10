@@ -67,6 +67,7 @@ import {
 import { formatCurrency } from '../../lib/utils';
 import { PaymentStatusBadge, getFullImageUrl } from '../../components/admin/common/payment-helpers';
 import { StudentPaymentHistoryDialog } from '../../components/admin/common/student-history-dialog';
+import { StatementImportSummaryCards } from '../../components/admin/statement-import-summary-cards';
 import { StatementRowMatchCard } from '../../components/admin/statement-row-match-card';
 
 export function VerifyPaymentsPage() {
@@ -682,32 +683,13 @@ export function VerifyPaymentsPage() {
                   </div>
 
                   <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                  <Card>
-                    <CardContent className="p-3">
-                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Rows</p>
-                      <p className="mt-1 text-[20px] font-semibold">{statementImport.summary?.totalRows ?? 0}</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-3">
-                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Strong Matches</p>
-                      <p className="mt-1 text-[20px] font-semibold text-success">{statementImport.summary?.strongMatches ?? 0}</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-3">
-                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Possible Matches</p>
-                      <p className="mt-1 text-[20px] font-semibold text-warning">{statementImport.summary?.possibleMatches ?? 0}</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-3">
-                      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">No Matches</p>
-                      <p className="mt-1 text-[20px] font-semibold text-muted-foreground">{statementImport.summary?.noMatches ?? 0}</p>
-                    </CardContent>
-                  </Card>
-                </div>
+                <StatementImportSummaryCards
+                  compact
+                  totalRows={statementImport.summary?.totalRows ?? 0}
+                  strongMatches={statementImport.summary?.strongMatches ?? 0}
+                  possibleMatches={statementImport.summary?.possibleMatches ?? 0}
+                  noMatches={statementImport.summary?.noMatches ?? 0}
+                />
 
                 <div className="rounded-xl border">
                   <div className="border-b p-3">

@@ -31,6 +31,7 @@ import {
   TableCell,
 } from '../../../components/ui/table';
 import { formatCurrency, formatDate } from '../../../lib/utils';
+import { StatementImportSummaryCards } from '../../components/admin/statement-import-summary-cards';
 
 export function ReconciliationHistoryPage() {
   const [searchParams] = useSearchParams();
@@ -217,32 +218,12 @@ export function ReconciliationHistoryPage() {
             <Skeleton className="h-[420px] rounded-xl" />
           ) : selectedImport ? (
             <>
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                <Card>
-                  <CardContent className="p-4">
-                    <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Rows</p>
-                    <p className="mt-1 text-[20px] font-semibold">{selectedImport.summary?.totalRows || 0}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4">
-                    <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Strong Matches</p>
-                    <p className="mt-1 text-[20px] font-semibold text-success">{selectedImport.summary?.strongMatches || 0}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4">
-                    <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Possible Matches</p>
-                    <p className="mt-1 text-[20px] font-semibold text-warning">{selectedImport.summary?.possibleMatches || 0}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4">
-                    <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Total Amount</p>
-                    <p className="mt-1 text-[20px] font-semibold">{formatCurrency(Number(selectedImport.totalAmount || selectedImport.summary?.totalAmount || 0))}</p>
-                  </CardContent>
-                </Card>
-              </div>
+              <StatementImportSummaryCards
+                totalRows={selectedImport.summary?.totalRows || 0}
+                strongMatches={selectedImport.summary?.strongMatches || 0}
+                possibleMatches={selectedImport.summary?.possibleMatches || 0}
+                totalAmount={Number(selectedImport.totalAmount || selectedImport.summary?.totalAmount || 0)}
+              />
 
               <Card>
                 <CardContent className="space-y-4 p-4">
