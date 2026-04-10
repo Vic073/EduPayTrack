@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText, Clock, Search, Filter, Trash2, Mail, Smartphone, Eye, HelpCircle, MessageCircle, Globe, LogOut, Laptop, Moon, Sun } from 'lucide-react';
+import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText, Search, Filter, Trash2, Mail, Smartphone, Eye, HelpCircle, MessageCircle, Globe, LogOut, Laptop, Moon, Sun } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
@@ -21,6 +21,7 @@ import {
 } from '../../components/ui/dialog';
 import { useNotificationFilters } from '../lib/notification-filters';
 import { NotificationConfirmDialogs } from '../components/notification-confirm-dialogs';
+import { NotificationGroupList } from '../components/notification-group-list';
 
 /* ===== NOTIFICATIONS ===== */
 
@@ -93,91 +94,6 @@ export function NotificationsPage() {
     } catch {
       toast.error('Failed to clear notifications');
     }
-  };
-
-  const renderNotificationGroup = (title: string, notifications: any[]) => {
-    if (notifications.length === 0) return null;
-
-    return (
-      <div key={title} className="space-y-2">
-        <h3 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground px-1 sticky top-0 bg-background/95 backdrop-blur py-2 z-10">
-          {title} ({notifications.length})
-        </h3>
-        <div className="space-y-2">
-          {notifications.map((n) => {
-            const config = getNotificationConfig(n.type);
-            const Icon = config.icon;
-
-            return (
-              <Card
-                key={n.id}
-                className={`transition-all hover:shadow-sm group ${
-                  !n.read ? 'border-primary/30 bg-primary/[0.03]' : 'border-border/50'
-                }`}
-              >
-                <CardContent className="py-3 px-4">
-                  <div className="flex items-start gap-3">
-                    <div className={`h-10 w-10 rounded-xl ${config.bg} flex items-center justify-center flex-shrink-0`}>
-                      <Icon className={`h-5 w-5 ${config.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className={`text-[13px] ${!n.read ? 'font-semibold' : 'font-medium'}`}>
-                              {n.title}
-                            </p>
-                            {!n.read && (
-                              <Badge variant="default" className="text-[10px] h-5 px-1.5 bg-primary">
-                                New
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-[12px] text-muted-foreground mt-0.5 line-clamp-2">
-                            {n.description}
-                          </p>
-                          <div className="flex items-center gap-3 mt-2">
-                            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {n.time}
-                            </span>
-                            <Badge variant="outline" className={`text-[10px] h-5 ${config.color} border-current`}>
-                              {config.label}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          {!n.read && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => handleMarkOneRead(n.id)}
-                              title="Mark as read"
-                            >
-                              <CheckCheck className="h-4 w-4" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-destructive hover:text-destructive"
-                            onClick={() => setDeletingId(n.id)}
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -305,10 +221,12 @@ export function NotificationsPage() {
         </Card>
       ) : (
         <div className="space-y-6 max-h-[calc(100vh-300px)] overflow-y-auto pr-1">
-          {renderNotificationGroup('Today', groupedNotifications.today)}
-          {renderNotificationGroup('Yesterday', groupedNotifications.yesterday)}
-          {renderNotificationGroup('This Week', groupedNotifications.thisWeek)}
-          {renderNotificationGroup('Earlier', groupedNotifications.earlier)}
+          <NotificationGroupList
+            groupedNotifications={groupedNotifications}
+            getNotificationConfig={getNotificationConfig}
+            onMarkOneRead={handleMarkOneRead}
+            onDelete={(id) => setDeletingId(id)}
+          />
         </div>
       )}
 

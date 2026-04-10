@@ -2,7 +2,6 @@ import { useState, useMemo, useCallback } from 'react';
 import {
   Bell,
   CheckCheck,
-  Clock,
   Search,
   Filter,
   Trash2,
@@ -32,6 +31,7 @@ import {
 } from '../../../components/ui/select';
 import { useNotificationFilters } from '../../lib/notification-filters';
 import { NotificationConfirmDialogs } from '../../components/notification-confirm-dialogs';
+import { NotificationGroupList } from '../../components/notification-group-list';
 
 // Student-specific notification types
 const notificationConfig: Record<string, { icon: any; color: string; bg: string; label: string }> = {
@@ -144,101 +144,6 @@ export function StudentNotificationsPage() {
     const total = studentNotifications.length;
     return { pendingFees, paymentUpdates, balanceAlerts, total };
   }, [studentNotifications]);
-
-  const renderNotificationGroup = (title: string, notifications: any[]) => {
-    if (notifications.length === 0) return null;
-
-    return (
-      <div key={title} className="space-y-2">
-        <h3 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground px-1 sticky top-0 bg-background/95 backdrop-blur py-2 z-10">
-          {title} ({notifications.length})
-        </h3>
-        <div className="space-y-2">
-          {notifications.map((n) => {
-            const config = getNotificationConfig(n.type);
-            const Icon = config.icon;
-            const isImportant = !n.read && (n.type === 'payment_rejected' || n.type === 'balance_reminder' || n.type === 'fee_reminder');
-
-            return (
-              <Card
-                key={n.id}
-                className={`transition-all hover:shadow-sm group ${
-                  isImportant
-                    ? 'border-destructive/30 bg-destructive/[0.02]'
-                    : !n.read
-                    ? 'border-primary/30 bg-primary/[0.03]'
-                    : 'border-border/50'
-                }`}
-              >
-                <CardContent className="py-3 px-4">
-                  <div className="flex items-start gap-3">
-                    <div className={`h-10 w-10 rounded-xl ${config.bg} flex items-center justify-center flex-shrink-0`}>
-                      <Icon className={`h-5 w-5 ${config.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className={`text-[13px] ${!n.read ? 'font-semibold' : 'font-medium'}`}>
-                              {n.title}
-                            </p>
-                            {isImportant && (
-                              <Badge variant="default" className="text-[10px] h-5 px-1.5 bg-destructive">
-                                Action Needed
-                              </Badge>
-                            )}
-                            {!n.read && !isImportant && (
-                              <Badge variant="default" className="text-[10px] h-5 px-1.5 bg-primary">
-                                New
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-[12px] text-muted-foreground mt-0.5 line-clamp-2">
-                            {n.description}
-                          </p>
-                          <div className="flex items-center gap-3 mt-2">
-                            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {n.time}
-                            </span>
-                            <Badge variant="outline" className={`text-[10px] h-5 ${config.color} border-current`}>
-                              {config.label}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          {!n.read && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => handleMarkOneRead(n.id)}
-                              title="Mark as read"
-                            >
-                              <CheckCheck className="h-4 w-4" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-destructive hover:text-destructive"
-                            onClick={() => setDeletingId(n.id)}
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="p-4 md:p-6 space-y-6 animate-fade-in">
@@ -412,10 +317,43 @@ export function StudentNotificationsPage() {
         </Card>
       ) : (
         <div className="space-y-6">
-          {renderNotificationGroup('Today', groupedNotifications.today)}
-          {renderNotificationGroup('Yesterday', groupedNotifications.yesterday)}
-          {renderNotificationGroup('This Week', groupedNotifications.thisWeek)}
-          {renderNotificationGroup('Earlier', groupedNotifications.earlier)}
+          <NotificationGroupList
+            groupedNotifications={groupedNotifications}
+            getNotificationConfig={getNotificationConfig}
+            onMarkOneRead={handleMarkOneRead}
+            onDelete={(id) => setDeletingId(id)}
+            getCardClassName={(notification: any) => {
+              const isImportant =
+                !notification.read &&
+                (notification.type === 'payment_rejected' ||
+                  notification.type === 'balance_reminder' ||
+                  notification.type === 'fee_reminder');
+              if (isImportant) return 'border-destructive/30 bg-destructive/[0.02]';
+              return !notification.read ? 'border-primary/30 bg-primary/[0.03]' : 'border-border/50';
+            }}
+            renderTopBadges={(notification: any) => {
+              const isImportant =
+                !notification.read &&
+                (notification.type === 'payment_rejected' ||
+                  notification.type === 'balance_reminder' ||
+                  notification.type === 'fee_reminder');
+              if (isImportant) {
+                return (
+                  <Badge variant="default" className="h-5 px-1.5 text-[10px] bg-destructive">
+                    Action Needed
+                  </Badge>
+                );
+              }
+              if (!notification.read) {
+                return (
+                  <Badge variant="default" className="h-5 px-1.5 text-[10px] bg-primary">
+                    New
+                  </Badge>
+                );
+              }
+              return null;
+            }}
+          />
         </div>
       )}
 

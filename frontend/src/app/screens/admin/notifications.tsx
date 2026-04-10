@@ -2,7 +2,6 @@ import { useState, useMemo, useCallback } from 'react';
 import {
   Bell,
   CheckCheck,
-  Clock,
   Search,
   Filter,
   Trash2,
@@ -34,6 +33,7 @@ import {
 } from '../../../components/ui/select';
 import { useNotificationFilters } from '../../lib/notification-filters';
 import { NotificationConfirmDialogs } from '../../components/notification-confirm-dialogs';
+import { NotificationGroupList } from '../../components/notification-group-list';
 
 // Admin-specific notification types
 const notificationConfig: Record<string, { icon: any; color: string; bg: string; label: string }> = {
@@ -146,101 +146,6 @@ export function AdminNotificationsPage() {
     const systemAlerts = adminNotifications.filter(n => (n.type?.includes('system') || n.type?.includes('audit')) && !n.read).length;
     return { pendingPayments, userAlerts, systemAlerts, total: adminNotifications.length };
   }, [adminNotifications]);
-
-  const renderNotificationGroup = (title: string, notifications: any[]) => {
-    if (notifications.length === 0) return null;
-
-    return (
-      <div key={title} className="space-y-2">
-        <h3 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground px-1 sticky top-0 bg-background/95 backdrop-blur py-2 z-10">
-          {title} ({notifications.length})
-        </h3>
-        <div className="space-y-2">
-          {notifications.map((n) => {
-            const config = getNotificationConfig(n.type);
-            const Icon = config.icon;
-            const needsAction = !n.read && (n.type === 'payment_submitted' || n.type === 'user_suspended' || n.type === 'system_alert');
-
-            return (
-              <Card
-                key={n.id}
-                className={`transition-all hover:shadow-sm group ${
-                  needsAction
-                    ? 'border-warning/40 bg-warning/[0.03]'
-                    : !n.read
-                    ? 'border-primary/30 bg-primary/[0.03]'
-                    : 'border-border/50'
-                }`}
-              >
-                <CardContent className="py-3 px-4">
-                  <div className="flex items-start gap-3">
-                    <div className={`h-10 w-10 rounded-xl ${config.bg} flex items-center justify-center flex-shrink-0`}>
-                      <Icon className={`h-5 w-5 ${config.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className={`text-[13px] ${!n.read ? 'font-semibold' : 'font-medium'}`}>
-                              {n.title}
-                            </p>
-                            {needsAction && (
-                              <Badge variant="default" className="text-[10px] h-5 px-1.5 bg-warning text-warning-foreground">
-                                Action Required
-                              </Badge>
-                            )}
-                            {!n.read && !needsAction && (
-                              <Badge variant="default" className="text-[10px] h-5 px-1.5 bg-primary">
-                                New
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-[12px] text-muted-foreground mt-0.5 line-clamp-2">
-                            {n.description}
-                          </p>
-                          <div className="flex items-center gap-3 mt-2">
-                            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {n.time}
-                            </span>
-                            <Badge variant="outline" className={`text-[10px] h-5 ${config.color} border-current`}>
-                              {config.label}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          {!n.read && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => handleMarkOneRead(n.id)}
-                              title="Mark as read"
-                            >
-                              <CheckCheck className="h-4 w-4" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-destructive hover:text-destructive"
-                            onClick={() => setDeletingId(n.id)}
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="p-4 md:p-6 space-y-6 animate-fade-in">
@@ -426,10 +331,43 @@ export function AdminNotificationsPage() {
         </Card>
       ) : (
         <div className="space-y-6">
-          {renderNotificationGroup('Today', groupedNotifications.today)}
-          {renderNotificationGroup('Yesterday', groupedNotifications.yesterday)}
-          {renderNotificationGroup('This Week', groupedNotifications.thisWeek)}
-          {renderNotificationGroup('Earlier', groupedNotifications.earlier)}
+          <NotificationGroupList
+            groupedNotifications={groupedNotifications}
+            getNotificationConfig={getNotificationConfig}
+            onMarkOneRead={handleMarkOneRead}
+            onDelete={(id) => setDeletingId(id)}
+            getCardClassName={(notification: any) => {
+              const needsAction =
+                !notification.read &&
+                (notification.type === 'payment_submitted' ||
+                  notification.type === 'user_suspended' ||
+                  notification.type === 'system_alert');
+              if (needsAction) return 'border-warning/40 bg-warning/[0.03]';
+              return !notification.read ? 'border-primary/30 bg-primary/[0.03]' : 'border-border/50';
+            }}
+            renderTopBadges={(notification: any) => {
+              const needsAction =
+                !notification.read &&
+                (notification.type === 'payment_submitted' ||
+                  notification.type === 'user_suspended' ||
+                  notification.type === 'system_alert');
+              if (needsAction) {
+                return (
+                  <Badge variant="default" className="h-5 px-1.5 text-[10px] bg-warning text-warning-foreground">
+                    Action Required
+                  </Badge>
+                );
+              }
+              if (!notification.read) {
+                return (
+                  <Badge variant="default" className="h-5 px-1.5 text-[10px] bg-primary">
+                    New
+                  </Badge>
+                );
+              }
+              return null;
+            }}
+          />
         </div>
       )}
 
