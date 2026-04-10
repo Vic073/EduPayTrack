@@ -14,7 +14,7 @@ import {
 import { toast } from 'sonner';
 
 import { useAuth } from '../../state/auth-context';
-import { apiFetch } from '../../lib/api';
+import { clearAllNotifications, deleteNotification, markNotificationRead } from '../../lib/notifications-api';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
@@ -106,7 +106,7 @@ export function StudentNotificationsPage() {
 
   const handleMarkOneRead = async (id: string) => {
     try {
-      await apiFetch(`/notifications/${id}/read`, { method: 'PATCH' });
+      await markNotificationRead(id);
       await refreshNotifications();
       toast.success('Marked as read');
     } catch {
@@ -116,7 +116,7 @@ export function StudentNotificationsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await apiFetch(`/notifications/${id}`, { method: 'DELETE' });
+      await deleteNotification(id);
       await refreshNotifications();
       setDeletingId(null);
       toast.success('Notification deleted');
@@ -127,7 +127,7 @@ export function StudentNotificationsPage() {
 
   const handleClearAll = async () => {
     try {
-      await apiFetch('/notifications', { method: 'DELETE' });
+      await clearAllNotifications();
       await refreshNotifications();
       setShowClearAllConfirm(false);
       toast.success('All notifications cleared');

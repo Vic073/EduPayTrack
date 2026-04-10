@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 
 import { useAuth } from '../state/auth-context';
 import { apiFetch } from '../lib/api';
+import { clearAllNotifications, deleteNotification, markNotificationRead } from '../lib/notifications-api';
 import { Card, CardContent } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
@@ -68,7 +69,7 @@ export function NotificationsPage() {
 
   const handleMarkOneRead = async (id: string) => {
     try {
-      await apiFetch(`/notifications/${id}/read`, { method: 'PATCH' });
+      await markNotificationRead(id);
       await refreshNotifications();
     } catch {
       toast.error('Failed to mark as read');
@@ -77,7 +78,7 @@ export function NotificationsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await apiFetch(`/notifications/${id}`, { method: 'DELETE' });
+      await deleteNotification(id);
       await refreshNotifications();
       setDeletingId(null);
       toast.success('Notification deleted');
@@ -88,7 +89,7 @@ export function NotificationsPage() {
 
   const handleClearAll = async () => {
     try {
-      await apiFetch('/notifications', { method: 'DELETE' });
+      await clearAllNotifications();
       await refreshNotifications();
       setShowClearAllConfirm(false);
       toast.success('All notifications cleared');
