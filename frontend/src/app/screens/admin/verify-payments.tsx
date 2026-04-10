@@ -81,6 +81,37 @@ export function VerifyPaymentsPage() {
     transactionDate: '',
   });
   const [mappingLoading, setMappingLoading] = useState(false);
+  const [noteDialog, setNoteDialog] = useState<{
+    open: boolean;
+    title: string;
+    description: string;
+    confirmLabel: string;
+    note: string;
+    required: boolean;
+    onConfirm: ((note: string) => Promise<void>) | null;
+  }>({
+    open: false,
+    title: '',
+    description: '',
+    confirmLabel: 'Save',
+    note: '',
+    required: false,
+    onConfirm: null,
+  });
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    title: string;
+    description: string;
+    confirmLabel: string;
+    onConfirm: (() => Promise<void>) | null;
+  }>({
+    open: false,
+    title: '',
+    description: '',
+    confirmLabel: 'Confirm',
+    onConfirm: null,
+  });
+  const [dialogLoading, setDialogLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const isAdminOrAccountant = user?.role === 'admin' || user?.role === 'accounts';
@@ -214,33 +245,38 @@ export function VerifyPaymentsPage() {
   };
 
   const handleReconciliation = async (payment: any, status: 'MATCHED' | 'UNMATCHED') => {
-    const note = window.prompt(
-      status === 'MATCHED'
-        ? 'Add a reconciliation note (bank statement, mobile money export, teller batch, etc.)'
-        : 'Why should this stay unmatched?',
-      status === 'MATCHED'
-        ? payment.reconciliationNote || 'Matched against the statement export.'
-        : payment.reconciliationNote || 'Still waiting for the statement match.'
-    );
-
-    if (note === null) return;
-
-    setActionLoading(payment.id);
-    try {
-      await apiFetch(`/admin/payments/${payment.id}/reconcile`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          reconciliationStatus: status,
-          reconciliationNote: note.trim(),
-        }),
-      });
-      toast.success(status === 'MATCHED' ? 'Payment marked as matched' : 'Payment kept in unmatched queue');
-      await loadPayments();
-    } catch (err: any) {
-      toast.error(err.message || 'Reconciliation update failed');
-    } finally {
-      setActionLoading(undefined);
-    }
+    setNoteDialog({
+      open: true,
+      title: status === 'MATCHED' ? 'Mark as Matched' : 'Keep Unmatched',
+      description:
+        status === 'MATCHED'
+          ? 'Add a reconciliation note (bank statement, mobile money export, teller batch, etc.)'
+          : 'Add a note for why this should remain unmatched.',
+      confirmLabel: status === 'MATCHED' ? 'Mark Matched' : 'Keep Unmatched',
+      note:
+        status === 'MATCHED'
+          ? payment.reconciliationNote || 'Matched against the statement export.'
+          : payment.reconciliationNote || 'Still waiting for the statement match.',
+      required: false,
+      onConfirm: async (note: string) => {
+        setActionLoading(payment.id);
+        try {
+          await apiFetch(`/admin/payments/${payment.id}/reconcile`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+              reconciliationStatus: status,
+              reconciliationNote: note.trim(),
+            }),
+          });
+          toast.success(status === 'MATCHED' ? 'Payment marked as matched' : 'Payment kept in unmatched queue');
+          await loadPayments();
+        } catch (err: any) {
+          toast.error(err.message || 'Reconciliation update failed');
+        } finally {
+          setActionLoading(undefined);
+        }
+      },
+    });
   };
 
   const saveReconciliation = async (paymentId: string, status: 'MATCHED' | 'UNMATCHED', note: string) => {
@@ -361,59 +397,68 @@ export function VerifyPaymentsPage() {
   };
 
   const assistApproveFromStatement = async (row: any, suggestion: any) => {
-    const confirmed = window.confirm(
-      `Approve ${suggestion.student?.firstName} ${suggestion.student?.lastName}'s payment in one step?\n\nThis will reconcile, verify, and approve the payment based on the strong statement match.`
-    );
-
-    if (!confirmed) return;
-
-    setActionLoading(suggestion.id);
-    try {
-      const updatedImport = await apiFetch<any>(
-        `/admin/reconciliation/imports/${statementImport.id}/rows/${row.id}/assist-approve`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({ paymentId: suggestion.id }),
+    setConfirmDialog({
+      open: true,
+      title: 'Assist Approve Payment',
+      description: `Approve ${suggestion.student?.firstName} ${suggestion.student?.lastName}'s payment in one step? This will reconcile, verify, and approve the payment based on the strong statement match.`,
+      confirmLabel: 'Approve Payment',
+      onConfirm: async () => {
+        setActionLoading(suggestion.id);
+        try {
+          const updatedImport = await apiFetch<any>(
+            `/admin/reconciliation/imports/${statementImport.id}/rows/${row.id}/assist-approve`,
+            {
+              method: 'PATCH',
+              body: JSON.stringify({ paymentId: suggestion.id }),
+            }
+          );
+          setStatementImport(updatedImport);
+          await loadPayments();
+          await loadStatementImports();
+          toast.success(`Payment approved for ${suggestion.student?.firstName} ${suggestion.student?.lastName}`);
+        } catch (err: any) {
+          toast.error(err.message || 'Could not auto-approve the payment');
+        } finally {
+          setActionLoading(undefined);
         }
-      );
-      setStatementImport(updatedImport);
-      await loadPayments();
-      await loadStatementImports();
-      toast.success(`Payment approved for ${suggestion.student?.firstName} ${suggestion.student?.lastName}`);
-    } catch (err: any) {
-      toast.error(err.message || 'Could not auto-approve the payment');
-    } finally {
-      setActionLoading(undefined);
-    }
+      },
+    });
   };
 
   const handleVerification = async (payment: any, verificationStatus: 'VERIFIED' | 'FLAGGED') => {
-    const note = window.prompt(
-      verificationStatus === 'FLAGGED' ? 'Enter a flag note' : 'Enter verification note (optional)',
-      verificationStatus === 'FLAGGED' ? '' : 'Verified against the receipt details.'
-    );
-
-    if (verificationStatus === 'FLAGGED' && !note?.trim()) {
-      toast.error('A flag note is required.');
-      return;
-    }
-
-    setActionLoading(payment.id);
-    try {
-      await apiFetch(`/admin/payments/${payment.id}/verify`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          verificationStatus,
-          verificationNotes: note?.trim() || 'Verified against the receipt details.',
-        }),
-      });
-      toast.success(verificationStatus === 'VERIFIED' ? 'Payment verified' : 'Payment flagged');
-      loadPayments();
-    } catch (err: any) {
-      toast.error(err.message || 'Verification failed');
-    } finally {
-      setActionLoading(undefined);
-    }
+    setNoteDialog({
+      open: true,
+      title: verificationStatus === 'FLAGGED' ? 'Flag Payment' : 'Verify Payment',
+      description:
+        verificationStatus === 'FLAGGED'
+          ? 'Enter a reason for flagging this payment.'
+          : 'Add verification notes (optional).',
+      confirmLabel: verificationStatus === 'FLAGGED' ? 'Flag Payment' : 'Verify Payment',
+      note: verificationStatus === 'FLAGGED' ? '' : 'Verified against the receipt details.',
+      required: verificationStatus === 'FLAGGED',
+      onConfirm: async (note: string) => {
+        if (verificationStatus === 'FLAGGED' && !note.trim()) {
+          toast.error('A flag note is required.');
+          return;
+        }
+        setActionLoading(payment.id);
+        try {
+          await apiFetch(`/admin/payments/${payment.id}/verify`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+              verificationStatus,
+              verificationNotes: note.trim() || 'Verified against the receipt details.',
+            }),
+          });
+          toast.success(verificationStatus === 'VERIFIED' ? 'Payment verified' : 'Payment flagged');
+          loadPayments();
+        } catch (err: any) {
+          toast.error(err.message || 'Verification failed');
+        } finally {
+          setActionLoading(undefined);
+        }
+      },
+    });
   };
 
   const handleAction = async (payment: any, status: 'APPROVED' | 'REJECTED') => {
@@ -422,13 +467,37 @@ export function VerifyPaymentsPage() {
       return;
     }
 
-    const reviewNotes =
-      status === 'REJECTED'
-        ? window.prompt('Enter a rejection reason', payment.reviewNotes || 'Receipt details do not match the submission.')
-        : undefined;
-
-    if (status === 'REJECTED' && typeof reviewNotes === 'string' && !reviewNotes.trim()) {
-      toast.error('Please add a short rejection reason.');
+    if (status === 'REJECTED') {
+      setNoteDialog({
+        open: true,
+        title: 'Reject Payment',
+        description: 'Enter a short reason for rejecting this submission.',
+        confirmLabel: 'Reject Payment',
+        note: payment.reviewNotes || 'Receipt details do not match the submission.',
+        required: true,
+        onConfirm: async (reviewNotes: string) => {
+          if (!reviewNotes.trim()) {
+            toast.error('Please add a short rejection reason.');
+            return;
+          }
+          setActionLoading(payment.id);
+          try {
+            await apiFetch(`/admin/payments/${payment.id}/review`, {
+              method: 'PATCH',
+              body: JSON.stringify({
+                status,
+                reviewNotes: reviewNotes.trim(),
+              }),
+            });
+            toast.success(`Payment ${status.toLowerCase()}`);
+            loadPayments();
+          } catch (err: any) {
+            toast.error(err.message || 'Action failed');
+          } finally {
+            setActionLoading(undefined);
+          }
+        },
+      });
       return;
     }
 
@@ -436,10 +505,7 @@ export function VerifyPaymentsPage() {
     try {
       await apiFetch(`/admin/payments/${payment.id}/review`, {
         method: 'PATCH',
-        body: JSON.stringify({
-          status,
-          ...(status === 'REJECTED' ? { reviewNotes: reviewNotes?.trim() } : {}),
-        }),
+        body: JSON.stringify({ status }),
       });
       toast.success(`Payment ${status.toLowerCase()}`);
       loadPayments();
@@ -971,6 +1037,86 @@ export function VerifyPaymentsPage() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={noteDialog.open}
+        onOpenChange={(open) => setNoteDialog((prev) => ({ ...prev, open }))}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{noteDialog.title}</DialogTitle>
+            <DialogDescription>{noteDialog.description}</DialogDescription>
+          </DialogHeader>
+          <textarea
+            value={noteDialog.note}
+            onChange={(e) => setNoteDialog((prev) => ({ ...prev, note: e.target.value }))}
+            className="min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            placeholder="Enter note..."
+          />
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setNoteDialog((prev) => ({ ...prev, open: false, onConfirm: null }))}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                if (noteDialog.required && !noteDialog.note.trim()) {
+                  toast.error('This note is required.');
+                  return;
+                }
+                if (!noteDialog.onConfirm) return;
+                setDialogLoading(true);
+                try {
+                  await noteDialog.onConfirm(noteDialog.note);
+                  setNoteDialog((prev) => ({ ...prev, open: false, onConfirm: null }));
+                } finally {
+                  setDialogLoading(false);
+                }
+              }}
+              disabled={dialogLoading}
+            >
+              {dialogLoading ? 'Saving...' : noteDialog.confirmLabel}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog((prev) => ({ ...prev, open }))}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{confirmDialog.title}</DialogTitle>
+            <DialogDescription>{confirmDialog.description}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setConfirmDialog((prev) => ({ ...prev, open: false, onConfirm: null }))}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!confirmDialog.onConfirm) return;
+                setDialogLoading(true);
+                try {
+                  await confirmDialog.onConfirm();
+                  setConfirmDialog((prev) => ({ ...prev, open: false, onConfirm: null }));
+                } finally {
+                  setDialogLoading(false);
+                }
+              }}
+              disabled={dialogLoading}
+            >
+              {dialogLoading ? 'Working...' : confirmDialog.confirmLabel}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!viewingReceipt} onOpenChange={() => setViewingReceipt(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">

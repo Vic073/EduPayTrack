@@ -99,6 +99,24 @@ export function UserManagementPage() {
   const [role, setRole] = useState<'ADMIN' | 'ACCOUNTS' | 'STUDENT'>('ACCOUNTS');
   const [password, setPassword] = useState('');
   const [saving, setSaving] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    title: string;
+    description: string;
+    confirmLabel: string;
+    destructive?: boolean;
+    onConfirm: (() => Promise<void>) | null;
+  }>({
+    open: false,
+    title: '',
+    description: '',
+    confirmLabel: 'Confirm',
+    destructive: false,
+    onConfirm: null,
+  });
+  const [resetPasswordDialogUserId, setResetPasswordDialogUserId] = useState<string | null>(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [resettingPassword, setResettingPassword] = useState(false);
 
   const isAdmin = user?.role === 'admin';
 
@@ -223,14 +241,22 @@ export function UserManagementPage() {
       toast.error('You cannot suspend yourself');
       return;
     }
-    if (!window.confirm('Are you sure you want to suspend this user? They will be temporarily locked out.')) return;
-    try {
-      await apiFetch(`/admin/users/${id}/suspend`, { method: 'POST' });
-      toast.success('User suspended');
-      loadUsers();
-    } catch (err: any) {
-      toast.error(err.message || 'Suspend failed');
-    }
+    setConfirmDialog({
+      open: true,
+      title: 'Suspend User',
+      description: 'Are you sure you want to suspend this user? They will be temporarily locked out.',
+      confirmLabel: 'Suspend User',
+      destructive: true,
+      onConfirm: async () => {
+        try {
+          await apiFetch(`/admin/users/${id}/suspend`, { method: 'POST' });
+          toast.success('User suspended');
+          loadUsers();
+        } catch (err: any) {
+          toast.error(err.message || 'Suspend failed');
+        }
+      },
+    });
   };
 
   const handleUnsuspend = async (id: string) => {
@@ -248,31 +274,48 @@ export function UserManagementPage() {
        toast.error('You cannot delete yourself');
        return;
     }
-    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
-    try {
-      await apiFetch(`/admin/users/${id}`, { method: 'DELETE' });
-      toast.success('User deleted');
-      loadUsers();
-    } catch (err: any) {
-      toast.error(err.message || 'Delete failed');
-    }
+    setConfirmDialog({
+      open: true,
+      title: 'Delete User',
+      description: 'Are you sure you want to delete this user? This action cannot be undone.',
+      confirmLabel: 'Delete User',
+      destructive: true,
+      onConfirm: async () => {
+        try {
+          await apiFetch(`/admin/users/${id}`, { method: 'DELETE' });
+          toast.success('User deleted');
+          loadUsers();
+        } catch (err: any) {
+          toast.error(err.message || 'Delete failed');
+        }
+      },
+    });
   };
 
-  const handleResetPassword = async (id: string) => {
-    const newPass = prompt('Enter new password:');
-    if (!newPass) return;
-    if (newPass.length < 8) {
+  const handleResetPassword = (id: string) => {
+    setResetPasswordDialogUserId(id);
+    setNewPassword('');
+  };
+
+  const submitResetPassword = async () => {
+    if (!resetPasswordDialogUserId) return;
+    if (!newPassword || newPassword.length < 8) {
       toast.error('Password must be at least 8 characters');
       return;
     }
+    setResettingPassword(true);
     try {
-      await apiFetch(`/admin/users/${id}/reset-password`, {
+      await apiFetch(`/admin/users/${resetPasswordDialogUserId}/reset-password`, {
         method: 'POST',
-        body: JSON.stringify({ newPassword: newPass }),
+        body: JSON.stringify({ newPassword }),
       });
       toast.success('Password reset successfully');
+      setResetPasswordDialogUserId(null);
+      setNewPassword('');
     } catch (err: any) {
       toast.error(err.message || 'Reset failed');
+    } finally {
+      setResettingPassword(false);
     }
   };
 
@@ -608,6 +651,78 @@ export function UserManagementPage() {
             <Button variant="outline" onClick={() => setShowEditModal(false)}>Cancel</Button>
             <Button onClick={handleEdit} disabled={saving}>
               {saving ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog((prev) => ({ ...prev, open }))}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{confirmDialog.title}</DialogTitle>
+            <DialogDescription>{confirmDialog.description}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setConfirmDialog((prev) => ({ ...prev, open: false }))}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant={confirmDialog.destructive ? 'destructive' : 'default'}
+              onClick={async () => {
+                if (confirmDialog.onConfirm) {
+                  await confirmDialog.onConfirm();
+                }
+                setConfirmDialog((prev) => ({ ...prev, open: false, onConfirm: null }));
+              }}
+            >
+              {confirmDialog.confirmLabel}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!resetPasswordDialogUserId}
+        onOpenChange={(open) => {
+          if (!open) {
+            setResetPasswordDialogUserId(null);
+            setNewPassword('');
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reset Password</DialogTitle>
+            <DialogDescription>Set a new password for this user account.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5 py-2">
+            <label className="text-[13px] font-medium">New Password</label>
+            <Input
+              type="password"
+              value={newPassword}
+              onChange={(e: any) => setNewPassword(e.target.value)}
+              placeholder="Minimum 8 characters"
+              className="h-10"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setResetPasswordDialogUserId(null);
+                setNewPassword('');
+              }}
+            >
+              Cancel
+            </Button>
+            <Button onClick={submitResetPassword} disabled={resettingPassword}>
+              {resettingPassword ? 'Resetting...' : 'Reset Password'}
             </Button>
           </DialogFooter>
         </DialogContent>
