@@ -92,6 +92,7 @@ export function AuditLogsPage() {
   const [selectedLog, setSelectedLog] = useState<any>(null);
   const [dateFilter, setDateFilter] = useState('all');
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   useEffect(() => {
     loadLogs();
@@ -212,10 +213,10 @@ export function AuditLogsPage() {
   };
 
   const handleClearAllLogs = async () => {
-    if (!window.confirm('Are you sure you want to delete all audit logs? This action cannot be undone.')) return;
     try {
       await apiFetch('/admin/audit-logs', { method: 'DELETE' });
       toast.success('Audit logs cleared');
+      setShowClearConfirm(false);
       loadLogs();
     } catch {
       toast.error('Failed to clear logs');
@@ -247,7 +248,7 @@ export function AuditLogsPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleClearAllLogs} className="text-destructive">
+              <DropdownMenuItem onClick={() => setShowClearConfirm(true)} className="text-destructive">
                 <Trash2 className="h-4 w-4 mr-2" /> Clear All Logs
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -550,6 +551,21 @@ export function AuditLogsPage() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setSelectedLog(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Clear Audit Logs</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete all audit logs? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowClearConfirm(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleClearAllLogs}>Delete All Logs</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

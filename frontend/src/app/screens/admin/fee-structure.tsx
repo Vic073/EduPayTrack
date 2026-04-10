@@ -36,6 +36,7 @@ export function FeeStructurePage() {
   const [showCreate, setShowCreate] = useState(false);
   const [creating, setCreating] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Form fields
   const [title, setTitle] = useState('');
@@ -106,10 +107,10 @@ export function FeeStructurePage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this fee structure? This will recalculate all student balances.')) return;
     try {
       await apiFetch(`/admin/fee-structures/${id}`, { method: 'DELETE' });
       toast.success('Fee structure deleted');
+      setDeletingId(null);
       loadFees();
     } catch (err: any) {
       toast.error(err.message || 'Failed to delete');
@@ -150,7 +151,7 @@ export function FeeStructurePage() {
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" onClick={() => handleEditClick(f)}><Pencil className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => handleDelete(f.id)}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => setDeletingId(f.id)}><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -181,6 +182,26 @@ export function FeeStructurePage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreate(false)}>Cancel</Button>
             <Button onClick={handleSave} disabled={creating}>{creating ? 'Saving...' : 'Save Changes'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!deletingId} onOpenChange={(open) => !open && setDeletingId(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Fee Structure</DialogTitle>
+            <DialogDescription>
+              Delete this fee structure? This will recalculate all student balances.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeletingId(null)}>Cancel</Button>
+            <Button
+              variant="destructive"
+              onClick={() => deletingId && handleDelete(deletingId)}
+            >
+              Delete
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -19,6 +19,14 @@ import { Badge } from '../../../components/ui/badge';
 import { Input } from '../../../components/ui/input';
 import { Skeleton } from '../../../components/ui/skeleton';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../../../components/ui/dialog';
+import {
   Table,
   TableBody,
   TableCell,
@@ -34,6 +42,7 @@ export function ReconciliationExceptionsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [confirmAssistItem, setConfirmAssistItem] = useState<any>(null);
 
   const loadExceptions = async () => {
     setLoading(true);
@@ -130,12 +139,6 @@ export function ReconciliationExceptionsPage() {
     const topSuggestion = item.topSuggestion;
     if (!topSuggestion) return;
 
-    const confirmed = window.confirm(
-      `Approve ${topSuggestion.student?.firstName} ${topSuggestion.student?.lastName}'s payment from the exception queue?\n\nThis will reconcile, verify, and approve the payment in one step.`
-    );
-
-    if (!confirmed) return;
-
     setActionLoading(item.id);
     try {
       await apiFetch(`/admin/reconciliation/imports/${item.importId}/rows/${item.id}/assist-approve`, {
@@ -143,6 +146,7 @@ export function ReconciliationExceptionsPage() {
         body: JSON.stringify({ paymentId: topSuggestion.id }),
       });
       toast.success(`Approved ${topSuggestion.student?.firstName} ${topSuggestion.student?.lastName}`);
+      setConfirmAssistItem(null);
       await loadExceptions();
     } catch (err: any) {
       toast.error(err.message || 'Could not assist approve payment');
@@ -335,7 +339,7 @@ export function ReconciliationExceptionsPage() {
                                 variant="outline"
                                 className="h-8 gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
                                 disabled={actionLoading === item.id}
-                                onClick={() => assistApproveTopSuggestion(item)}
+                                onClick={() => setConfirmAssistItem(item)}
                               >
                                 {actionLoading === item.id ? <RotateCw className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
                                 Assist Approve
@@ -359,6 +363,28 @@ export function ReconciliationExceptionsPage() {
           </Card>
         </>
       )}
+
+      <Dialog open={!!confirmAssistItem} onOpenChange={(open) => !open && setConfirmAssistItem(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Assist Approve Payment</DialogTitle>
+            <DialogDescription>
+              {confirmAssistItem?.topSuggestion?.student
+                ? `Approve ${confirmAssistItem.topSuggestion.student.firstName} ${confirmAssistItem.topSuggestion.student.lastName}'s payment from the exception queue? This will reconcile, verify, and approve the payment in one step.`
+                : 'Approve this payment from the exception queue?'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmAssistItem(null)}>Cancel</Button>
+            <Button
+              onClick={() => confirmAssistItem && assistApproveTopSuggestion(confirmAssistItem)}
+              disabled={actionLoading === confirmAssistItem?.id}
+            >
+              {actionLoading === confirmAssistItem?.id ? 'Approving...' : 'Approve Payment'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
