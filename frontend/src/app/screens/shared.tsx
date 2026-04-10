@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText, Search, Filter, Trash2, Mail, Smartphone, Eye, HelpCircle, MessageCircle, Globe, LogOut, Laptop, Moon, Sun } from 'lucide-react';
+import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText, Search, Filter, Mail, Smartphone, Eye, HelpCircle, MessageCircle, Globe, LogOut, Laptop, Moon, Sun } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
@@ -22,6 +22,7 @@ import {
 import { useNotificationFilters } from '../lib/notification-filters';
 import { NotificationConfirmDialogs } from '../components/notification-confirm-dialogs';
 import { NotificationGroupList } from '../components/notification-group-list';
+import { NotificationPageHeader } from '../components/notification-page-header';
 
 /* ===== NOTIFICATIONS ===== */
 
@@ -98,40 +99,24 @@ export function NotificationsPage() {
 
   return (
     <div className="p-4 md:p-6 space-y-6 max-w-[900px] animate-fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-[22px] font-semibold tracking-tight text-foreground flex items-center gap-2">
-            <Bell className="h-6 w-6 text-primary" />
-            Notifications
-          </h1>
-          <p className="text-[13px] text-muted-foreground mt-0.5">
+      <NotificationPageHeader
+        title="Notifications"
+        titleIcon={<Bell className="h-6 w-6 text-primary" />}
+        subtitle={
+          <>
             {unreadCount > 0 ? (
               <span className="text-primary font-medium">{unreadCount} unread</span>
             ) : (
               'All caught up!'
             )}
             {readCount > 0 && ` • ${readCount} read`}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {unreadCount > 0 && (
-            <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={markAllRead}>
-              <CheckCheck className="h-4 w-4" /> Mark all read
-            </Button>
-          )}
-          {hasAnyNotifications && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1.5 h-9 text-destructive hover:text-destructive"
-              onClick={() => setShowClearAllConfirm(true)}
-            >
-              <Trash2 className="h-4 w-4" /> Clear all
-            </Button>
-          )}
-        </div>
-      </div>
+          </>
+        }
+        unreadCount={unreadCount}
+        hasAnyNotifications={hasAnyNotifications}
+        onMarkAllRead={markAllRead}
+        onClearAll={() => setShowClearAllConfirm(true)}
+      />
 
       {/* Tabs & Filters */}
       <div className="space-y-3">

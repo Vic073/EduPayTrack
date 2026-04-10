@@ -1,10 +1,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import {
   Bell,
-  CheckCheck,
   Search,
   Filter,
-  Trash2,
   FileText,
   CreditCard,
   AlertTriangle,
@@ -32,6 +30,8 @@ import {
 import { useNotificationFilters } from '../../lib/notification-filters';
 import { NotificationConfirmDialogs } from '../../components/notification-confirm-dialogs';
 import { NotificationGroupList } from '../../components/notification-group-list';
+import { NotificationPageHeader } from '../../components/notification-page-header';
+import { NotificationStatsCards } from '../../components/notification-stats-cards';
 
 // Student-specific notification types
 const notificationConfig: Record<string, { icon: any; color: string; bg: string; label: string }> = {
@@ -147,14 +147,11 @@ export function StudentNotificationsPage() {
 
   return (
     <div className="p-4 md:p-6 space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-[22px] font-semibold tracking-tight text-foreground flex items-center gap-2">
-            <Bell className="h-6 w-6 text-primary" />
-            My Notifications
-          </h1>
-          <p className="text-[13px] text-muted-foreground mt-0.5">
+      <NotificationPageHeader
+        title="My Notifications"
+        titleIcon={<Bell className="h-6 w-6 text-primary" />}
+        subtitle={
+          <>
             {stats.pendingFees > 0 && (
               <span className="text-primary font-medium">{stats.pendingFees} new fees</span>
             )}
@@ -166,71 +163,43 @@ export function StudentNotificationsPage() {
               <span className="text-primary font-medium">{unreadCount} unread</span>
             )}
             {readCount > 0 && ` • ${readCount} read`}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {unreadCount > 0 && (
-            <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={markAllRead}>
-              <CheckCheck className="h-4 w-4" /> Mark all read
-            </Button>
-          )}
-          {hasAnyNotifications && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1.5 h-9 text-destructive hover:text-destructive"
-              onClick={() => setShowClearAllConfirm(true)}
-            >
-              <Trash2 className="h-4 w-4" /> Clear all
-            </Button>
-          )}
-        </div>
-      </div>
+          </>
+        }
+        unreadCount={unreadCount}
+        hasAnyNotifications={hasAnyNotifications}
+        onMarkAllRead={markAllRead}
+        onClearAll={() => setShowClearAllConfirm(true)}
+      />
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-background">
-          <CardContent className="pt-4 pb-4 px-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Total</p>
-                <p className="text-[24px] font-bold text-primary mt-1">{stats.total}</p>
-              </div>
-              <div className="h-10 w-10 rounded-lg bg-primary/15 flex items-center justify-center">
-                <Bell className="h-5 w-5 text-primary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="overflow-hidden border-warning/20 bg-gradient-to-br from-warning/5 via-background to-background">
-          <CardContent className="pt-4 pb-4 px-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Pending Fees</p>
-                <p className="text-[24px] font-bold text-warning mt-1">{stats.pendingFees}</p>
-              </div>
-              <div className="h-10 w-10 rounded-lg bg-warning/15 flex items-center justify-center">
-                <FileText className="h-5 w-5 text-warning" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="overflow-hidden border-destructive/20 bg-gradient-to-br from-destructive/5 via-background to-background">
-          <CardContent className="pt-4 pb-4 px-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Payment Updates</p>
-                <p className="text-[24px] font-bold text-destructive mt-1">{stats.paymentUpdates}</p>
-              </div>
-              <div className="h-10 w-10 rounded-lg bg-destructive/15 flex items-center justify-center">
-                <CreditCard className="h-5 w-5 text-destructive" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <NotificationStatsCards
+        columnsClassName="grid grid-cols-1 sm:grid-cols-3 gap-4"
+        stats={[
+          {
+            label: 'Total',
+            value: stats.total,
+            valueClassName: 'text-primary',
+            cardClassName: 'overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-background',
+            iconContainerClassName: 'bg-primary/15',
+            icon: <Bell className="h-5 w-5 text-primary" />,
+          },
+          {
+            label: 'Pending Fees',
+            value: stats.pendingFees,
+            valueClassName: 'text-warning',
+            cardClassName: 'overflow-hidden border-warning/20 bg-gradient-to-br from-warning/5 via-background to-background',
+            iconContainerClassName: 'bg-warning/15',
+            icon: <FileText className="h-5 w-5 text-warning" />,
+          },
+          {
+            label: 'Payment Updates',
+            value: stats.paymentUpdates,
+            valueClassName: 'text-destructive',
+            cardClassName: 'overflow-hidden border-destructive/20 bg-gradient-to-br from-destructive/5 via-background to-background',
+            iconContainerClassName: 'bg-destructive/15',
+            icon: <CreditCard className="h-5 w-5 text-destructive" />,
+          },
+        ]}
+      />
 
       {/* Tabs & Filters */}
       <div className="space-y-3">
