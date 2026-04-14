@@ -1,0 +1,38 @@
+For this system, I’d focus on features that reduce manual follow-up, improve trust in payment records, and make each role feel like the product is built for them.
+
+For admins:
+- Approval workflow rules: require dual review for large payments, flagged receipts, or suspicious duplicates.
+- Role-based analytics: see collections by campus, class, term, staff member, and payment channel.
+- Broadcasts and campaign messaging: send targeted reminders by balance range, class, or overdue status.
+- Audit dashboards: highlight unusual actions like mass deactivations, repeated password resets, or many rejected receipts.
+- Fee planning tools: simulate how a new fee structure affects balances before publishing it.
+
+For accounts staff:
+- Smart verification queue: sort by highest amount, oldest pending, duplicate risk, OCR mismatch, or missing reference.
+- Side-by-side receipt review: show extracted OCR fields next to submitted fields with mismatch highlights.
+- Bulk actions with safeguards: approve low-risk clean receipts in batches, but require notes for risky ones.
+- Reconciliation tools: mark payments as matched to bank statements or mobile money exports.
+- Exception handling inbox: one place for flagged receipts, missing proof, duplicate references, and partial payments.
+
+For students:
+- Real payment timeline: submitted, verified, approved, rejected, with who reviewed and any notes.
+- Balance forecast: show how much remains this term and suggested installment milestones.
+- Downloadable fee statement / clearance letter: useful for registration and exams.
+- Payment reminders with action links: overdue notices that take them straight to upload payment.
+- Receipt quality helper: warn before upload if the image is blurry, cropped, dark, or missing key fields.
+
+For all roles:
+- In-app and email notifications.
+- Search everywhere: students, references, receipts, users, reports.
+- Better profile/account settings: password change, profile photo, session history.
+- Export improvements: CSV, PDF, print-ready summaries.
+- Mobile-first receipt upload and review polish.
+
+If I were prioritizing the next 5 highest-value additions, I’d pick:
+1. Smart verification queue for accounts
+2. Student payment timeline with review notes
+3. Statement/clearance PDF generation
+4. Reconciliation against bank/mobile-money exports
+5. Targeted reminder campaigns for admins
+
+If you want, I can turn this into a phased roadmap: “must-have next,” “nice-to-have later,” and “premium/polished features.”
