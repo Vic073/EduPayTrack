@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText, Search, Filter, Mail, Smartphone, Eye, HelpCircle, MessageCircle, Globe, LogOut, Laptop, Moon, Sun, Building2 } from 'lucide-react';
+import { Bell, CheckCheck, Settings as SettingsIcon, User, Lock, Palette, Loader2, AlertTriangle, XCircle, FileText, Search, Filter, Mail, Smartphone, Eye, HelpCircle, MessageCircle, Globe, LogOut, Laptop, Moon, Sun, Building2, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
@@ -13,6 +13,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { PaymentReminders, generateSampleReminders } from '../components/payment-reminders';
 import {
   Dialog,
   DialogContent,
@@ -358,6 +359,11 @@ export function SettingsPage() {
           <TabsTrigger value="profile" className="gap-1.5 text-[13px]">
             <User className="h-3.5 w-3.5" /> Profile
           </TabsTrigger>
+          {user?.role === 'student' && (
+            <TabsTrigger value="reminders" className="gap-1.5 text-[13px]">
+              <Clock className="h-3.5 w-3.5" /> Reminders
+            </TabsTrigger>
+          )}
           <TabsTrigger value="notifications" className="gap-1.5 text-[13px]">
             <Bell className="h-3.5 w-3.5" /> Notifications
           </TabsTrigger>
@@ -432,6 +438,18 @@ export function SettingsPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {user?.role === 'student' && (
+          <TabsContent value="reminders" className="space-y-4">
+            <PaymentReminders
+              reminders={generateSampleReminders()}
+              onRemindersChange={(reminders) => {
+                console.log('Reminders updated:', reminders);
+                toast.success('Reminder preferences updated');
+              }}
+            />
+          </TabsContent>
+        )}
 
         <TabsContent value="notifications" className="space-y-4">
           <Card>

@@ -16,6 +16,7 @@ import { formatCurrency, formatDate } from '../../lib/utils';
 import { getFullImageUrl } from '../components/admin/common/payment-helpers';
 import { downloadPaymentReceipt, type ReceiptData } from '../lib/receipt-pdf';
 import { PaymentDeadlineCalendar } from '../components/payment-deadline-calendar';
+import { PaymentReminders, type PaymentReminder, type ReminderPreferences, generateSampleReminders } from '../components/payment-reminders';
 
 /* ---- Status badge helper ---- */
 function PaymentStatusBadge({ status }: { status: string }) {
@@ -218,6 +219,15 @@ export function StudentDashboardPage() {
 
       {/* Payment Deadline Calendar */}
       <PaymentDeadlineCalendar currentBalance={remaining} />
+
+      {/* Payment Reminders */}
+      <PaymentReminders 
+        reminders={generateSampleReminders()} 
+        onRemindersChange={(reminders) => {
+          // TODO: Save to backend when API is ready
+          console.log('Reminders updated:', reminders);
+        }}
+      />
 
       {/* Recent payments */}
       <div>
