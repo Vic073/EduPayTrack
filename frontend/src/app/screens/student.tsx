@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Skeleton } from '../../components/ui/skeleton';
 import { formatCurrency, formatDate } from '../../lib/utils';
 import { getFullImageUrl } from '../components/admin/common/payment-helpers';
+import { downloadPaymentReceipt, type ReceiptData } from '../lib/receipt-pdf';
 
 /* ---- Status badge helper ---- */
 function PaymentStatusBadge({ status }: { status: string }) {
@@ -721,6 +722,37 @@ export function PaymentHistoryPage() {
                             <p className="mt-1">No receipt attached</p>
                           )}
                         </div>
+                      </div>
+
+                      {/* Download Official Receipt Button */}
+                      <div className="flex justify-end pt-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-2"
+                          onClick={() => {
+                            const receiptData: ReceiptData = {
+                              id: payment.id,
+                              amount: payment.amount,
+                              status: payment.status,
+                              method: payment.method,
+                              externalReference: payment.externalReference,
+                              receiptNumber: payment.receiptNumber,
+                              paymentDate: payment.paymentDate,
+                              submittedAt: payment.submittedAt,
+                              payerName: payment.payerName,
+                              notes: payment.notes,
+                              student: dashboard?.student || payment.student,
+                              reviewedBy: payment.reviewedBy,
+                              reviewedAt: payment.reviewedAt,
+                            };
+                            downloadPaymentReceipt(receiptData);
+                            toast.success('Receipt downloaded');
+                          }}
+                        >
+                          <Download className="h-4 w-4" />
+                          Download Official Receipt
+                        </Button>
                       </div>
                     </div>
                   )}
