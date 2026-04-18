@@ -20,6 +20,7 @@ import { PaymentReminders, type PaymentReminder, type ReminderPreferences, gener
 import { useFormAutosave } from '../lib/use-form-autosave';
 import { useAppShortcuts } from '../lib/use-keyboard-shortcuts';
 import { KeyboardShortcutsHelp } from '../components/keyboard-shortcuts-help';
+import { AdvancedFilters, type AdvancedFiltersState } from '../components/advanced-filters';
 
 /* ---- Status badge helper ---- */
 function PaymentStatusBadge({ status }: { status: string }) {
@@ -701,9 +702,18 @@ export function PaymentHistoryPage() {
   const [dashboard, setDashboard] = useState<any>(null);
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
   const [downloadingStatement, setDownloadingStatement] = useState(false);
+
+  // Advanced filters state
+  const [advancedFilters, setAdvancedFilters] = useState<AdvancedFiltersState>({
+    search: '',
+    status: 'ALL',
+    dateRange: {},
+    amountRange: {},
+    sortBy: 'newest',
+    sortOrder: 'desc',
+  });
 
   // Keyboard shortcuts
   const { shortcuts, shortcutsHelpOpen, setShortcutsHelpOpen } = useAppShortcuts({
@@ -722,9 +732,66 @@ export function PaymentHistoryPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = statusFilter === 'ALL'
-    ? payments
-    : payments.filter(p => p.status === statusFilter);
+  // Apply advanced filters
+  const filtered = useMemo(() => {
+    let result = [...payments];
+
+    // Search filter
+    if (advancedFilters.search) {
+      const query = advancedFilters.search.toLowerCase();
+      result = result.filter(p => {
+        const searchable = `${p.method || ''} ${p.externalReference || ''} ${p.receiptNumber || ''} ${p.status || ''}`.toLowerCase();
+        return searchable.includes(query);
+      });
+    }
+
+    // Status filter
+    if (advancedFilters.status !== 'ALL') {
+      result = result.filter(p => p.status === advancedFilters.status);
+    }
+
+    // Date range filter
+    if (advancedFilters.dateRange.from || advancedFilters.dateRange.to) {
+      result = result.filter(p => {
+        const date = new Date(p.paymentDate || p.submittedAt);
+        if (advancedFilters.dateRange.from && date < new Date(advancedFilters.dateRange.from)) return false;
+        if (advancedFilters.dateRange.to && date > new Date(advancedFilters.dateRange.to)) return false;
+        return true;
+      });
+    }
+
+    // Amount range filter
+    if (advancedFilters.amountRange.min !== undefined || advancedFilters.amountRange.max !== undefined) {
+      result = result.filter(p => {
+        const amount = Number(p.amount || 0);
+        if (advancedFilters.amountRange.min !== undefined && amount < advancedFilters.amountRange.min) return false;
+        if (advancedFilters.amountRange.max !== undefined && amount > advancedFilters.amountRange.max) return false;
+        return true;
+      });
+    }
+
+    // Sorting
+    result.sort((a, b) => {
+      let comparison = 0;
+      switch (advancedFilters.sortBy) {
+        case 'newest':
+          comparison = new Date(b.submittedAt || 0).getTime() - new Date(a.submittedAt || 0).getTime();
+          break;
+        case 'oldest':
+          comparison = new Date(a.submittedAt || 0).getTime() - new Date(b.submittedAt || 0).getTime();
+          break;
+        case 'amount-high':
+          comparison = Number(b.amount || 0) - Number(a.amount || 0);
+          break;
+        case 'amount-low':
+          comparison = Number(a.amount || 0) - Number(b.amount || 0);
+          break;
+      }
+      return advancedFilters.sortOrder === 'desc' ? -comparison : comparison;
+    });
+
+    return result;
+  }, [payments, advancedFilters]);
 
   const getVerificationState = (payment: any) => {
     if (payment.verificationStatus === 'FLAGGED') {
@@ -766,24 +833,30 @@ export function PaymentHistoryPage() {
             {payments.length} payment{payments.length !== 1 ? 's' : ''} submitted
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[140px] h-9">
-              <SelectValue placeholder="Filter..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All statuses</SelectItem>
-              <SelectItem value="PENDING">Pending</SelectItem>
-              <SelectItem value="APPROVED">Approved</SelectItem>
-              <SelectItem value="REJECTED">Rejected</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" className="h-9 gap-2" onClick={downloadStatement} disabled={downloadingStatement}>
-            {downloadingStatement ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            Download Statement
-          </Button>
-        </div>
+        <Button variant="outline" className="h-9 gap-2" onClick={downloadStatement} disabled={downloadingStatement}>
+          {downloadingStatement ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          Download Statement
+        </Button>
       </div>
+
+      {/* Advanced Filters */}
+      <AdvancedFilters
+        filters={advancedFilters}
+        onFiltersChange={setAdvancedFilters}
+        statusOptions={[
+          { id: 'all', label: 'All Statuses', value: 'ALL' },
+          { id: 'pending', label: 'Pending', value: 'PENDING' },
+          { id: 'approved', label: 'Approved', value: 'APPROVED' },
+          { id: 'rejected', label: 'Rejected', value: 'REJECTED' },
+        ]}
+        sortOptions={[
+          { id: 'newest', label: 'Newest First', value: 'newest' },
+          { id: 'oldest', label: 'Oldest First', value: 'oldest' },
+          { id: 'amount-high', label: 'Amount (High)', value: 'amount-high' },
+          { id: 'amount-low', label: 'Amount (Low)', value: 'amount-low' },
+        ]}
+        totalResults={filtered.length}
+      />
 
       {dashboard && (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -812,8 +885,8 @@ export function PaymentHistoryPage() {
         {filtered.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center text-[13px] text-muted-foreground">
-              {statusFilter !== 'ALL'
-                ? `No ${statusFilter.toLowerCase()} payments found.`
+              {payments.length > 0
+                ? 'No payments match your filters. Try adjusting your search criteria.'
                 : 'No payments submitted yet.'}
             </CardContent>
           </Card>
