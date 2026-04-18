@@ -132,6 +132,7 @@ exports.Prisma.UserScalarFieldEnum = {
   profilePictureUrl: 'profilePictureUrl',
   currentSessionId: 'currentSessionId',
   sessionExpires: 'sessionExpires',
+  lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

@@ -83,6 +83,7 @@ export const listSystemUsers = async () => {
             lastName: true,
             role: true,
             status: true,
+            lastLoginAt: true,
             createdAt: true,
             updatedAt: true,
             student: {

@@ -1953,6 +1953,7 @@ export namespace Prisma {
     profilePictureUrl: string | null
     currentSessionId: string | null
     sessionExpires: Date | null
+    lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1968,6 +1969,7 @@ export namespace Prisma {
     profilePictureUrl: string | null
     currentSessionId: string | null
     sessionExpires: Date | null
+    lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1983,6 +1985,7 @@ export namespace Prisma {
     profilePictureUrl: number
     currentSessionId: number
     sessionExpires: number
+    lastLoginAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2000,6 +2003,7 @@ export namespace Prisma {
     profilePictureUrl?: true
     currentSessionId?: true
     sessionExpires?: true
+    lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2015,6 +2019,7 @@ export namespace Prisma {
     profilePictureUrl?: true
     currentSessionId?: true
     sessionExpires?: true
+    lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2030,6 +2035,7 @@ export namespace Prisma {
     profilePictureUrl?: true
     currentSessionId?: true
     sessionExpires?: true
+    lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2118,6 +2124,7 @@ export namespace Prisma {
     profilePictureUrl: string | null
     currentSessionId: string | null
     sessionExpires: Date | null
+    lastLoginAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -2150,6 +2157,7 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     currentSessionId?: boolean
     sessionExpires?: boolean
+    lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     student?: boolean | User$studentArgs<ExtArgs>
@@ -2174,6 +2182,7 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     currentSessionId?: boolean
     sessionExpires?: boolean
+    lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2189,6 +2198,7 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     currentSessionId?: boolean
     sessionExpires?: boolean
+    lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2204,11 +2214,12 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     currentSessionId?: boolean
     sessionExpires?: boolean
+    lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "passwordHash" | "firstName" | "lastName" | "role" | "status" | "profilePictureUrl" | "currentSessionId" | "sessionExpires" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "passwordHash" | "firstName" | "lastName" | "role" | "status" | "profilePictureUrl" | "currentSessionId" | "sessionExpires" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | User$studentArgs<ExtArgs>
     verifiedPayments?: boolean | User$verifiedPaymentsArgs<ExtArgs>
@@ -2246,6 +2257,7 @@ export namespace Prisma {
       profilePictureUrl: string | null
       currentSessionId: string | null
       sessionExpires: Date | null
+      lastLoginAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -2689,6 +2701,7 @@ export namespace Prisma {
     readonly profilePictureUrl: FieldRef<"User", 'String'>
     readonly currentSessionId: FieldRef<"User", 'String'>
     readonly sessionExpires: FieldRef<"User", 'DateTime'>
+    readonly lastLoginAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -13995,6 +14008,7 @@ export namespace Prisma {
     profilePictureUrl: 'profilePictureUrl',
     currentSessionId: 'currentSessionId',
     sessionExpires: 'sessionExpires',
+    lastLoginAt: 'lastLoginAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14447,6 +14461,7 @@ export namespace Prisma {
     profilePictureUrl?: StringNullableFilter<"User"> | string | null
     currentSessionId?: StringNullableFilter<"User"> | string | null
     sessionExpires?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     student?: XOR<StudentNullableScalarRelationFilter, StudentWhereInput> | null
@@ -14470,6 +14485,7 @@ export namespace Prisma {
     profilePictureUrl?: SortOrderInput | SortOrder
     currentSessionId?: SortOrderInput | SortOrder
     sessionExpires?: SortOrderInput | SortOrder
+    lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     student?: StudentOrderByWithRelationInput
@@ -14496,6 +14512,7 @@ export namespace Prisma {
     profilePictureUrl?: StringNullableFilter<"User"> | string | null
     currentSessionId?: StringNullableFilter<"User"> | string | null
     sessionExpires?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     student?: XOR<StudentNullableScalarRelationFilter, StudentWhereInput> | null
@@ -14519,6 +14536,7 @@ export namespace Prisma {
     profilePictureUrl?: SortOrderInput | SortOrder
     currentSessionId?: SortOrderInput | SortOrder
     sessionExpires?: SortOrderInput | SortOrder
+    lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -14540,6 +14558,7 @@ export namespace Prisma {
     profilePictureUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     currentSessionId?: StringNullableWithAggregatesFilter<"User"> | string | null
     sessionExpires?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -15436,6 +15455,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -15459,6 +15479,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -15482,6 +15503,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -15505,6 +15527,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -15528,6 +15551,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15543,6 +15567,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15558,6 +15583,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16712,6 +16738,7 @@ export namespace Prisma {
     profilePictureUrl?: SortOrder
     currentSessionId?: SortOrder
     sessionExpires?: SortOrder
+    lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16727,6 +16754,7 @@ export namespace Prisma {
     profilePictureUrl?: SortOrder
     currentSessionId?: SortOrder
     sessionExpires?: SortOrder
+    lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16742,6 +16770,7 @@ export namespace Prisma {
     profilePictureUrl?: SortOrder
     currentSessionId?: SortOrder
     sessionExpires?: SortOrder
+    lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19430,6 +19459,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
@@ -19452,6 +19482,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
@@ -19566,6 +19597,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
@@ -19588,6 +19620,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
@@ -19665,6 +19698,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -19687,6 +19721,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -19714,6 +19749,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -19736,6 +19772,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -19763,6 +19800,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -19785,6 +19823,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -19868,6 +19907,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -19890,6 +19930,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -19923,6 +19964,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -19945,6 +19987,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -19978,6 +20021,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -20000,6 +20044,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -20022,6 +20067,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -20044,6 +20090,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -20124,6 +20171,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -20146,6 +20194,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -20268,6 +20317,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -20290,6 +20340,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -20328,6 +20379,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -20350,6 +20402,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -20372,6 +20425,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -20394,6 +20448,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -20432,6 +20487,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -20454,6 +20510,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -20476,6 +20533,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
@@ -20498,6 +20556,7 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     currentSessionId?: string | null
     sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
@@ -20536,6 +20595,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
@@ -20558,6 +20618,7 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput

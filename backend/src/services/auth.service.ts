@@ -255,7 +255,8 @@ export const loginUser = async (input: unknown, ipAddress?: string) => {
         where: { id: user.id },
         data: { 
             currentSessionId: newSessionId,
-            sessionExpires
+            sessionExpires,
+            lastLoginAt: now,
         }
     });
 
