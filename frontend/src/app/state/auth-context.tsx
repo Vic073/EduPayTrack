@@ -137,6 +137,16 @@ export function AuthProvider({ children }: PropsWithChildren) {
       .finally(() => setIsLoading(false));
   }, [refreshNotifications]);
 
+  // Real-time notifications polling
+  useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(() => {
+      refreshNotifications();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [user, refreshNotifications]);
+
+
   const login = useCallback(async ({ email, password }: LoginValues) => {
     const payload = await apiFetch<any>('/auth/login', {
       method: 'POST',

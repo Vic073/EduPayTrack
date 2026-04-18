@@ -26,9 +26,11 @@ function ThemeToggle() {
 }
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
-  const { user, navItems, logout } = useAuth();
+  const { user, navItems, logout, notifications } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   const initials = user?.name
     ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -67,20 +69,39 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           const Icon = item.icon;
           const isActive = location.pathname === item.href ||
             (item.href !== '/' && location.pathname.startsWith(item.href));
+            
+          const isNotifs = item.label === 'Notifications';
+
           return (
             <NavLink
               key={item.href}
               to={item.href}
               onClick={onNavigate}
               className={cn(
-                'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-all duration-150',
+                'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-all duration-150 group',
                 isActive
                   ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
                   : 'text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground'
               )}
             >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span>{item.label}</span>
+              <div className="relative">
+                <Icon className="h-4 w-4 shrink-0 transition-transform group-hover:scale-105" />
+                {isNotifs && unreadCount > 0 && (
+                  <span
+                    key={`dot-${unreadCount}`}
+                    className="absolute -top-[2px] -right-[2px] h-[8px] w-[8px] rounded-full bg-primary ring-2 ring-sidebar border border-transparent animate-in zoom-in fade-in duration-200"
+                  />
+                )}
+              </div>
+              <span className="flex-1 text-left truncate">{item.label}</span>
+              {isNotifs && unreadCount > 0 && (
+                <div
+                  key={`badge-${unreadCount}`}
+                  className="flex h-[18px] min-w-[20px] items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-medium text-primary-foreground animate-in zoom-in fade-in duration-200"
+                >
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </div>
+              )}
             </NavLink>
           );
         })}
