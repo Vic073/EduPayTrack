@@ -376,6 +376,29 @@ export function RegisterPage() {
                   </FormItem>
                 )} />
               )}
+              {form.watch('schoolLevel') === 'TERTIARY' && (
+                <FormField name="classLevel" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[13px] font-medium">Year of Study</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
+                      <FormControl>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="Select..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Year 1">Year 1</SelectItem>
+                        <SelectItem value="Year 2">Year 2</SelectItem>
+                        <SelectItem value="Year 3">Year 3</SelectItem>
+                        <SelectItem value="Year 4">Year 4</SelectItem>
+                        <SelectItem value="Year 5">Year 5</SelectItem>
+                        <SelectItem value="Year 6">Year 6</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[12px]" />
+                  </FormItem>
+                )} />
+              )}
               {form.watch('schoolLevel') === 'PRIMARY' && (
                 <FormField name="classLevel" render={({ field }) => (
                   <FormItem>
@@ -428,12 +451,12 @@ export function RegisterPage() {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="2024">2024</SelectItem>
+                      <SelectItem value="2024/2025">2024/2025</SelectItem>
                       <SelectItem value="2025">2025</SelectItem>
+                      <SelectItem value="2025/2026">2025/2026</SelectItem>
                       <SelectItem value="2026">2026</SelectItem>
-                      <SelectItem value="Year 1">Year 1</SelectItem>
-                      <SelectItem value="Year 2">Year 2</SelectItem>
-                      <SelectItem value="Year 3">Year 3</SelectItem>
-                      <SelectItem value="Year 4">Year 4</SelectItem>
+                      <SelectItem value="2026/2027">2026/2027</SelectItem>
+                      <SelectItem value="2027/2028">2027/2028</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage className="text-[12px]" />
