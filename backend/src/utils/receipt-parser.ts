@@ -39,6 +39,8 @@ type ReferenceCandidate = {
     token: string;
 };
 
+type ReceiptTemplate = 'NBM_FASTSERVE' | 'NBM_DEPOSIT' | 'STANDARD_BANK' | 'GENERIC';
+
 const normalizeAmount = (rawAmount: string) => Number(rawAmount.replace(/,/g, ''));
 
 const cleanupToken = (value: string) => value.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9/-]+$/g, '').trim();
@@ -65,6 +67,92 @@ const isLikelyReference = (value: string, allowPureNumeric = false) => {
     }
 
     return allowPureNumeric && /^\d{6,14}$/.test(normalized);
+};
+
+const detectReceiptTemplate = (rawText: string): ReceiptTemplate => {
+    const normalized = rawText.toLowerCase();
+
+    if (normalized.includes('fastserve') || normalized.includes('payment/send details')) {
+        return 'NBM_FASTSERVE';
+    }
+
+    if (
+        normalized.includes('national bank of malawi') ||
+        normalized.includes('cash deposit') ||
+        normalized.includes('amt deposited')
+    ) {
+        return 'NBM_DEPOSIT';
+    }
+
+    if (normalized.includes('standard bank') || normalized.includes('transaction with transaction id')) {
+        return 'STANDARD_BANK';
+    }
+
+    return 'GENERIC';
+};
+
+const extractFromLabeledLine = (lines: string[], labelPattern: RegExp, allowPureNumeric = false): string | null => {
+    for (let i = 0; i < lines.length; i += 1) {
+        const line = lines[i];
+        if (!labelPattern.test(line)) {
+            continue;
+        }
+
+        const inlineMatch = line.match(/[:#-]\s*([A-Za-z0-9][A-Za-z0-9/-]{4,39})/);
+        if (inlineMatch?.[1] && isLikelyReference(inlineMatch[1], allowPureNumeric)) {
+            return cleanupToken(inlineMatch[1]);
+        }
+
+        const tokens = line.match(/\b([A-Za-z0-9][A-Za-z0-9/-]{4,39})\b/g) || [];
+        for (const token of tokens) {
+            if (isLikelyReference(token, allowPureNumeric) && !labelPattern.test(token)) {
+                return cleanupToken(token);
+            }
+        }
+
+        const nextLine = lines[i + 1];
+        if (nextLine) {
+            const nextTokenMatch = nextLine.match(/\b([A-Za-z0-9][A-Za-z0-9/-]{4,39})\b/);
+            if (nextTokenMatch?.[1] && isLikelyReference(nextTokenMatch[1], allowPureNumeric)) {
+                return cleanupToken(nextTokenMatch[1]);
+            }
+        }
+    }
+
+    return null;
+};
+
+const extractTemplateReference = (rawText: string): string | null => {
+    const lines = rawText
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+    const template = detectReceiptTemplate(rawText);
+
+    if (template === 'NBM_FASTSERVE') {
+        return (
+            extractFromLabeledLine(lines, /reference\s*number/i) ||
+            extractFromLabeledLine(lines, /\bref(?:erence)?\b/i)
+        );
+    }
+
+    if (template === 'NBM_DEPOSIT') {
+        return (
+            extractFromLabeledLine(lines, /\bref(?:erence)?(?:\s*transaction)?\b/i) ||
+            extractFromLabeledLine(lines, /transaction\s*(?:id|ref|reference|number)/i)
+        );
+    }
+
+    if (template === 'STANDARD_BANK') {
+        return (
+            extractFromLabeledLine(lines, /transaction\s*id/i, true) ||
+            extractFromLabeledLine(lines, /my\s*reference/i) ||
+            extractFromLabeledLine(lines, /their\s*reference/i)
+        );
+    }
+
+    return null;
 };
 
 const scoreReferenceCandidate = (token: string, line: string) => {
@@ -99,6 +187,11 @@ const pickBestCandidate = (candidates: ReferenceCandidate[]): string | null => {
 };
 
 const extractReference = (rawText: string): string | null => {
+    const templateReference = extractTemplateReference(rawText);
+    if (templateReference) {
+        return templateReference;
+    }
+
     const lines = rawText
         .split(/\r?\n/)
         .map((line) => line.trim())
