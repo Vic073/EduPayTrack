@@ -68,18 +68,61 @@ const parseReferenceCandidate = (value: unknown): string | null => {
         return null;
     }
 
-    const normalized = value.trim().replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9-]+$/g, '');
-    if (!normalized || normalized.length < 5 || normalized.length > 40) {
+    const normalizedText = value.replace(/\s+/g, ' ').trim();
+    if (!normalizedText) return null;
+
+    const explicitPattern =
+        /(?:reference(?:\s*(?:number|no|#))?|ref(?:erence)?(?:\s*(?:number|no|#))?|transaction(?:\s*(?:id|reference|ref|no|number))?|txn(?:\s*(?:id|reference|ref|no|number))?|trx(?:\s*(?:id|reference|ref|no|number))?|trace(?:\s*no)?|rrn)\s*[:#\-]?\s*([A-Za-z0-9-]{5,40})/i;
+    const explicitMatch = normalizedText.match(explicitPattern);
+    if (explicitMatch?.[1]) {
+        return explicitMatch[1];
+    }
+
+    const tokenPattern = /\b([A-Za-z0-9-]{5,40})\b/g;
+    let tokenMatch: RegExpExecArray | null = tokenPattern.exec(normalizedText);
+    while (tokenMatch) {
+        const token = tokenMatch[1];
+        const hasLetter = /[A-Za-z]/.test(token);
+        const hasNumber = /\d/.test(token);
+        if (hasLetter && hasNumber) {
+            return token;
+        }
+        tokenMatch = tokenPattern.exec(normalizedText);
+    }
+
+    return null;
+};
+
+const parseReferenceFromUnknown = (value: unknown, depth = 0): string | null => {
+    if (depth > 6 || value === null || value === undefined) {
         return null;
     }
 
-    const hasLetter = /[A-Za-z]/.test(normalized);
-    const hasNumber = /\d/.test(normalized);
-    if (!hasLetter || !hasNumber) {
+    if (typeof value === 'string') {
+        return parseReferenceCandidate(value);
+    }
+
+    if (typeof value === 'number' || typeof value === 'boolean') {
         return null;
     }
 
-    return normalized;
+    if (Array.isArray(value)) {
+        for (const item of value) {
+            const parsed = parseReferenceFromUnknown(item, depth + 1);
+            if (parsed) return parsed;
+        }
+        return null;
+    }
+
+    if (typeof value === 'object') {
+        const objectValue = value as Record<string, unknown>;
+        for (const innerValue of Object.values(objectValue)) {
+            const parsed = parseReferenceFromUnknown(innerValue, depth + 1);
+            if (parsed) return parsed;
+        }
+    }
+
+    return null;
 };
 
 const collectKeyMatches = (
@@ -126,23 +169,13 @@ const pickReferenceFromTabScannerPayload = (payload: Record<string, unknown>): s
     const directCandidates = collectKeyMatches(payload, referenceKeyMatchers);
 
     for (const candidate of directCandidates) {
-        if (Array.isArray(candidate)) {
-            for (const item of candidate) {
-                const parsed = parseReferenceCandidate(item);
-                if (parsed) {
-                    return parsed;
-                }
-            }
-            continue;
-        }
-
-        const parsed = parseReferenceCandidate(candidate);
+        const parsed = parseReferenceFromUnknown(candidate);
         if (parsed) {
             return parsed;
         }
     }
 
-    return null;
+    return parseReferenceFromUnknown(payload);
 };
 
 const parseTabScannerResponse = async (response: Response): Promise<TabScannerResponse> => {
