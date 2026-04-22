@@ -5,7 +5,7 @@ const amountPatterns = [
 ];
 
 const referenceLabelPattern =
-    /(?:reference(?:\s*(?:number|no|#))?|ref(?:erence)?(?:\s*(?:number|no|#))?|transaction(?:\s*(?:id|reference|ref|no|number))?|txn(?:\s*(?:id|reference|ref|no|number))?|trx(?:\s*(?:id|reference|ref|no|number))?|trace(?:\s*no)?|rrn|my\s*reference|their\s*reference)\s*[:#\-]?\s*/i;
+    /(?:reference(?:\s*(?:number|no|#))?|ref(?:erence)?(?:\s*(?:number|no|#))?|transaction\s*(?:id|reference|ref|no|number)|txn\s*(?:id|reference|ref|no|number)|trx\s*(?:id|reference|ref|no|number)|trace(?:\s*no)?|rrn|my\s*reference|their\s*reference)\s*[:#\-]?\s*/i;
 
 const strictTransactionIdLabelPattern =
     /(?:transaction\s*id|txn\s*id|trx\s*id)\s*[:#\-]?\s*/i;
@@ -45,7 +45,8 @@ const cleanupToken = (value: string) => value.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-
 
 const isDateLikeToken = (token: string) =>
     /^(?:19|20)\d{2}[-/.]\d{1,2}[-/.]\d{1,2}$/.test(token) ||
-    /^\d{1,2}[-/.]\d{1,2}[-/.](?:19|20)\d{2}$/.test(token);
+    /^\d{1,2}[-/.]\d{1,2}[-/.](?:19|20)\d{2}$/.test(token) ||
+    /^(?:19|20)\d{2}[-/.]\d{1,2}[-/.]\d{1,2}t\d{1,2}/i.test(token);
 
 const isLikelyReference = (value: string, allowPureNumeric = false) => {
     const normalized = cleanupToken(value);
@@ -109,7 +110,7 @@ const extractReference = (rawText: string): string | null => {
     for (let i = 0; i < lines.length; i += 1) {
         const currentLine = lines[i];
         const explicitPattern =
-            /(?:reference(?:\s*(?:number|no|#))?|ref(?:erence)?(?:\s*(?:number|no|#))?|transaction(?:\s*(?:id|reference|ref|no|number))?|txn(?:\s*(?:id|reference|ref|no|number))?|trx(?:\s*(?:id|reference|ref|no|number))?|trace(?:\s*no)?|rrn|my\s*reference|their\s*reference)\s*[:#\-]?\s*([A-Za-z0-9][A-Za-z0-9/-]{4,39})/i;
+            /(?:reference(?:\s*(?:number|no|#))?|ref(?:erence)?(?:\s*(?:number|no|#))?|transaction\s*(?:id|reference|ref|no|number)|txn\s*(?:id|reference|ref|no|number)|trx\s*(?:id|reference|ref|no|number)|trace(?:\s*no)?|rrn|my\s*reference|their\s*reference)\s*[:#\-]?\s*([A-Za-z0-9][A-Za-z0-9/-]{4,39})/i;
         const explicitMatch = currentLine.match(explicitPattern);
         if (explicitMatch?.[1]) {
             const token = cleanupToken(explicitMatch[1]);

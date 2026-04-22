@@ -123,7 +123,7 @@ const parseReferenceCandidate = (value: unknown): string | null => {
     if (!normalizedText) return null;
 
     const explicitPattern =
-        /(?:reference(?:\s*(?:number|no|#))?|ref(?:erence)?(?:\s*(?:number|no|#))?|transaction(?:\s*(?:id|reference|ref|no|number))?|txn(?:\s*(?:id|reference|ref|no|number))?|trx(?:\s*(?:id|reference|ref|no|number))?|trace(?:\s*no)?|rrn|my\s*reference|their\s*reference)\s*[:#\-]?\s*([A-Za-z0-9][A-Za-z0-9/-]{4,39})/i;
+        /(?:reference(?:\s*(?:number|no|#))?|ref(?:erence)?(?:\s*(?:number|no|#))?|transaction\s*(?:id|reference|ref|no|number)|txn\s*(?:id|reference|ref|no|number)|trx\s*(?:id|reference|ref|no|number)|trace(?:\s*no)?|rrn|my\s*reference|their\s*reference)\s*[:#\-]?\s*([A-Za-z0-9][A-Za-z0-9/-]{4,39})/i;
     const explicitMatch = normalizedText.match(explicitPattern);
     if (explicitMatch?.[1]) {
         return explicitMatch[1];
@@ -134,7 +134,11 @@ const parseReferenceCandidate = (value: unknown): string | null => {
     let tokenMatch: RegExpExecArray | null = tokenPattern.exec(normalizedText);
     while (tokenMatch) {
         const token = tokenMatch[1];
-        if (/^(?:19|20)\d{2}[-/.]\d{1,2}[-/.]\d{1,2}$/.test(token) || /^\d{1,2}[-/.]\d{1,2}[-/.](?:19|20)\d{2}$/.test(token)) {
+        if (
+            /^(?:19|20)\d{2}[-/.]\d{1,2}[-/.]\d{1,2}$/.test(token) ||
+            /^\d{1,2}[-/.]\d{1,2}[-/.](?:19|20)\d{2}$/.test(token) ||
+            /^(?:19|20)\d{2}[-/.]\d{1,2}[-/.]\d{1,2}t\d{1,2}/i.test(token)
+        ) {
             tokenMatch = tokenPattern.exec(normalizedText);
             continue;
         }
