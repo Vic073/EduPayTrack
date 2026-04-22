@@ -368,6 +368,10 @@ export function UploadPaymentPage() {
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
   const [payerName, setPayerName] = useState('');
   const [notes, setNotes] = useState('');
+  const [autoFilledFields, setAutoFilledFields] = useState({
+    amount: false,
+    reference: false,
+  });
 
   // Memoize form data to prevent infinite loop in useFormAutosave
   const formData = useMemo(() => ({ 
@@ -402,6 +406,7 @@ export function UploadPaymentPage() {
     setFile(selectedFile);
     setOcrResult(null);
     setScanIssue(null);
+    setAutoFilledFields({ amount: false, reference: false });
     // Create preview for images
     if (selectedFile.type.startsWith('image/')) {
       const url = URL.createObjectURL(selectedFile);
@@ -467,9 +472,11 @@ export function UploadPaymentPage() {
         setOcrResult(scanResult);
         if (scanResult.amount !== null) {
           setAmount(String(scanResult.amount));
+          setAutoFilledFields((current) => ({ ...current, amount: true }));
         }
         if (scanResult.reference) {
           setReference(scanResult.reference);
+          setAutoFilledFields((current) => ({ ...current, reference: true }));
         }
 
         if (scanResult.amount !== null || scanResult.reference) {
@@ -528,6 +535,7 @@ export function UploadPaymentPage() {
       setProofUrl(null);
       setOcrResult(null);
       setScanIssue(null);
+      setAutoFilledFields({ amount: false, reference: false });
       setAmount('');
       setMethod('');
       setReference('');
@@ -752,15 +760,26 @@ export function UploadPaymentPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label htmlFor="payment-amount" className="text-[12px] text-muted-foreground font-medium">Amount (MWK) *</label>
+                {autoFilledFields.amount ? (
+                  <Badge variant="outline" className="ml-2 border-success/30 bg-success/10 text-success">
+                    Auto-filled
+                  </Badge>
+                ) : null}
                 <Input
                   id="payment-amount"
                   name="amount"
                   type="number"
                   placeholder="450000"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) => {
+                    setAmount(e.target.value);
+                    setAutoFilledFields((current) => ({ ...current, amount: false }));
+                  }}
                   autoComplete="transaction-amount"
-                  className="h-10"
+                  className={cn(
+                    'h-10',
+                    autoFilledFields.amount && 'border-success/40 bg-success/5 ring-1 ring-success/20'
+                  )}
                   required
                 />
               </div>
@@ -782,14 +801,25 @@ export function UploadPaymentPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label htmlFor="payment-reference" className="text-[12px] text-muted-foreground font-medium">Reference Number</label>
+                {autoFilledFields.reference ? (
+                  <Badge variant="outline" className="ml-2 border-success/30 bg-success/10 text-success">
+                    Auto-filled
+                  </Badge>
+                ) : null}
                 <Input
                   id="payment-reference"
                   name="referenceNumber"
                   placeholder="NBM-782331"
                   value={reference}
-                  onChange={(e) => setReference(e.target.value)}
+                  onChange={(e) => {
+                    setReference(e.target.value);
+                    setAutoFilledFields((current) => ({ ...current, reference: false }));
+                  }}
                   autoComplete="off"
-                  className="h-10"
+                  className={cn(
+                    'h-10',
+                    autoFilledFields.reference && 'border-success/40 bg-success/5 ring-1 ring-success/20'
+                  )}
                 />
               </div>
               <div className="space-y-1.5">
