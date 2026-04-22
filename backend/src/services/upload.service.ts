@@ -273,7 +273,9 @@ export const scanReceiptWithPython = (filePath: string): Promise<string> => {
         exec(`python "${scriptPath}" "${absoluteFilePath}"`, (error, stdout, stderr) => {
             if (error) {
                 console.error(`OCR Execution Error: ${stderr}`);
-                return reject(new Error('Failed to run Python OCR engine'));
+                const stderrMessage = stderr?.trim();
+                const detail = stderrMessage || error.message;
+                return reject(new Error(`Failed to run Python OCR engine: ${detail}`));
             }
             try {
                 const result = JSON.parse(stdout);
@@ -289,9 +291,15 @@ export const scanReceiptWithPython = (filePath: string): Promise<string> => {
 };
 
 export const scanUploadedReceipt = async (filePath: string): Promise<ReceiptScanResult> => {
+    let tabScannerFailure: unknown = null;
+
     try {
         return await scanReceiptWithTabScanner(filePath);
     } catch (tabScannerError) {
+        tabScannerFailure = tabScannerError;
+    }
+
+    try {
         const rawText = await scanReceiptWithPython(filePath);
         const parsed = parseReceiptText(rawText);
 
@@ -300,6 +308,21 @@ export const scanUploadedReceipt = async (filePath: string): Promise<ReceiptScan
             message: 'OCR successful via Python fallback',
             provider: 'PYTHON',
         };
+    } catch (pythonError) {
+        const tabScannerMessage =
+            tabScannerFailure instanceof Error ? tabScannerFailure.message : 'Unknown TabScanner error';
+        const pythonMessage = pythonError instanceof Error ? pythonError.message : 'Unknown Python OCR error';
+
+        throw new AppError(
+            'Receipt OCR failed. TabScanner failed and Python fallback is unavailable.',
+            502,
+            'OCR_ALL_ENGINES_FAILED',
+            {
+                tabScanner: tabScannerMessage,
+                python: pythonMessage,
+                hint: 'Set TABSCANNER_API_KEY and install Python easyocr dependencies for fallback.',
+            }
+        );
     }
 };
 
