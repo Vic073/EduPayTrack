@@ -213,28 +213,10 @@ export function PaymentDialog({
                   variant="outline" 
                   size="sm" 
                   className="w-full mt-3 gap-2"
-                  onClick={() => {
-                    const receiptData: ReceiptData = {
-                      id: payment.id,
-                      amount: payment.amount,
-                      status: payment.status,
-                      method: payment.method,
-                      externalReference: payment.externalReference,
-                      receiptNumber: payment.receiptNumber,
-                      paymentDate: payment.paymentDate,
-                      submittedAt: payment.submittedAt,
-                      payerName: payment.payerName,
-                      notes: payment.notes,
-                      student: payment.student,
-                      reviewedBy: payment.reviewedBy,
-                      reviewedAt: payment.reviewedAt,
-                    };
-                    downloadPaymentReceipt(receiptData);
-                    toast.success('Receipt downloaded');
-                  }}
+                  onClick={() => window.open(receiptUrl, '_blank')}
                 >
                   <Download className="h-4 w-4" />
-                  Download Official Receipt
+                  Download Receipt
                 </Button>
               </CardContent>
             </Card>
