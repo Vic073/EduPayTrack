@@ -49,6 +49,13 @@ const referenceKeyMatchers = [
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const normalizeTabScannerKey = (key: string) =>
+    key
+        .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+        .replace(/[_-]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
 const flattenTabScannerPayload = (value: unknown, depth = 0): string[] => {
     if (value === null || value === undefined || depth > 8) {
         return [];
@@ -76,17 +83,18 @@ const flattenTabScannerPayload = (value: unknown, depth = 0): string[] => {
         const lines: string[] = [];
 
         for (const [key, nestedValue] of Object.entries(objectValue)) {
+            const normalizedKey = normalizeTabScannerKey(key);
             if (typeof nestedValue === 'string' || typeof nestedValue === 'number') {
                 const normalizedValue = String(nestedValue).replace(/\s+/g, ' ').trim();
                 if (normalizedValue) {
-                    lines.push(`${key}: ${normalizedValue}`);
+                    lines.push(`${normalizedKey}: ${normalizedValue}`);
                 }
                 continue;
             }
 
             const nestedLines = flattenTabScannerPayload(nestedValue, depth + 1);
             if (nestedLines.length > 0) {
-                lines.push(...nestedLines.map((line) => `${key}: ${line}`));
+                lines.push(...nestedLines.map((line) => `${normalizedKey}: ${line}`));
             }
         }
 

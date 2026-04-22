@@ -303,6 +303,10 @@ interface ReceiptOcrResult {
   provider?: 'TABSCANNER' | 'PYTHON';
   confidence?: number;
   message?: string;
+  debug?: {
+    textSource: 'TABSCANNER_FLATTENED' | 'PYTHON_RAW';
+    textPreview: string;
+  };
 }
 
 type ReceiptScanIssue = {
@@ -717,6 +721,16 @@ export function UploadPaymentPage() {
                   {scanIssue.details?.map((detail) => (
                     <p key={detail}>{detail}</p>
                   ))}
+                </div>
+              )}
+              {ocrResult?.debug?.textPreview && (
+                <div className="space-y-1">
+                  <p className="text-[12px] font-medium text-foreground">
+                    OCR text preview
+                  </p>
+                  <pre className="max-h-40 overflow-auto rounded-md bg-background p-3 text-[11px] text-muted-foreground whitespace-pre-wrap">
+                    {ocrResult.debug.textPreview}
+                  </pre>
                 </div>
               )}
             </CardContent>
