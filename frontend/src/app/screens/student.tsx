@@ -686,7 +686,7 @@ export function UploadPaymentPage() {
                     )}
                     {ocrResult && (
                       <p className="mt-2 text-[11px] text-muted-foreground">
-                        Extraction source: {ocrResult.provider || 'Unknown'} | Confidence: {Math.round((ocrResult.confidence || 0) * 100)}%
+                        Groq has reviewed your receipt. Please continue filling the form and change anything that looks incorrect.
                       </p>
                     )}
                   </div>
@@ -698,39 +698,46 @@ export function UploadPaymentPage() {
 
         {(ocrResult || scanIssue) && (
           <Card className={scanIssue ? 'border-warning/30 bg-warning/5' : 'border-success/30 bg-success/5'}>
-            <CardContent className="space-y-2 p-4">
-              <p className="text-[13px] font-medium">
-                {scanIssue ? 'Extraction needs attention' : 'Groq extraction summary'}
-              </p>
+            <CardContent className="space-y-3 p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-[13px] font-medium">
+                    {scanIssue ? 'Please review before continuing' : 'Receipt details added'}
+                  </p>
+                  <p className="mt-1 text-[12px] text-muted-foreground">
+                    {scanIssue
+                      ? 'Some details could not be filled automatically. Please check the form and enter anything missing.'
+                      : 'We filled what we could from your receipt. Please continue and change anything if needed before submitting.'}
+                  </p>
+                </div>
+                {ocrResult && !scanIssue ? (
+                  <Badge variant="outline" className="bg-success/10 text-success border-success/20">
+                    Ready for review
+                  </Badge>
+                ) : null}
+              </div>
               {ocrResult && (
-                <div className="grid grid-cols-1 gap-2 text-[12px] text-muted-foreground md:grid-cols-3">
-                  <div>
-                    <span className="font-medium text-foreground">Provider:</span> {ocrResult.provider || 'Unknown'}
+                <div className="grid grid-cols-1 gap-3 text-[12px] md:grid-cols-3">
+                  <div className="rounded-md border border-border/70 bg-background/80 p-3 text-muted-foreground">
+                    <span className="font-medium text-foreground">Amount found</span>
+                    <p className="mt-1">{ocrResult.amount !== null ? formatCurrency(ocrResult.amount) : 'Not found'}</p>
                   </div>
-                  <div>
-                    <span className="font-medium text-foreground">Detected amount:</span> {ocrResult.amount !== null ? formatCurrency(ocrResult.amount) : 'Not found'}
+                  <div className="rounded-md border border-border/70 bg-background/80 p-3 text-muted-foreground">
+                    <span className="font-medium text-foreground">Reference found</span>
+                    <p className="mt-1">{ocrResult.reference || 'Not found'}</p>
                   </div>
-                  <div>
-                    <span className="font-medium text-foreground">Detected reference:</span> {ocrResult.reference || 'Not found'}
+                  <div className="rounded-md border border-border/70 bg-background/80 p-3 text-muted-foreground">
+                    <span className="font-medium text-foreground">Extraction confidence</span>
+                    <p className="mt-1">{Math.round((ocrResult.confidence || 0) * 100)}%</p>
                   </div>
                 </div>
               )}
               {scanIssue && (
-                <div className="space-y-1 text-[12px] text-muted-foreground">
+                <div className="rounded-md border border-warning/20 bg-background/70 p-3 space-y-1 text-[12px] text-muted-foreground">
                   <p>{scanIssue.summary}</p>
                   {scanIssue.details?.map((detail) => (
                     <p key={detail}>{detail}</p>
                   ))}
-                </div>
-              )}
-              {ocrResult?.debug?.textPreview && (
-                <div className="space-y-1">
-                  <p className="text-[12px] font-medium text-foreground">
-                    Model text preview
-                  </p>
-                  <pre className="max-h-40 overflow-auto rounded-md bg-background p-3 text-[11px] text-muted-foreground whitespace-pre-wrap">
-                    {ocrResult.debug.textPreview}
-                  </pre>
                 </div>
               )}
             </CardContent>
