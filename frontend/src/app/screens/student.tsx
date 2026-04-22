@@ -300,11 +300,11 @@ interface ReceiptOcrResult {
   amount: number | null;
   reference: string | null;
   rawText?: string;
-  provider?: 'TABSCANNER' | 'PYTHON';
+  provider?: 'GROQ' | 'PYTHON';
   confidence?: number;
   message?: string;
   debug?: {
-    textSource: 'TABSCANNER_FLATTENED' | 'PYTHON_RAW';
+    textSource: 'GROQ_JSON' | 'PYTHON_RAW';
     textPreview: string;
   };
 }
@@ -319,8 +319,8 @@ function getScanIssue(error: unknown): ReceiptScanIssue {
     const backendDetails = error.data?.details;
     const details: string[] = [];
 
-    if (backendDetails?.tabScanner) {
-      details.push(`TabScanner: ${backendDetails.tabScanner}`);
+    if (backendDetails?.groq) {
+      details.push(`Groq: ${backendDetails.groq}`);
     }
     if (backendDetails?.python) {
       details.push(`Python OCR: ${backendDetails.python}`);
