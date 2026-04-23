@@ -150,15 +150,18 @@ const drawSummaryCards = (doc: PDFKit.PDFDocument, payload: StudentDocumentPaylo
 };
 
 const drawStatementTable = (doc: PDFKit.PDFDocument, payload: StudentDocumentPayload) => {
-    doc.fillColor('#0F172A').fontSize(12).font('Helvetica-Bold').text('Payment Activity');
+    doc.fillColor('#0F172A').fontSize(14).font('Helvetica-Bold').text('Payment History & Running Balance');
+    doc.moveDown(0.3);
+    doc.fillColor('#64748B').fontSize(9).font('Helvetica').text('All amounts in MWK (Malawian Kwacha)');
     doc.moveDown(0.5);
 
     const columns = [
-        { label: 'Date', width: 82 },
-        { label: 'Reference', width: 145 },
-        { label: 'Method', width: 110 },
-        { label: 'Amount', width: 90 },
-        { label: 'Status', width: 90 },
+        { label: 'Date', width: 70 },
+        { label: 'Reference/Receipt', width: 130 },
+        { label: 'Description', width: 110 },
+        { label: 'Amount (MWK)', width: 85, align: 'right' },
+        { label: 'Status', width: 65 },
+        { label: 'Balance (MWK)', width: 85, align: 'right' },
     ];
 
     const startX = doc.x;
@@ -167,54 +170,111 @@ const drawStatementTable = (doc: PDFKit.PDFDocument, payload: StudentDocumentPay
     const drawHeader = () => {
         let x = startX;
         columns.forEach((column) => {
-            doc.rect(x, currentY, column.width, 22).fillAndStroke('#E2E8F0', '#CBD5E1');
-            doc.fillColor('#334155').fontSize(9).font('Helvetica-Bold').text(column.label, x + 6, currentY + 7, { width: column.width - 12 });
+            doc.rect(x, currentY, column.width, 24).fillAndStroke('#1E40AF', '#1E40AF');
+            doc.fillColor('#FFFFFF').fontSize(8).font('Helvetica-Bold').text(column.label, x + 5, currentY + 8, { width: column.width - 10, align: column.align || 'left' });
             x += column.width;
         });
-        currentY += 22;
+        currentY += 24;
     };
 
     drawHeader();
 
-    payload.payments.forEach((payment, index) => {
-        if (currentY > 720) {
+    // Calculate running balance
+    let runningBalance = payload.summary.totalPaid;
+    const approvedPayments = payload.payments.filter(p => p.status === 'APPROVED');
+    
+    // Sort payments by date ascending for running balance
+    const sortedPayments = [...payload.payments].sort((a, b) => {
+        const dateA = new Date(a.paymentDate || a.submittedAt).getTime();
+        const dateB = new Date(b.paymentDate || b.submittedAt).getTime();
+        return dateA - dateB;
+    });
+
+    sortedPayments.forEach((payment, index) => {
+        if (currentY > 680) {
             doc.addPage();
             currentY = 60;
+            doc.fillColor('#1E40AF').fontSize(10).font('Helvetica-Bold').text('Payment History (continued)', 50, currentY);
+            currentY += 20;
             drawHeader();
         }
+
+        // Update running balance for approved payments
+        if (payment.status === 'APPROVED') {
+            runningBalance -= payment.amount;
+        }
+
+        const description = payment.method.replace(/_/g, ' ') + (payment.status !== 'APPROVED' ? ` (${payment.status})` : '');
+        const balanceDisplay = payment.status === 'APPROVED' ? formatCurrency(Math.max(0, runningBalance)).replace('MWK ', '') : '-';
+        const amountDisplay = formatCurrency(payment.amount).replace('MWK ', '');
 
         const rowValues = [
             formatDate(payment.paymentDate || payment.submittedAt),
             payment.receiptNumber || payment.externalReference || 'N/A',
-            payment.method.replace(/_/g, ' '),
-            formatCurrency(payment.amount),
+            description,
+            amountDisplay,
             payment.status,
+            balanceDisplay,
         ];
+
+        // Status colors
+        const statusColors: Record<string, string> = {
+            'APPROVED': '#059669',
+            'PENDING': '#D97706',
+            'REJECTED': '#DC2626',
+        };
 
         let x = startX;
         rowValues.forEach((value, valueIndex) => {
+            const isStatusCol = valueIndex === 4;
+            const bgColor = index % 2 === 0 ? '#FFFFFF' : '#F1F5F9';
+            
             doc
-                .rect(x, currentY, columns[valueIndex].width, 24)
-                .fillAndStroke(index % 2 === 0 ? '#FFFFFF' : '#F8FAFC', '#E2E8F0');
+                .rect(x, currentY, columns[valueIndex].width, 26)
+                .fillAndStroke(bgColor, '#E2E8F0');
 
+            if (isStatusCol) {
+                doc.fillColor(statusColors[value] || '#374151').fontSize(8).font('Helvetica-Bold');
+            } else {
+                doc.fillColor('#0F172A').fontSize(8).font('Helvetica');
+            }
+            
             doc
-                .fillColor('#0F172A')
-                .fontSize(9)
-                .font('Helvetica')
-                .text(value, x + 6, currentY + 8, { width: columns[valueIndex].width - 12, ellipsis: true });
+                .text(value, x + 5, currentY + 9, { width: columns[valueIndex].width - 10, align: columns[valueIndex].align || 'left', ellipsis: true });
 
             x += columns[valueIndex].width;
         });
 
-        currentY += 24;
+        currentY += 26;
     });
 
     if (payload.payments.length === 0) {
         doc
-            .roundedRect(startX, currentY, 517, 42, 8)
-            .fillAndStroke('#F8FAFC', '#E2E8F0');
-        doc.fillColor('#64748B').fontSize(10).font('Helvetica').text('No payment activity recorded yet.', startX + 12, currentY + 15);
+            .roundedRect(startX, currentY, 545, 50, 8)
+            .fillAndStroke('#FEF3C7', '#F59E0B');
+        doc.fillColor('#92400E').fontSize(10).font('Helvetica').text('No payment activity recorded yet.', startX + 15, currentY + 20);
     }
+
+    // Summary footer
+    doc.moveDown(1);
+    currentY = doc.y;
+    
+    doc.roundedRect(startX, currentY, 545, 70, 8).fillAndStroke('#EFF6FF', '#3B82F6');
+    
+    doc.fillColor('#1E40AF').fontSize(10).font('Helvetica-Bold').text('SUMMARY', startX + 15, currentY + 12);
+    
+    const summaryItems = [
+        ['Total Amount Paid:', formatCurrency(payload.summary.totalPaid)],
+        ['Current Outstanding Balance:', formatCurrency(payload.summary.currentBalance)],
+        ['Total Payments Made:', `${payload.summary.installmentCount} transaction${payload.summary.installmentCount !== 1 ? 's' : ''}`],
+    ];
+
+    let summaryY = currentY + 30;
+    summaryItems.forEach(([label, value]) => {
+        doc.fillColor('#475569').fontSize(9).font('Helvetica').text(label, startX + 15, summaryY);
+        doc.fillColor('#0F172A').fontSize(9).font('Helvetica-Bold').text(value, startX + 200, summaryY);
+        summaryY += 14;
+    });
 };
 
 export const getStudentDocumentPayloadByStudentId = async (studentId: string): Promise<StudentDocumentPayload> => {
