@@ -15,6 +15,7 @@ import { Skeleton } from '../../components/ui/skeleton';
 import { formatCurrency, formatDate, cn } from '../../lib/utils';
 import { getFullImageUrl } from '../components/admin/common/payment-helpers';
 import { downloadPaymentReceipt, type ReceiptData } from '../lib/receipt-pdf';
+import { downloadStudentStatement } from '../lib/statement-pdf';
 import { PaymentDeadlineCalendar } from '../components/payment-deadline-calendar';
 import { PaymentReminders, generateRemindersFromDeadlines } from '../components/payment-reminders';
 import { useFormAutosave } from '../lib/use-form-autosave';
@@ -892,6 +893,7 @@ export function UploadPaymentPage() {
 
 export function PaymentHistoryPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [dashboard, setDashboard] = useState<any>(null);
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -999,10 +1001,43 @@ export function PaymentHistoryPage() {
   const downloadStatement = async () => {
     setDownloadingStatement(true);
     try {
-      await downloadApiFile('/students/me/statement.pdf', 'statement.pdf');
+      // Generate PDF client-side using jspdf (same as receipts)
+      const approvedCount = payments.filter((p: any) => p.status === 'APPROVED').length;
+      const pendingCount = payments.filter((p: any) => p.status === 'PENDING').length;
+      const rejectedCount = payments.filter((p: any) => p.status === 'REJECTED').length;
+      
+      downloadStudentStatement({
+        student: {
+          id: user?.id || '',
+          name: user?.name || '',
+          studentCode: dashboard?.student?.studentCode || '',
+          program: dashboard?.student?.program || '',
+          academicYear: dashboard?.student?.academicYear || '',
+          email: user?.email || '',
+        },
+        summary: {
+          totalPaid: dashboard?.summary?.totalPaid || 0,
+          currentBalance: dashboard?.summary?.currentBalance || 0,
+          installmentCount: approvedCount,
+          pendingVerifications: pendingCount,
+          rejectedSubmissions: rejectedCount,
+        },
+        payments: payments.map((p: any) => ({
+          id: p.id,
+          amount: p.amount,
+          method: p.method,
+          paymentDate: p.paymentDate,
+          submittedAt: p.submittedAt,
+          status: p.status,
+          receiptNumber: p.receiptNumber,
+          externalReference: p.externalReference,
+        })),
+      });
+      
       toast.success('Statement downloaded');
     } catch (err: any) {
-      toast.error(err.message || 'Unable to download statement');
+      console.error('Error generating statement:', err);
+      toast.error(err.message || 'Unable to generate statement');
     } finally {
       setDownloadingStatement(false);
     }

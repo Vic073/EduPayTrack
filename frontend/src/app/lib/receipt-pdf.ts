@@ -302,7 +302,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
       textColor: [75, 85, 99],
     },
     columnStyles: {
-      0: { fontStyle: 'bold', cellWidth: 100, textColor: darkColor },
+      0: { fontStyle: 'bold', cellWidth: 100, textColor: [31, 41, 55] },
       1: { cellWidth: 'auto' },
     },
     margin: { left: margin, right: margin },
@@ -335,8 +335,8 @@ export function generateStudentStatement(data: StatementData): jsPDF {
       textColor: [75, 85, 99],
     },
     columnStyles: {
-      0: { fontStyle: 'bold', fillColor: [249, 250, 251], textColor: darkColor },
-      1: { halign: 'right', fontStyle: 'bold', textColor: primaryColor },
+      0: { fontStyle: 'bold', fillColor: [249, 250, 251], textColor: [31, 41, 55] },
+      1: { halign: 'right', fontStyle: 'bold', textColor: [41, 98, 255] },
     },
     margin: { left: margin, right: margin },
     styles: {
@@ -392,7 +392,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
     body: paymentRows,
     theme: 'striped',
     headStyles: {
-      fillColor: primaryColor,
+      fillColor: [41, 98, 255],
       textColor: [255, 255, 255],
       fontStyle: 'bold',
       fontSize: 10,
