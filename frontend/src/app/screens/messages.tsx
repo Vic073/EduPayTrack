@@ -261,9 +261,8 @@ export function MessagesPage() {
         setReplyingTo(null);
     };
 
-    // Handle reaction - requires backend support for reactions table/endpoint
+    // Handle reaction
     const handleReaction = async (msgId: string, emoji: string) => {
-        // TODO: Backend needs to implement POST /messages/:id/reaction endpoint
         try {
             await apiFetch(`/messages/${msgId}/reaction`, {
                 method: 'POST',
