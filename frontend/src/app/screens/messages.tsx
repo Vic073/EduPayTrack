@@ -208,25 +208,26 @@ export function MessagesPage() {
         return currentMsg.senderId === prevMsg.senderId;
     };
 
-    // File upload handler - requires backend support for file storage
+    // File upload handler - uses /messages/attachment endpoint
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file || !activeUser) return;
 
-        // TODO: Backend needs to implement multipart/form-data support for file uploads
-        console.warn('File attachment requires backend implementation for file storage');
-
         const formData = new FormData();
         formData.append('file', file);
         formData.append('receiverId', activeUser.id);
+        if (replyingTo) {
+            formData.append('replyToId', replyingTo.id);
+        }
 
         try {
             setUploading(true);
-            const newMsg = await apiFetch('/messages', {
+            const newMsg = await apiFetch('/messages/attachment', {
                 method: 'POST',
                 body: formData,
             });
             setMessages([...messages, newMsg]);
+            setReplyingTo(null);
             
             // Update conversation
             const convIdx = conversations.findIndex(c => c.user.id === activeUser.id);
@@ -237,7 +238,7 @@ export function MessagesPage() {
             }
         } catch (error) {
             console.error('Error uploading file:', error);
-            alert('File upload failed - backend may not support file attachments yet');
+            alert('File upload failed');
         } finally {
             setUploading(false);
             if (fileInputRef.current) {
@@ -595,14 +596,10 @@ export function MessagesPage() {
                                     size="icon"
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={uploading}
-                                    className="h-11 w-11 rounded-full shrink-0 hover:bg-slate-200 dark:hover:bg-slate-800 relative group/attach"
-                                    title="File attachment (requires backend support)"
+                                    className="h-11 w-11 rounded-full shrink-0 hover:bg-slate-200 dark:hover:bg-slate-800"
+                                    title="Attach file"
                                 >
                                     {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Paperclip className="h-5 w-5" />}
-                                    {/* Tooltip */}
-                                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover/attach:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                                        Backend required
-                                    </span>
                                 </Button>
                                 
                                 <div className="flex-1 bg-white dark:bg-[#1f2c34] rounded-full border border-slate-200 dark:border-slate-700 shadow-sm focus-within:shadow-md focus-within:border-primary/30 transition-all duration-200">

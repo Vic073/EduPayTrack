@@ -1,4 +1,7 @@
 import { Router } from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 import { asyncHandler } from '../lib/async-handler';
 import { requireAuth } from '../middleware/auth';
 import {
@@ -8,6 +11,51 @@ import {
     markConversationAsRead,
     getAccountsUsers
 } from '../services/message.service';
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(process.cwd(), 'uploads', 'messages');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, `msg-${uniqueSuffix}${ext}`);
+    }
+});
+
+const fileFilter = (req: any, file: any, cb: any) => {
+    // Allowed file types
+    const allowedMimes = [
+        'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'text/plain'
+    ];
+    
+    if (allowedMimes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Invalid file type. Allowed: images, PDF, Word, Excel, text'), false);
+    }
+};
+
+const upload = multer({
+    storage,
+    fileFilter,
+    limits: {
+        fileSize: 10 * 1024 * 1024 // 10MB limit
+    }
+});
 
 export const messageRouter = Router();
 
@@ -41,16 +89,62 @@ messageRouter.get(
     })
 );
 
-// Send a message
+// Send a message (text only or with replyToId)
 messageRouter.post(
     '/',
     asyncHandler(async (req, res) => {
-        const { receiverId, content } = req.body;
+        const { receiverId, content, replyToId } = req.body;
         if (!receiverId || !content) {
             res.status(400).json({ message: 'receiverId and content are required' });
             return;
         }
-        const message = await sendMessage(req.user!.userId, receiverId, content);
+        const message = await sendMessage(req.user!.userId, receiverId, content, replyToId);
+        res.status(201).json(message);
+    })
+);
+
+// Send a message with file attachment
+messageRouter.post(
+    '/attachment',
+    upload.single('file'),
+    asyncHandler(async (req, res) => {
+        const { receiverId, content, replyToId } = req.body;
+        
+        if (!receiverId) {
+            res.status(400).json({ message: 'receiverId is required' });
+            return;
+        }
+
+        if (!req.file) {
+            res.status(400).json({ message: 'File is required' });
+            return;
+        }
+
+        // Build file URL
+        const fileUrl = `/uploads/messages/${req.file.filename}`;
+        
+        // Format file size
+        const formatFileSize = (bytes: number): string => {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        };
+
+        const attachment = {
+            url: fileUrl,
+            name: req.file.originalname,
+            size: formatFileSize(req.file.size),
+            type: req.file.mimetype
+        };
+
+        const message = await sendMessage(
+            req.user!.userId,
+            receiverId,
+            content || '',
+            replyToId || undefined,
+            attachment
+        );
+        
         res.status(201).json(message);
     })
 );
