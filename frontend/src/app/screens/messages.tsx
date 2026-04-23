@@ -451,13 +451,15 @@ export function MessagesPage() {
                                                         ? `bg-[#d9fdd3] dark:bg-[#005c4b] text-[#111b21] dark:text-white shadow-sm ${getBubbleRadius()}` 
                                                         : `bg-white dark:bg-[#1f2c34] text-[#111b21] dark:text-white shadow-sm border border-slate-100 dark:border-slate-800 ${getBubbleRadius()}`
                                                     } ${searchQuery && msg.content?.toLowerCase().includes(searchQuery.toLowerCase()) ? 'ring-2 ring-primary/50' : ''}`}>
-                                                        {/* Reply preview */}
-                                                        {msg.replyTo && (
-                                                            <div className={`mb-2 pl-3 py-1.5 text-xs border-l-2 ${isMe ? 'border-primary/30 bg-primary/10' : 'border-slate-300 dark:border-slate-600 bg-slate-100/50 dark:bg-slate-800/50'} rounded-r-md`}>
-                                                                <p className="font-medium opacity-70 mb-0.5">
-                                                                    {msg.replyTo.senderId === user?.id ? 'You' : activeUser?.firstName}
+                                                        {/* Reply preview - shows the quoted message */}
+                                                        {(msg.replyTo || msg.replyToId) && (
+                                                            <div className={`mb-2 pl-3 py-2 text-xs border-l-2 ${isMe ? 'border-primary/40 bg-primary/10' : 'border-slate-400 dark:border-slate-500 bg-slate-100/70 dark:bg-slate-800/70'} rounded-r-md`}>
+                                                                <p className="font-semibold text-[11px] opacity-80 mb-1">
+                                                                    {msg.replyTo?.senderId === user?.id ? 'You' : activeUser?.firstName || 'User'}
                                                                 </p>
-                                                                <p className="truncate opacity-60">{msg.replyTo.content}</p>
+                                                                <p className="truncate opacity-70 leading-relaxed">
+                                                                    {msg.replyTo?.content || 'Original message'}
+                                                                </p>
                                                             </div>
                                                         )}
                                                         
@@ -581,9 +583,14 @@ export function MessagesPage() {
                                     size="icon"
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={uploading}
-                                    className="h-11 w-11 rounded-full shrink-0 hover:bg-slate-200 dark:hover:bg-slate-800"
+                                    className="h-11 w-11 rounded-full shrink-0 hover:bg-slate-200 dark:hover:bg-slate-800 relative group/attach"
+                                    title="File attachment (requires backend support)"
                                 >
                                     {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Paperclip className="h-5 w-5" />}
+                                    {/* Tooltip */}
+                                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover/attach:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                        Backend required
+                                    </span>
                                 </Button>
                                 
                                 <div className="flex-1 bg-white dark:bg-[#1f2c34] rounded-full border border-slate-200 dark:border-slate-700 shadow-sm focus-within:shadow-md focus-within:border-primary/30 transition-all duration-200">
