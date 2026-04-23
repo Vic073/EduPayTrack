@@ -1,19 +1,52 @@
 import { prisma } from '../lib/prisma';
 import { UserRole } from '../generated/prisma';
 
-export async function sendMessage(senderId: string, receiverId: string, content: string) {
+interface AttachmentData {
+    url: string;
+    name: string;
+    size: string;
+    type: string;
+}
+
+export async function sendMessage(
+    senderId: string,
+    receiverId: string,
+    content: string,
+    replyToId?: string,
+    attachment?: AttachmentData
+) {
+    const data: any = {
+        senderId,
+        receiverId,
+        content,
+    };
+
+    if (replyToId) {
+        data.replyToId = replyToId;
+    }
+
+    if (attachment) {
+        data.attachmentUrl = attachment.url;
+        data.attachmentName = attachment.name;
+        data.attachmentSize = attachment.size;
+        data.attachmentType = attachment.type;
+    }
+
     return prisma.message.create({
-        data: {
-            senderId,
-            receiverId,
-            content,
-        },
+        data,
         include: {
             sender: {
                 select: { id: true, firstName: true, lastName: true, role: true, profilePictureUrl: true }
             },
             receiver: {
                 select: { id: true, firstName: true, lastName: true, role: true, profilePictureUrl: true }
+            },
+            replyTo: {
+                include: {
+                    sender: {
+                        select: { id: true, firstName: true, lastName: true, role: true, profilePictureUrl: true }
+                    }
+                }
             }
         }
     });
@@ -31,6 +64,13 @@ export async function getConversation(userId: string, otherUserId: string) {
         include: {
             sender: {
                 select: { id: true, firstName: true, lastName: true, role: true, profilePictureUrl: true }
+            },
+            replyTo: {
+                include: {
+                    sender: {
+                        select: { id: true, firstName: true, lastName: true, role: true, profilePictureUrl: true }
+                    }
+                }
             }
         }
     });
