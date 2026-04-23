@@ -192,6 +192,81 @@ export function MessagesPage() {
         return currentMsg.senderId === prevMsg.senderId;
     };
 
+    // File upload handler
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !activeUser) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('receiverId', activeUser.id);
+
+        try {
+            setUploading(true);
+            const newMsg = await apiFetch('/messages', {
+                method: 'POST',
+                body: formData,
+            });
+            setMessages([...messages, newMsg]);
+            
+            // Update conversation
+            const convIdx = conversations.findIndex(c => c.user.id === activeUser.id);
+            if (convIdx >= 0) {
+                const newConvs = [...conversations];
+                newConvs[convIdx].lastMessage = newMsg;
+                setConversations(newConvs);
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        } finally {
+            setUploading(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
+
+    // Search messages
+    const filteredMessages = searchQuery.trim()
+        ? messages.filter(msg => msg.content?.toLowerCase().includes(searchQuery.toLowerCase()))
+        : messages;
+
+    // Handle reply
+    const handleReply = (msg: any) => {
+        setReplyingTo(msg);
+    };
+
+    const cancelReply = () => {
+        setReplyingTo(null);
+    };
+
+    // Handle reaction
+    const handleReaction = async (msgId: string, emoji: string) => {
+        try {
+            await apiFetch(`/messages/${msgId}/reaction`, {
+                method: 'POST',
+                body: JSON.stringify({ emoji }),
+            });
+            // Update local state
+            setMessages(messages.map(m => {
+                if (m.id === msgId) {
+                    const reactions = m.reactions || [];
+                    const existing = reactions.find((r: any) => r.emoji === emoji);
+                    if (existing) {
+                        return {
+                            ...m,
+                            reactions: reactions.filter((r: any) => !(r.emoji === emoji && r.userId === user?.id))
+                        };
+                    }
+                    return { ...m, reactions: [...reactions, { emoji, userId: user?.id }] };
+                }
+                return m;
+            }));
+        } catch (error) {
+            console.error('Error adding reaction:', error);
+        }
+    };
+
     if (loading) {
         return <div className="flex h-full items-center justify-center p-8"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
     }
