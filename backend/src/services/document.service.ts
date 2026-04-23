@@ -356,6 +356,69 @@ export const getStudentDocumentPayloadByUserId = async (userId: string) => {
     return getStudentDocumentPayloadByStudentId(student.id);
 };
 
+const drawQrCode = (doc: PDFKit.PDFDocument, studentId: string) => {
+    // Simple QR-like representation with verification URL
+    const size = 60;
+    const x = doc.page.width - size - 60;
+    const y = 50;
+    
+    doc.roundedRect(x, y, size, size, 4).stroke('#CBD5E1');
+    doc.fillColor('#1E40AF').fontSize(8).font('Helvetica-Bold');
+    doc.text('VERIFY', x + 15, y + 25, { width: size - 10, align: 'center' });
+    doc.fontSize(6).font('Helvetica');
+    doc.text(`ID: ${studentId.slice(-8)}`, x + 5, y + 40, { width: size - 10, align: 'center' });
+    doc.moveDown(2);
+};
+
+const drawOfficialFooter = (doc: PDFKit.PDFDocument, currentPage: number, totalPages: number) => {
+    const footerY = doc.page.height - 80;
+    
+    // Separator line
+    doc.moveTo(50, footerY - 10).lineTo(545, footerY - 10).stroke('#E2E8F0');
+    
+    // Official stamp area
+    doc.roundedRect(50, footerY, 150, 50, 4).stroke('#CBD5E1');
+    doc.fillColor('#64748B').fontSize(7).font('Helvetica');
+    doc.text('OFFICIAL STAMP', 55, footerY + 8);
+    doc.fillColor('#94A3B8').fontSize(6);
+    doc.text('Accounts Office', 55, footerY + 22);
+    doc.text('Date: ____________', 55, footerY + 35);
+    
+    // Signature area
+    doc.roundedRect(220, footerY, 150, 50, 4).stroke('#CBD5E1');
+    doc.fillColor('#64748B').fontSize(7).font('Helvetica');
+    doc.text('AUTHORIZED SIGNATURE', 225, footerY + 8);
+    doc.fillColor('#94A3B8').fontSize(6);
+    doc.text('Accounts Officer', 225, footerY + 22);
+    doc.text('Signature: ____________', 225, footerY + 35);
+    
+    // Verification note
+    doc.fillColor('#64748B').fontSize(7).font('Helvetica');
+    doc.text(
+        'This is a computer-generated statement. For verification, contact the Accounts Office.',
+        400, footerY + 20, { width: 145, align: 'left' }
+    );
+    
+    // Page number
+    doc.fillColor('#94A3B8').fontSize(8).font('Helvetica');
+    doc.text(`Page ${currentPage} of ${totalPages}`, doc.page.width / 2, footerY + 60, { align: 'center' });
+};
+
+const drawTermsSection = (doc: PDFKit.PDFDocument) => {
+    doc.moveDown(2);
+    doc.fillColor('#1E40AF').fontSize(10).font('Helvetica-Bold').text('Terms & Conditions');
+    doc.moveDown(0.3);
+    doc.fillColor('#475569').fontSize(8).font('Helvetica');
+    doc.text(
+        '1. This statement reflects payments received and processed by the Accounts Office.\n' +
+        '2. All amounts are in Malawian Kwacha (MWK).\n' +
+        '3. Pending payments are subject to verification.\n' +
+        '4. Please retain your original receipts for reference.\n' +
+        '5. For discrepancies, contact accounts@institution.mw within 30 days.',
+        { lineGap: 2 }
+    );
+};
+
 export const generateStudentStatementPdf = async (studentId: string) => {
     const payload = await getStudentDocumentPayloadByStudentId(studentId);
 
@@ -366,6 +429,8 @@ export const generateStudentStatementPdf = async (studentId: string) => {
             'Student Fee Statement',
             `Generated on ${formatDate(new Date())} for ${payload.student.firstName} ${payload.student.lastName}.`
         );
+
+        drawQrCode(doc, studentId);
 
         drawMetaGrid(doc, [
             ['Student Name', `${payload.student.firstName} ${payload.student.lastName}`],
@@ -378,6 +443,8 @@ export const generateStudentStatementPdf = async (studentId: string) => {
 
         drawSummaryCards(doc, payload);
         drawStatementTable(doc, payload);
+        drawTermsSection(doc);
+        drawOfficialFooter(doc, 1, 1);
     });
 };
 
