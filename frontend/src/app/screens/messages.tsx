@@ -135,7 +135,14 @@ export function MessagesPage() {
                 method: 'POST',
                 body: JSON.stringify(payload)
             });
-            setMessages([...messages, newMsg]);
+            
+            // Add reply preview to local message if replying
+            const messageWithReply = replyingTo ? {
+                ...newMsg,
+                replyTo: replyingTo
+            } : newMsg;
+            
+            setMessages([...messages, messageWithReply]);
             setContent('');
             setReplyingTo(null);
             
@@ -143,10 +150,10 @@ export function MessagesPage() {
             const convIdx = conversations.findIndex(c => c.user.id === activeUser.id);
             if (convIdx >= 0) {
                 const newConvs = [...conversations];
-                newConvs[convIdx].lastMessage = newMsg;
+                newConvs[convIdx].lastMessage = messageWithReply;
                 setConversations(newConvs);
             } else {
-                setConversations([{ user: activeUser, lastMessage: newMsg, unreadCount: 0 }, ...conversations]);
+                setConversations([{ user: activeUser, lastMessage: messageWithReply, unreadCount: 0 }, ...conversations]);
             }
         } catch (error) {
             console.error('Error sending message:', error);
