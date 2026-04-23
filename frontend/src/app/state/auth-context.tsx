@@ -218,11 +218,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
       user,
       isLoading,
       notifications: appNotifications,
-      navItems: user?.role === 'student' 
-        ? studentNav 
+      navItems: user?.role === 'student'
+        ? studentNav
         : user?.role === 'accounts'
           ? adminNav.filter(item => !['/admin/users', '/admin/audit-logs'].includes(item.href))
-          : adminNav,
+          : adminNav.filter(item => item.href !== '/messages'),
       login,
       register,
       logout,
