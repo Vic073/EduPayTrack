@@ -354,11 +354,33 @@ export function MessagesPage() {
                                     <p className="font-semibold truncate">{activeUser.firstName} {activeUser.lastName}</p>
                                     <p className="text-xs text-muted-foreground font-normal">{isStudent ? 'Accounts Office' : 'Student'}</p>
                                 </div>
+                                <div className="flex items-center gap-1">
+                                    {isSearching ? (
+                                        <div className="flex items-center gap-2 bg-background/80 rounded-full px-3 py-1.5 border">
+                                            <Search className="h-4 w-4 text-muted-foreground" />
+                                            <input
+                                                type="text"
+                                                placeholder="Search messages..."
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                className="bg-transparent text-sm outline-none w-32 md:w-48 placeholder:text-muted-foreground"
+                                                autoFocus
+                                            />
+                                            <button onClick={() => { setIsSearching(false); setSearchQuery(''); }} className="text-muted-foreground hover:text-foreground">
+                                                <X className="h-4 w-4" />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={() => setIsSearching(true)}>
+                                            <Search className="h-5 w-5" />
+                                        </Button>
+                                    )}
+                                </div>
                             </CardTitle>
                         </CardHeader>
                         <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-[#f0f2f5] dark:bg-[#0a1014] relative">
                             <div className="space-y-0 max-w-3xl mx-auto">
-                                {messages.map((msg, idx) => {
+                                {filteredMessages.map((msg, idx) => {
                                     const isMe = msg.senderId === user?.id;
                                     const prevMsg = idx > 0 ? messages[idx - 1] : null;
                                     const nextMsg = idx < messages.length - 1 ? messages[idx + 1] : null;
