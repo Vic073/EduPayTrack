@@ -58,7 +58,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   
   // Header Background
   doc.setFillColor(249, 250, 251);
-  doc.rect(0, 0, pageWidth, 100, 'F');
+  doc.rect(0, 0, pageWidth, 90, 'F');
   
   // School Logo placeholder / Title
   doc.setFontSize(24);
@@ -69,14 +69,14 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   // Statement Title
   doc.setFontSize(28);
   doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.text('STUDENT FEE STATEMENT', margin, 55);
+  doc.text('STUDENT STATEMENT', margin, 55);
   
   // Statement Details
   doc.setFontSize(11);
   doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
   doc.setFont('helvetica', 'normal');
   const generatedDate = data.generatedAt ? formatDate(data.generatedAt) : formatDate(new Date().toISOString());
-  doc.text(`Statement Date: ${generatedDate}`, margin, 70);
+  doc.text(`Statement Date: ${generatedDate}`, margin, 68);
   doc.text(`Student ID: ${data.student.studentCode}`, margin, 78);
   
   // Status Badge - Shows if fully paid or balance due
@@ -94,73 +94,56 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   // Horizontal Line
   doc.setDrawColor(229, 231, 235);
   doc.setLineWidth(0.5);
-  doc.line(margin, 100, pageWidth - margin, 100);
+  doc.line(margin, 90, pageWidth - margin, 90);
+
+  // Balance Section
+  doc.setFontSize(12);
+  doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Current Balance', margin, 110);
   
-  // Student Information Section
-  doc.setFontSize(14);
+  doc.setFontSize(32);
   doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
   doc.setFont('helvetica', 'bold');
-  doc.text('Student Information', margin, 120);
+  doc.text(formatCurrency(data.summary.currentBalance), margin, 130);
   
-  const studentData = [
+  doc.setFontSize(11);
+  doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Total Fees: ${formatCurrency(data.summary.totalFees || data.summary.totalPaid + data.summary.currentBalance)}  |  Total Paid: ${formatCurrency(data.summary.totalPaid)}`, margin, 142);
+  
+  // Information Table
+  const tableData = [
     ['Full Name', data.student.name],
     ['Student ID', data.student.studentCode],
     ['Program', data.student.program || 'N/A'],
-    ['Academic Year', data.student.academicYear || 'N/A'],
-    ['Email Address', data.student.email || 'N/A'],
-    ['Phone Number', data.student.phone || 'N/A'],
   ];
+  if (data.student.academicYear) tableData.push(['Academic Year', data.student.academicYear]);
+  if (data.student.email) tableData.push(['Email Address', data.student.email]);
+  if (data.student.phone) tableData.push(['Phone Number', data.student.phone]);
+
+  tableData.push(['Approved Payments', `${data.summary.approvedCount} transaction${data.summary.approvedCount !== 1 ? 's' : ''}`]);
+  tableData.push(['Pending Verification', `${data.summary.pendingCount}`]);
+  tableData.push(['Rejected Submissions', `${data.summary.rejectedCount}`]);
   
   autoTable(doc, {
-    startY: 128,
-    body: studentData,
+    startY: 160,
+    head: [['Description', 'Details']],
+    body: tableData,
     theme: 'striped',
-    bodyStyles: {
-      fontSize: 10,
-      textColor: [75, 85, 99],
-    },
-    columnStyles: {
-      0: { fontStyle: 'bold', cellWidth: 100, textColor: darkColor },
-      1: { cellWidth: 'auto' },
-    },
-    margin: { left: margin, right: margin },
-    styles: {
-      lineColor: [229, 231, 235],
-      lineWidth: 0.5,
-    },
-    alternateRowStyles: {
+    headStyles: {
       fillColor: [249, 250, 251],
+      textColor: [31, 41, 55],
+      fontStyle: 'bold',
+      fontSize: 10,
     },
-  });
-  
-  // Financial Summary Section
-  const summaryStartY = (doc as any).lastAutoTable?.finalY + 20 || 220;
-  
-  doc.setFontSize(14);
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Financial Summary', margin, summaryStartY);
-  
-  const summaryRows = [
-    ['Total Fees', formatCurrency(data.summary.totalFees || data.summary.totalPaid + data.summary.currentBalance)],
-    ['Total Amount Paid', formatCurrency(data.summary.totalPaid)],
-    ['Current Balance', formatCurrency(data.summary.currentBalance)],
-    ['Approved Payments', `${data.summary.approvedCount} transaction${data.summary.approvedCount !== 1 ? 's' : ''}`],
-    ['Pending Verification', `${data.summary.pendingCount}`],
-    ['Rejected Submissions', `${data.summary.rejectedCount}`],
-  ];
-  
-  autoTable(doc, {
-    startY: summaryStartY + 8,
-    body: summaryRows,
-    theme: 'grid',
     bodyStyles: {
       fontSize: 10,
       textColor: [75, 85, 99],
     },
     columnStyles: {
-      0: { fontStyle: 'bold', fillColor: [249, 250, 251], textColor: darkColor, cellWidth: 140 },
-      1: { halign: 'right', fontStyle: 'bold', cellWidth: 'auto' },
+      0: { fontStyle: 'bold', cellWidth: 80 },
+      1: { cellWidth: 'auto' },
     },
     margin: { left: margin, right: margin },
     styles: {
@@ -211,8 +194,8 @@ export function generateStudentStatement(data: StatementData): jsPDF {
     body: paymentRows,
     theme: 'striped',
     headStyles: {
-      fillColor: primaryColor,
-      textColor: [255, 255, 255],
+      fillColor: [249, 250, 251],
+      textColor: [31, 41, 55],
       fontStyle: 'bold',
       fontSize: 10,
     },
@@ -251,6 +234,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
       }
     },
   });
+
   
   // Notes Section (if there are any notes)
   const notesStartY = (doc as any).lastAutoTable?.finalY + 20 || 400;
