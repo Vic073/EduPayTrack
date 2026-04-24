@@ -47,7 +47,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   const margin = 20;
-  
+
   // Colors - using tuples for proper typing
   const primaryColor: [number, number, number] = [41, 98, 255]; // Blue
   const successColor: [number, number, number] = [34, 197, 94]; // Green
@@ -55,22 +55,22 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   const destructiveColor: [number, number, number] = [239, 68, 68]; // Red
   const darkColor: [number, number, number] = [31, 41, 55]; // Dark gray
   const lightGray: [number, number, number] = [156, 163, 175]; // Light gray
-  
+
   // Header Background
   doc.setFillColor(249, 250, 251);
   doc.rect(0, 0, pageWidth, 90, 'F');
-  
+
   // School Logo placeholder / Title
   doc.setFontSize(24);
   doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
   doc.setFont('helvetica', 'bold');
   doc.text(data.schoolName || getSchoolName(), margin, 30);
-  
+
   // Statement Title
   doc.setFontSize(28);
   doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
   doc.text('STUDENT STATEMENT', margin, 55);
-  
+
   // Statement Details
   doc.setFontSize(11);
   doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
@@ -78,7 +78,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   const generatedDate = data.generatedAt ? formatDate(data.generatedAt) : formatDate(new Date().toISOString());
   doc.text(`Statement Date: ${generatedDate}`, margin, 68);
   doc.text(`Student ID: ${data.student.studentCode}`, margin, 78);
-  
+
   // Status Badge - Shows if fully paid or balance due
   const isFullyPaid = data.summary.currentBalance <= 0;
   const statusColor = isFullyPaid ? successColor : warningColor;
@@ -90,7 +90,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.text(statusText, statusX + 27.5, 59, { align: 'center' });
-  
+
   // Horizontal Line
   doc.setDrawColor(229, 231, 235);
   doc.setLineWidth(0.5);
@@ -101,17 +101,17 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
   doc.setFont('helvetica', 'normal');
   doc.text('Current Balance', margin, 110);
-  
+
   doc.setFontSize(32);
   doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
   doc.setFont('helvetica', 'bold');
   doc.text(formatCurrency(data.summary.currentBalance), margin, 130);
-  
+
   doc.setFontSize(11);
   doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
   doc.setFont('helvetica', 'normal');
   doc.text(`Total Fees: ${formatCurrency(data.summary.totalFees || data.summary.totalPaid + data.summary.currentBalance)}  |  Total Paid: ${formatCurrency(data.summary.totalPaid)}`, margin, 142);
-  
+
   // Information Table
   const tableData = [
     ['Full Name', data.student.name],
@@ -125,7 +125,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   tableData.push(['Approved Payments', `${data.summary.approvedCount} transaction${data.summary.approvedCount !== 1 ? 's' : ''}`]);
   tableData.push(['Pending Verification', `${data.summary.pendingCount}`]);
   tableData.push(['Rejected Submissions', `${data.summary.rejectedCount}`]);
-  
+
   autoTable(doc, {
     startY: 160,
     head: [['Description', 'Details']],
@@ -151,29 +151,29 @@ export function generateStudentStatement(data: StatementData): jsPDF {
       lineWidth: 0.5,
     },
   });
-  
+
   // Payment History Section
   const historyStartY = (doc as any).lastAutoTable?.finalY + 20 || 300;
-  
+
   doc.setFontSize(14);
   doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
   doc.setFont('helvetica', 'bold');
   doc.text('Payment History', margin, historyStartY);
-  
+
   // Sort payments by date (newest first)
   const sortedPayments = [...data.payments].sort((a, b) => {
     const dateA = new Date(a.paymentDate || a.submittedAt).getTime();
     const dateB = new Date(b.paymentDate || b.submittedAt).getTime();
     return dateB - dateA; // Newest first
   });
-  
+
   // Calculate running balance (starting from total paid, going backwards)
   let runningBalance = 0;
   const paymentRows = sortedPayments.reverse().map((payment) => {
     if (payment.status === 'APPROVED') {
       runningBalance += payment.amount;
     }
-    
+
     return [
       formatDate(payment.paymentDate || payment.submittedAt),
       payment.receiptNumber || payment.externalReference || payment.id.slice(-8).toUpperCase(),
@@ -183,11 +183,11 @@ export function generateStudentStatement(data: StatementData): jsPDF {
       formatCurrency(runningBalance),
     ];
   }).reverse();
-  
+
   if (paymentRows.length === 0) {
     paymentRows.push(['No payment records found', '', '', '', '', '']);
   }
-  
+
   autoTable(doc, {
     startY: historyStartY + 8,
     head: [['Date', 'Reference', 'Method', 'Amount', 'Status', 'Running Balance']],
@@ -219,7 +219,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
     alternateRowStyles: {
       fillColor: [249, 250, 251],
     },
-    didParseCell: function(data: any) {
+    didParseCell: function (data: any) {
       // Color code the status column
       if (data.section === 'body' && data.column.index === 4) {
         const status = data.cell.raw;
@@ -235,18 +235,18 @@ export function generateStudentStatement(data: StatementData): jsPDF {
     },
   });
 
-  
+
   // Notes Section (if there are any notes)
   const notesStartY = (doc as any).lastAutoTable?.finalY + 20 || 400;
-  
+
   doc.setFontSize(14);
   doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
   doc.setFont('helvetica', 'bold');
   doc.text('Important Notes', margin, notesStartY);
-  
+
   doc.setFillColor(254, 252, 232);
   doc.roundedRect(margin, notesStartY + 5, pageWidth - (margin * 2), 50, 4, 4, 'F');
-  
+
   doc.setFontSize(9);
   doc.setTextColor(75, 85, 99);
   doc.setFont('helvetica', 'normal');
@@ -258,10 +258,10 @@ export function generateStudentStatement(data: StatementData): jsPDF {
     '5. For any discrepancies, please contact the Accounts Office within 30 days.',
     margin + 8, notesStartY + 18, { maxWidth: pageWidth - (margin * 2) - 16 }
   );
-  
+
   // Official Verification Section
   const officialY = notesStartY + 65;
-  
+
   doc.setFillColor(240, 253, 244);
   doc.roundedRect(margin, officialY, (pageWidth - margin * 2) / 2 - 5, 55, 4, 4, 'F');
   doc.setFontSize(10);
@@ -272,7 +272,7 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
   doc.setFont('helvetica', 'normal');
   doc.text('Accounts Office\n\nDate: _______________', margin + 10, officialY + 28);
-  
+
   doc.setFillColor(239, 246, 255);
   doc.roundedRect(margin + (pageWidth - margin * 2) / 2 + 5, officialY, (pageWidth - margin * 2) / 2 - 5, 55, 4, 4, 'F');
   doc.setFontSize(10);
@@ -283,22 +283,22 @@ export function generateStudentStatement(data: StatementData): jsPDF {
   doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
   doc.setFont('helvetica', 'normal');
   doc.text('Accounts Officer\n\nSignature: _______________', margin + (pageWidth - margin * 2) / 2 + 15, officialY + 28);
-  
+
   // Footer
   const footerY = doc.internal.pageSize.height - 30;
   doc.setDrawColor(229, 231, 235);
   doc.setLineWidth(0.5);
   doc.line(margin, footerY - 10, pageWidth - margin, footerY - 10);
-  
+
   doc.setFontSize(9);
   doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
   doc.setFont('helvetica', 'normal');
   doc.text('This is an official fee statement generated by EduPayTrack.', margin, footerY);
   doc.text('For inquiries, please contact the accounts office.', margin, footerY + 5);
-  
+
   // Generated timestamp
   doc.text(`Generated: ${new Date().toLocaleString()}`, pageWidth - margin, footerY, { align: 'right' });
-  
+
   return doc;
 }
 
