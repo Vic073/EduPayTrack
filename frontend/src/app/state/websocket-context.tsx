@@ -277,6 +277,21 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
         };
     }, []);
 
+    const onMessagesDelivered = useCallback((callback: (data: {
+        senderId: string;
+        receiverId: string;
+        messageIds: string[];
+        deliveredAt: string;
+    }) => void) => {
+        const socket = socketRef.current;
+        if (!socket) return () => {};
+
+        socket.on('messages_delivered', callback);
+        return () => {
+            socket.off('messages_delivered', callback);
+        };
+    }, []);
+
     const isUserOnline = useCallback((userId: string) => {
         return onlineUsers.has(userId);
     }, [onlineUsers]);
@@ -301,6 +316,7 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
         onMessageReaction,
         onMessageEdited,
         onMessageDeleted,
+        onMessagesDelivered,
         isUserOnline,
         isUserTyping,
     };
