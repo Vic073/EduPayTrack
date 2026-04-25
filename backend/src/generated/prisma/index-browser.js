@@ -292,12 +292,27 @@ exports.Prisma.MessageScalarFieldEnum = {
   receiverId: 'receiverId',
   content: 'content',
   read: 'read',
+  readAt: 'readAt',
+  delivered: 'delivered',
+  deliveredAt: 'deliveredAt',
   createdAt: 'createdAt',
   replyToId: 'replyToId',
   attachmentUrl: 'attachmentUrl',
   attachmentName: 'attachmentName',
   attachmentSize: 'attachmentSize',
-  attachmentType: 'attachmentType'
+  attachmentType: 'attachmentType',
+  edited: 'edited',
+  editedAt: 'editedAt',
+  deleted: 'deleted',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ReactionScalarFieldEnum = {
+  id: 'id',
+  emoji: 'emoji',
+  messageId: 'messageId',
+  userId: 'userId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -391,7 +406,8 @@ exports.Prisma.ModelName = {
   GeneratedReport: 'GeneratedReport',
   Notification: 'Notification',
   SystemRegistry: 'SystemRegistry',
-  Message: 'Message'
+  Message: 'Message',
+  Reaction: 'Reaction'
 };
 
 /**

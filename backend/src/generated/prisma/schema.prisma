@@ -83,6 +83,7 @@ model User {
   notifications      Notification[]
   sentMessages       Message[]          @relation("SentMessages")
   receivedMessages   Message[]          @relation("ReceivedMessages")
+  reactions          Reaction[]
 }
 
 model Student {
@@ -264,12 +265,15 @@ model SystemRegistry {
 }
 
 model Message {
-  id         String   @id @default(cuid())
-  senderId   String
-  receiverId String
-  content    String
-  read       Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id          String    @id @default(cuid())
+  senderId    String
+  receiverId  String
+  content     String
+  read        Boolean   @default(false)
+  readAt      DateTime?
+  delivered   Boolean   @default(false)
+  deliveredAt DateTime?
+  createdAt   DateTime  @default(now())
 
   // Reply/Quote functionality
   replyToId String?
@@ -282,6 +286,17 @@ model Message {
   attachmentSize String?
   attachmentType String?
 
+  // Reactions
+  reactions Reaction[]
+
+  // Edit tracking
+  edited   Boolean   @default(false)
+  editedAt DateTime?
+
+  // Soft delete
+  deleted   Boolean   @default(false)
+  deletedAt DateTime?
+
   sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
   receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
 
@@ -289,4 +304,19 @@ model Message {
   @@index([receiverId])
   @@index([senderId, receiverId])
   @@index([replyToId])
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  emoji     String
+  messageId String
+  userId    String
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+  @@index([messageId])
+  @@index([userId])
 }

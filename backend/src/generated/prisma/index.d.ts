@@ -68,6 +68,11 @@ export type SystemRegistry = $Result.DefaultSelection<Prisma.$SystemRegistryPayl
  * 
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
+/**
+ * Model Reaction
+ * 
+ */
+export type Reaction = $Result.DefaultSelection<Prisma.$ReactionPayload>
 
 /**
  * Enums
@@ -415,6 +420,16 @@ export class PrismaClient<
     * ```
     */
   get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.reaction`: Exposes CRUD operations for the **Reaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Reactions
+    * const reactions = await prisma.reaction.findMany()
+    * ```
+    */
+  get reaction(): Prisma.ReactionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -866,7 +881,8 @@ export namespace Prisma {
     GeneratedReport: 'GeneratedReport',
     Notification: 'Notification',
     SystemRegistry: 'SystemRegistry',
-    Message: 'Message'
+    Message: 'Message',
+    Reaction: 'Reaction'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -885,7 +901,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "student" | "feeStructure" | "payment" | "statementImport" | "statementImportRow" | "reminderCampaign" | "generatedReport" | "notification" | "systemRegistry" | "message"
+      modelProps: "user" | "student" | "feeStructure" | "payment" | "statementImport" | "statementImportRow" | "reminderCampaign" | "generatedReport" | "notification" | "systemRegistry" | "message" | "reaction"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1703,6 +1719,80 @@ export namespace Prisma {
           }
         }
       }
+      Reaction: {
+        payload: Prisma.$ReactionPayload<ExtArgs>
+        fields: Prisma.ReactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>
+          }
+          findFirst: {
+            args: Prisma.ReactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>
+          }
+          findMany: {
+            args: Prisma.ReactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>[]
+          }
+          create: {
+            args: Prisma.ReactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>
+          }
+          createMany: {
+            args: Prisma.ReactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReactionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>[]
+          }
+          delete: {
+            args: Prisma.ReactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>
+          }
+          update: {
+            args: Prisma.ReactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReactionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReactionPayload>
+          }
+          aggregate: {
+            args: Prisma.ReactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReaction>
+          }
+          groupBy: {
+            args: Prisma.ReactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReactionCountArgs<ExtArgs>
+            result: $Utils.Optional<ReactionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1810,6 +1900,7 @@ export namespace Prisma {
     notification?: NotificationOmit
     systemRegistry?: SystemRegistryOmit
     message?: MessageOmit
+    reaction?: ReactionOmit
   }
 
   /* Types for Logging */
@@ -1899,6 +1990,7 @@ export namespace Prisma {
     notifications: number
     sentMessages: number
     receivedMessages: number
+    reactions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1911,6 +2003,7 @@ export namespace Prisma {
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     sentMessages?: boolean | UserCountOutputTypeCountSentMessagesArgs
     receivedMessages?: boolean | UserCountOutputTypeCountReceivedMessagesArgs
+    reactions?: boolean | UserCountOutputTypeCountReactionsArgs
   }
 
   // Custom InputTypes
@@ -1987,6 +2080,13 @@ export namespace Prisma {
     where?: MessageWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReactionWhereInput
+  }
+
 
   /**
    * Count Type StudentCountOutputType
@@ -2056,10 +2156,12 @@ export namespace Prisma {
 
   export type MessageCountOutputType = {
     replies: number
+    reactions: number
   }
 
   export type MessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     replies?: boolean | MessageCountOutputTypeCountRepliesArgs
+    reactions?: boolean | MessageCountOutputTypeCountReactionsArgs
   }
 
   // Custom InputTypes
@@ -2078,6 +2180,13 @@ export namespace Prisma {
    */
   export type MessageCountOutputTypeCountRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageWhereInput
+  }
+
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeCountReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReactionWhereInput
   }
 
 
@@ -2323,6 +2432,7 @@ export namespace Prisma {
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     sentMessages?: boolean | User$sentMessagesArgs<ExtArgs>
     receivedMessages?: boolean | User$receivedMessagesArgs<ExtArgs>
+    reactions?: boolean | User$reactionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2386,6 +2496,7 @@ export namespace Prisma {
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     sentMessages?: boolean | User$sentMessagesArgs<ExtArgs>
     receivedMessages?: boolean | User$receivedMessagesArgs<ExtArgs>
+    reactions?: boolean | User$reactionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2404,6 +2515,7 @@ export namespace Prisma {
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       sentMessages: Prisma.$MessagePayload<ExtArgs>[]
       receivedMessages: Prisma.$MessagePayload<ExtArgs>[]
+      reactions: Prisma.$ReactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2823,6 +2935,7 @@ export namespace Prisma {
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sentMessages<T extends User$sentMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     receivedMessages<T extends User$receivedMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$receivedMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reactions<T extends User$reactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3485,6 +3598,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * User.reactions
+   */
+  export type User$reactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    where?: ReactionWhereInput
+    orderBy?: ReactionOrderByWithRelationInput | ReactionOrderByWithRelationInput[]
+    cursor?: ReactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReactionScalarFieldEnum | ReactionScalarFieldEnum[]
   }
 
   /**
@@ -14260,12 +14397,19 @@ export namespace Prisma {
     receiverId: string | null
     content: string | null
     read: boolean | null
+    readAt: Date | null
+    delivered: boolean | null
+    deliveredAt: Date | null
     createdAt: Date | null
     replyToId: string | null
     attachmentUrl: string | null
     attachmentName: string | null
     attachmentSize: string | null
     attachmentType: string | null
+    edited: boolean | null
+    editedAt: Date | null
+    deleted: boolean | null
+    deletedAt: Date | null
   }
 
   export type MessageMaxAggregateOutputType = {
@@ -14274,12 +14418,19 @@ export namespace Prisma {
     receiverId: string | null
     content: string | null
     read: boolean | null
+    readAt: Date | null
+    delivered: boolean | null
+    deliveredAt: Date | null
     createdAt: Date | null
     replyToId: string | null
     attachmentUrl: string | null
     attachmentName: string | null
     attachmentSize: string | null
     attachmentType: string | null
+    edited: boolean | null
+    editedAt: Date | null
+    deleted: boolean | null
+    deletedAt: Date | null
   }
 
   export type MessageCountAggregateOutputType = {
@@ -14288,12 +14439,19 @@ export namespace Prisma {
     receiverId: number
     content: number
     read: number
+    readAt: number
+    delivered: number
+    deliveredAt: number
     createdAt: number
     replyToId: number
     attachmentUrl: number
     attachmentName: number
     attachmentSize: number
     attachmentType: number
+    edited: number
+    editedAt: number
+    deleted: number
+    deletedAt: number
     _all: number
   }
 
@@ -14304,12 +14462,19 @@ export namespace Prisma {
     receiverId?: true
     content?: true
     read?: true
+    readAt?: true
+    delivered?: true
+    deliveredAt?: true
     createdAt?: true
     replyToId?: true
     attachmentUrl?: true
     attachmentName?: true
     attachmentSize?: true
     attachmentType?: true
+    edited?: true
+    editedAt?: true
+    deleted?: true
+    deletedAt?: true
   }
 
   export type MessageMaxAggregateInputType = {
@@ -14318,12 +14483,19 @@ export namespace Prisma {
     receiverId?: true
     content?: true
     read?: true
+    readAt?: true
+    delivered?: true
+    deliveredAt?: true
     createdAt?: true
     replyToId?: true
     attachmentUrl?: true
     attachmentName?: true
     attachmentSize?: true
     attachmentType?: true
+    edited?: true
+    editedAt?: true
+    deleted?: true
+    deletedAt?: true
   }
 
   export type MessageCountAggregateInputType = {
@@ -14332,12 +14504,19 @@ export namespace Prisma {
     receiverId?: true
     content?: true
     read?: true
+    readAt?: true
+    delivered?: true
+    deliveredAt?: true
     createdAt?: true
     replyToId?: true
     attachmentUrl?: true
     attachmentName?: true
     attachmentSize?: true
     attachmentType?: true
+    edited?: true
+    editedAt?: true
+    deleted?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -14419,12 +14598,19 @@ export namespace Prisma {
     receiverId: string
     content: string
     read: boolean
+    readAt: Date | null
+    delivered: boolean
+    deliveredAt: Date | null
     createdAt: Date
     replyToId: string | null
     attachmentUrl: string | null
     attachmentName: string | null
     attachmentSize: string | null
     attachmentType: string | null
+    edited: boolean
+    editedAt: Date | null
+    deleted: boolean
+    deletedAt: Date | null
     _count: MessageCountAggregateOutputType | null
     _min: MessageMinAggregateOutputType | null
     _max: MessageMaxAggregateOutputType | null
@@ -14450,14 +14636,22 @@ export namespace Prisma {
     receiverId?: boolean
     content?: boolean
     read?: boolean
+    readAt?: boolean
+    delivered?: boolean
+    deliveredAt?: boolean
     createdAt?: boolean
     replyToId?: boolean
     attachmentUrl?: boolean
     attachmentName?: boolean
     attachmentSize?: boolean
     attachmentType?: boolean
+    edited?: boolean
+    editedAt?: boolean
+    deleted?: boolean
+    deletedAt?: boolean
     replyTo?: boolean | Message$replyToArgs<ExtArgs>
     replies?: boolean | Message$repliesArgs<ExtArgs>
+    reactions?: boolean | Message$reactionsArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
@@ -14469,12 +14663,19 @@ export namespace Prisma {
     receiverId?: boolean
     content?: boolean
     read?: boolean
+    readAt?: boolean
+    delivered?: boolean
+    deliveredAt?: boolean
     createdAt?: boolean
     replyToId?: boolean
     attachmentUrl?: boolean
     attachmentName?: boolean
     attachmentSize?: boolean
     attachmentType?: boolean
+    edited?: boolean
+    editedAt?: boolean
+    deleted?: boolean
+    deletedAt?: boolean
     replyTo?: boolean | Message$replyToArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
@@ -14486,12 +14687,19 @@ export namespace Prisma {
     receiverId?: boolean
     content?: boolean
     read?: boolean
+    readAt?: boolean
+    delivered?: boolean
+    deliveredAt?: boolean
     createdAt?: boolean
     replyToId?: boolean
     attachmentUrl?: boolean
     attachmentName?: boolean
     attachmentSize?: boolean
     attachmentType?: boolean
+    edited?: boolean
+    editedAt?: boolean
+    deleted?: boolean
+    deletedAt?: boolean
     replyTo?: boolean | Message$replyToArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
@@ -14503,18 +14711,26 @@ export namespace Prisma {
     receiverId?: boolean
     content?: boolean
     read?: boolean
+    readAt?: boolean
+    delivered?: boolean
+    deliveredAt?: boolean
     createdAt?: boolean
     replyToId?: boolean
     attachmentUrl?: boolean
     attachmentName?: boolean
     attachmentSize?: boolean
     attachmentType?: boolean
+    edited?: boolean
+    editedAt?: boolean
+    deleted?: boolean
+    deletedAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senderId" | "receiverId" | "content" | "read" | "createdAt" | "replyToId" | "attachmentUrl" | "attachmentName" | "attachmentSize" | "attachmentType", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "senderId" | "receiverId" | "content" | "read" | "readAt" | "delivered" | "deliveredAt" | "createdAt" | "replyToId" | "attachmentUrl" | "attachmentName" | "attachmentSize" | "attachmentType" | "edited" | "editedAt" | "deleted" | "deletedAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     replyTo?: boolean | Message$replyToArgs<ExtArgs>
     replies?: boolean | Message$repliesArgs<ExtArgs>
+    reactions?: boolean | Message$reactionsArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
@@ -14535,6 +14751,7 @@ export namespace Prisma {
     objects: {
       replyTo: Prisma.$MessagePayload<ExtArgs> | null
       replies: Prisma.$MessagePayload<ExtArgs>[]
+      reactions: Prisma.$ReactionPayload<ExtArgs>[]
       sender: Prisma.$UserPayload<ExtArgs>
       receiver: Prisma.$UserPayload<ExtArgs>
     }
@@ -14544,12 +14761,19 @@ export namespace Prisma {
       receiverId: string
       content: string
       read: boolean
+      readAt: Date | null
+      delivered: boolean
+      deliveredAt: Date | null
       createdAt: Date
       replyToId: string | null
       attachmentUrl: string | null
       attachmentName: string | null
       attachmentSize: string | null
       attachmentType: string | null
+      edited: boolean
+      editedAt: Date | null
+      deleted: boolean
+      deletedAt: Date | null
     }, ExtArgs["result"]["message"]>
     composites: {}
   }
@@ -14946,6 +15170,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     replyTo<T extends Message$replyToArgs<ExtArgs> = {}>(args?: Subset<T, Message$replyToArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     replies<T extends Message$repliesArgs<ExtArgs> = {}>(args?: Subset<T, Message$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reactions<T extends Message$reactionsArgs<ExtArgs> = {}>(args?: Subset<T, Message$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sender<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     receiver<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -14982,12 +15207,19 @@ export namespace Prisma {
     readonly receiverId: FieldRef<"Message", 'String'>
     readonly content: FieldRef<"Message", 'String'>
     readonly read: FieldRef<"Message", 'Boolean'>
+    readonly readAt: FieldRef<"Message", 'DateTime'>
+    readonly delivered: FieldRef<"Message", 'Boolean'>
+    readonly deliveredAt: FieldRef<"Message", 'DateTime'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
     readonly replyToId: FieldRef<"Message", 'String'>
     readonly attachmentUrl: FieldRef<"Message", 'String'>
     readonly attachmentName: FieldRef<"Message", 'String'>
     readonly attachmentSize: FieldRef<"Message", 'String'>
     readonly attachmentType: FieldRef<"Message", 'String'>
+    readonly edited: FieldRef<"Message", 'Boolean'>
+    readonly editedAt: FieldRef<"Message", 'DateTime'>
+    readonly deleted: FieldRef<"Message", 'Boolean'>
+    readonly deletedAt: FieldRef<"Message", 'DateTime'>
   }
     
 
@@ -15427,6 +15659,30 @@ export namespace Prisma {
   }
 
   /**
+   * Message.reactions
+   */
+  export type Message$reactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    where?: ReactionWhereInput
+    orderBy?: ReactionOrderByWithRelationInput | ReactionOrderByWithRelationInput[]
+    cursor?: ReactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReactionScalarFieldEnum | ReactionScalarFieldEnum[]
+  }
+
+  /**
    * Message without action
    */
   export type MessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15442,6 +15698,1072 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: MessageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Reaction
+   */
+
+  export type AggregateReaction = {
+    _count: ReactionCountAggregateOutputType | null
+    _min: ReactionMinAggregateOutputType | null
+    _max: ReactionMaxAggregateOutputType | null
+  }
+
+  export type ReactionMinAggregateOutputType = {
+    id: string | null
+    emoji: string | null
+    messageId: string | null
+    userId: string | null
+    createdAt: Date | null
+  }
+
+  export type ReactionMaxAggregateOutputType = {
+    id: string | null
+    emoji: string | null
+    messageId: string | null
+    userId: string | null
+    createdAt: Date | null
+  }
+
+  export type ReactionCountAggregateOutputType = {
+    id: number
+    emoji: number
+    messageId: number
+    userId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ReactionMinAggregateInputType = {
+    id?: true
+    emoji?: true
+    messageId?: true
+    userId?: true
+    createdAt?: true
+  }
+
+  export type ReactionMaxAggregateInputType = {
+    id?: true
+    emoji?: true
+    messageId?: true
+    userId?: true
+    createdAt?: true
+  }
+
+  export type ReactionCountAggregateInputType = {
+    id?: true
+    emoji?: true
+    messageId?: true
+    userId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ReactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Reaction to aggregate.
+     */
+    where?: ReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reactions to fetch.
+     */
+    orderBy?: ReactionOrderByWithRelationInput | ReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Reactions
+    **/
+    _count?: true | ReactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReactionMaxAggregateInputType
+  }
+
+  export type GetReactionAggregateType<T extends ReactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateReaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReaction[P]>
+      : GetScalarType<T[P], AggregateReaction[P]>
+  }
+
+
+
+
+  export type ReactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReactionWhereInput
+    orderBy?: ReactionOrderByWithAggregationInput | ReactionOrderByWithAggregationInput[]
+    by: ReactionScalarFieldEnum[] | ReactionScalarFieldEnum
+    having?: ReactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReactionCountAggregateInputType | true
+    _min?: ReactionMinAggregateInputType
+    _max?: ReactionMaxAggregateInputType
+  }
+
+  export type ReactionGroupByOutputType = {
+    id: string
+    emoji: string
+    messageId: string
+    userId: string
+    createdAt: Date
+    _count: ReactionCountAggregateOutputType | null
+    _min: ReactionMinAggregateOutputType | null
+    _max: ReactionMaxAggregateOutputType | null
+  }
+
+  type GetReactionGroupByPayload<T extends ReactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReactionGroupByOutputType[P]>
+            : GetScalarType<T[P], ReactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    emoji?: boolean
+    messageId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reaction"]>
+
+  export type ReactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    emoji?: boolean
+    messageId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reaction"]>
+
+  export type ReactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    emoji?: boolean
+    messageId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["reaction"]>
+
+  export type ReactionSelectScalar = {
+    id?: boolean
+    emoji?: boolean
+    messageId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+  }
+
+  export type ReactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "emoji" | "messageId" | "userId" | "createdAt", ExtArgs["result"]["reaction"]>
+  export type ReactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ReactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Reaction"
+    objects: {
+      message: Prisma.$MessagePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      emoji: string
+      messageId: string
+      userId: string
+      createdAt: Date
+    }, ExtArgs["result"]["reaction"]>
+    composites: {}
+  }
+
+  type ReactionGetPayload<S extends boolean | null | undefined | ReactionDefaultArgs> = $Result.GetResult<Prisma.$ReactionPayload, S>
+
+  type ReactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReactionCountAggregateInputType | true
+    }
+
+  export interface ReactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Reaction'], meta: { name: 'Reaction' } }
+    /**
+     * Find zero or one Reaction that matches the filter.
+     * @param {ReactionFindUniqueArgs} args - Arguments to find a Reaction
+     * @example
+     * // Get one Reaction
+     * const reaction = await prisma.reaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReactionFindUniqueArgs>(args: SelectSubset<T, ReactionFindUniqueArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Reaction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReactionFindUniqueOrThrowArgs} args - Arguments to find a Reaction
+     * @example
+     * // Get one Reaction
+     * const reaction = await prisma.reaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReactionFindUniqueOrThrowArgs>(args: SelectSubset<T, ReactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Reaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReactionFindFirstArgs} args - Arguments to find a Reaction
+     * @example
+     * // Get one Reaction
+     * const reaction = await prisma.reaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReactionFindFirstArgs>(args?: SelectSubset<T, ReactionFindFirstArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Reaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReactionFindFirstOrThrowArgs} args - Arguments to find a Reaction
+     * @example
+     * // Get one Reaction
+     * const reaction = await prisma.reaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReactionFindFirstOrThrowArgs>(args?: SelectSubset<T, ReactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Reactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Reactions
+     * const reactions = await prisma.reaction.findMany()
+     * 
+     * // Get first 10 Reactions
+     * const reactions = await prisma.reaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const reactionWithIdOnly = await prisma.reaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReactionFindManyArgs>(args?: SelectSubset<T, ReactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Reaction.
+     * @param {ReactionCreateArgs} args - Arguments to create a Reaction.
+     * @example
+     * // Create one Reaction
+     * const Reaction = await prisma.reaction.create({
+     *   data: {
+     *     // ... data to create a Reaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReactionCreateArgs>(args: SelectSubset<T, ReactionCreateArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Reactions.
+     * @param {ReactionCreateManyArgs} args - Arguments to create many Reactions.
+     * @example
+     * // Create many Reactions
+     * const reaction = await prisma.reaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReactionCreateManyArgs>(args?: SelectSubset<T, ReactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Reactions and returns the data saved in the database.
+     * @param {ReactionCreateManyAndReturnArgs} args - Arguments to create many Reactions.
+     * @example
+     * // Create many Reactions
+     * const reaction = await prisma.reaction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Reactions and only return the `id`
+     * const reactionWithIdOnly = await prisma.reaction.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReactionCreateManyAndReturnArgs>(args?: SelectSubset<T, ReactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Reaction.
+     * @param {ReactionDeleteArgs} args - Arguments to delete one Reaction.
+     * @example
+     * // Delete one Reaction
+     * const Reaction = await prisma.reaction.delete({
+     *   where: {
+     *     // ... filter to delete one Reaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReactionDeleteArgs>(args: SelectSubset<T, ReactionDeleteArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Reaction.
+     * @param {ReactionUpdateArgs} args - Arguments to update one Reaction.
+     * @example
+     * // Update one Reaction
+     * const reaction = await prisma.reaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReactionUpdateArgs>(args: SelectSubset<T, ReactionUpdateArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Reactions.
+     * @param {ReactionDeleteManyArgs} args - Arguments to filter Reactions to delete.
+     * @example
+     * // Delete a few Reactions
+     * const { count } = await prisma.reaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReactionDeleteManyArgs>(args?: SelectSubset<T, ReactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Reactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Reactions
+     * const reaction = await prisma.reaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReactionUpdateManyArgs>(args: SelectSubset<T, ReactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Reactions and returns the data updated in the database.
+     * @param {ReactionUpdateManyAndReturnArgs} args - Arguments to update many Reactions.
+     * @example
+     * // Update many Reactions
+     * const reaction = await prisma.reaction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Reactions and only return the `id`
+     * const reactionWithIdOnly = await prisma.reaction.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReactionUpdateManyAndReturnArgs>(args: SelectSubset<T, ReactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Reaction.
+     * @param {ReactionUpsertArgs} args - Arguments to update or create a Reaction.
+     * @example
+     * // Update or create a Reaction
+     * const reaction = await prisma.reaction.upsert({
+     *   create: {
+     *     // ... data to create a Reaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Reaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReactionUpsertArgs>(args: SelectSubset<T, ReactionUpsertArgs<ExtArgs>>): Prisma__ReactionClient<$Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Reactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReactionCountArgs} args - Arguments to filter Reactions to count.
+     * @example
+     * // Count the number of Reactions
+     * const count = await prisma.reaction.count({
+     *   where: {
+     *     // ... the filter for the Reactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReactionCountArgs>(
+      args?: Subset<T, ReactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Reaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReactionAggregateArgs>(args: Subset<T, ReactionAggregateArgs>): Prisma.PrismaPromise<GetReactionAggregateType<T>>
+
+    /**
+     * Group by Reaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReactionGroupByArgs['orderBy'] }
+        : { orderBy?: ReactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Reaction model
+   */
+  readonly fields: ReactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Reaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    message<T extends MessageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MessageDefaultArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Reaction model
+   */
+  interface ReactionFieldRefs {
+    readonly id: FieldRef<"Reaction", 'String'>
+    readonly emoji: FieldRef<"Reaction", 'String'>
+    readonly messageId: FieldRef<"Reaction", 'String'>
+    readonly userId: FieldRef<"Reaction", 'String'>
+    readonly createdAt: FieldRef<"Reaction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Reaction findUnique
+   */
+  export type ReactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Reaction to fetch.
+     */
+    where: ReactionWhereUniqueInput
+  }
+
+  /**
+   * Reaction findUniqueOrThrow
+   */
+  export type ReactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Reaction to fetch.
+     */
+    where: ReactionWhereUniqueInput
+  }
+
+  /**
+   * Reaction findFirst
+   */
+  export type ReactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Reaction to fetch.
+     */
+    where?: ReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reactions to fetch.
+     */
+    orderBy?: ReactionOrderByWithRelationInput | ReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Reactions.
+     */
+    cursor?: ReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reactions.
+     */
+    distinct?: ReactionScalarFieldEnum | ReactionScalarFieldEnum[]
+  }
+
+  /**
+   * Reaction findFirstOrThrow
+   */
+  export type ReactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Reaction to fetch.
+     */
+    where?: ReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reactions to fetch.
+     */
+    orderBy?: ReactionOrderByWithRelationInput | ReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Reactions.
+     */
+    cursor?: ReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reactions.
+     */
+    distinct?: ReactionScalarFieldEnum | ReactionScalarFieldEnum[]
+  }
+
+  /**
+   * Reaction findMany
+   */
+  export type ReactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which Reactions to fetch.
+     */
+    where?: ReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reactions to fetch.
+     */
+    orderBy?: ReactionOrderByWithRelationInput | ReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Reactions.
+     */
+    cursor?: ReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reactions.
+     */
+    skip?: number
+    distinct?: ReactionScalarFieldEnum | ReactionScalarFieldEnum[]
+  }
+
+  /**
+   * Reaction create
+   */
+  export type ReactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Reaction.
+     */
+    data: XOR<ReactionCreateInput, ReactionUncheckedCreateInput>
+  }
+
+  /**
+   * Reaction createMany
+   */
+  export type ReactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Reactions.
+     */
+    data: ReactionCreateManyInput | ReactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Reaction createManyAndReturn
+   */
+  export type ReactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Reactions.
+     */
+    data: ReactionCreateManyInput | ReactionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Reaction update
+   */
+  export type ReactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Reaction.
+     */
+    data: XOR<ReactionUpdateInput, ReactionUncheckedUpdateInput>
+    /**
+     * Choose, which Reaction to update.
+     */
+    where: ReactionWhereUniqueInput
+  }
+
+  /**
+   * Reaction updateMany
+   */
+  export type ReactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Reactions.
+     */
+    data: XOR<ReactionUpdateManyMutationInput, ReactionUncheckedUpdateManyInput>
+    /**
+     * Filter which Reactions to update
+     */
+    where?: ReactionWhereInput
+    /**
+     * Limit how many Reactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Reaction updateManyAndReturn
+   */
+  export type ReactionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * The data used to update Reactions.
+     */
+    data: XOR<ReactionUpdateManyMutationInput, ReactionUncheckedUpdateManyInput>
+    /**
+     * Filter which Reactions to update
+     */
+    where?: ReactionWhereInput
+    /**
+     * Limit how many Reactions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Reaction upsert
+   */
+  export type ReactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Reaction to update in case it exists.
+     */
+    where: ReactionWhereUniqueInput
+    /**
+     * In case the Reaction found by the `where` argument doesn't exist, create a new Reaction with this data.
+     */
+    create: XOR<ReactionCreateInput, ReactionUncheckedCreateInput>
+    /**
+     * In case the Reaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReactionUpdateInput, ReactionUncheckedUpdateInput>
+  }
+
+  /**
+   * Reaction delete
+   */
+  export type ReactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
+    /**
+     * Filter which Reaction to delete.
+     */
+    where: ReactionWhereUniqueInput
+  }
+
+  /**
+   * Reaction deleteMany
+   */
+  export type ReactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Reactions to delete
+     */
+    where?: ReactionWhereInput
+    /**
+     * Limit how many Reactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Reaction without action
+   */
+  export type ReactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reaction
+     */
+    select?: ReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reaction
+     */
+    omit?: ReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReactionInclude<ExtArgs> | null
   }
 
 
@@ -15660,15 +16982,33 @@ export namespace Prisma {
     receiverId: 'receiverId',
     content: 'content',
     read: 'read',
+    readAt: 'readAt',
+    delivered: 'delivered',
+    deliveredAt: 'deliveredAt',
     createdAt: 'createdAt',
     replyToId: 'replyToId',
     attachmentUrl: 'attachmentUrl',
     attachmentName: 'attachmentName',
     attachmentSize: 'attachmentSize',
-    attachmentType: 'attachmentType'
+    attachmentType: 'attachmentType',
+    edited: 'edited',
+    editedAt: 'editedAt',
+    deleted: 'deleted',
+    deletedAt: 'deletedAt'
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+  export const ReactionScalarFieldEnum: {
+    id: 'id',
+    emoji: 'emoji',
+    messageId: 'messageId',
+    userId: 'userId',
+    createdAt: 'createdAt'
+  };
+
+  export type ReactionScalarFieldEnum = (typeof ReactionScalarFieldEnum)[keyof typeof ReactionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15971,6 +17311,7 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     sentMessages?: MessageListRelationFilter
     receivedMessages?: MessageListRelationFilter
+    reactions?: ReactionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -15997,6 +17338,7 @@ export namespace Prisma {
     notifications?: NotificationOrderByRelationAggregateInput
     sentMessages?: MessageOrderByRelationAggregateInput
     receivedMessages?: MessageOrderByRelationAggregateInput
+    reactions?: ReactionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16026,6 +17368,7 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     sentMessages?: MessageListRelationFilter
     receivedMessages?: MessageListRelationFilter
+    reactions?: ReactionListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -16976,14 +18319,22 @@ export namespace Prisma {
     receiverId?: StringFilter<"Message"> | string
     content?: StringFilter<"Message"> | string
     read?: BoolFilter<"Message"> | boolean
+    readAt?: DateTimeNullableFilter<"Message"> | Date | string | null
+    delivered?: BoolFilter<"Message"> | boolean
+    deliveredAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     replyToId?: StringNullableFilter<"Message"> | string | null
     attachmentUrl?: StringNullableFilter<"Message"> | string | null
     attachmentName?: StringNullableFilter<"Message"> | string | null
     attachmentSize?: StringNullableFilter<"Message"> | string | null
     attachmentType?: StringNullableFilter<"Message"> | string | null
+    edited?: BoolFilter<"Message"> | boolean
+    editedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
+    deleted?: BoolFilter<"Message"> | boolean
+    deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     replyTo?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
     replies?: MessageListRelationFilter
+    reactions?: ReactionListRelationFilter
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
     receiver?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -16994,14 +18345,22 @@ export namespace Prisma {
     receiverId?: SortOrder
     content?: SortOrder
     read?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    delivered?: SortOrder
+    deliveredAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     replyToId?: SortOrderInput | SortOrder
     attachmentUrl?: SortOrderInput | SortOrder
     attachmentName?: SortOrderInput | SortOrder
     attachmentSize?: SortOrderInput | SortOrder
     attachmentType?: SortOrderInput | SortOrder
+    edited?: SortOrder
+    editedAt?: SortOrderInput | SortOrder
+    deleted?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     replyTo?: MessageOrderByWithRelationInput
     replies?: MessageOrderByRelationAggregateInput
+    reactions?: ReactionOrderByRelationAggregateInput
     sender?: UserOrderByWithRelationInput
     receiver?: UserOrderByWithRelationInput
   }
@@ -17015,14 +18374,22 @@ export namespace Prisma {
     receiverId?: StringFilter<"Message"> | string
     content?: StringFilter<"Message"> | string
     read?: BoolFilter<"Message"> | boolean
+    readAt?: DateTimeNullableFilter<"Message"> | Date | string | null
+    delivered?: BoolFilter<"Message"> | boolean
+    deliveredAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     replyToId?: StringNullableFilter<"Message"> | string | null
     attachmentUrl?: StringNullableFilter<"Message"> | string | null
     attachmentName?: StringNullableFilter<"Message"> | string | null
     attachmentSize?: StringNullableFilter<"Message"> | string | null
     attachmentType?: StringNullableFilter<"Message"> | string | null
+    edited?: BoolFilter<"Message"> | boolean
+    editedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
+    deleted?: BoolFilter<"Message"> | boolean
+    deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     replyTo?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
     replies?: MessageListRelationFilter
+    reactions?: ReactionListRelationFilter
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
     receiver?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -17033,12 +18400,19 @@ export namespace Prisma {
     receiverId?: SortOrder
     content?: SortOrder
     read?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    delivered?: SortOrder
+    deliveredAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     replyToId?: SortOrderInput | SortOrder
     attachmentUrl?: SortOrderInput | SortOrder
     attachmentName?: SortOrderInput | SortOrder
     attachmentSize?: SortOrderInput | SortOrder
     attachmentType?: SortOrderInput | SortOrder
+    edited?: SortOrder
+    editedAt?: SortOrderInput | SortOrder
+    deleted?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: MessageCountOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
     _min?: MessageMinOrderByAggregateInput
@@ -17053,12 +18427,78 @@ export namespace Prisma {
     receiverId?: StringWithAggregatesFilter<"Message"> | string
     content?: StringWithAggregatesFilter<"Message"> | string
     read?: BoolWithAggregatesFilter<"Message"> | boolean
+    readAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
+    delivered?: BoolWithAggregatesFilter<"Message"> | boolean
+    deliveredAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     replyToId?: StringNullableWithAggregatesFilter<"Message"> | string | null
     attachmentUrl?: StringNullableWithAggregatesFilter<"Message"> | string | null
     attachmentName?: StringNullableWithAggregatesFilter<"Message"> | string | null
     attachmentSize?: StringNullableWithAggregatesFilter<"Message"> | string | null
     attachmentType?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    edited?: BoolWithAggregatesFilter<"Message"> | boolean
+    editedAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
+    deleted?: BoolWithAggregatesFilter<"Message"> | boolean
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
+  }
+
+  export type ReactionWhereInput = {
+    AND?: ReactionWhereInput | ReactionWhereInput[]
+    OR?: ReactionWhereInput[]
+    NOT?: ReactionWhereInput | ReactionWhereInput[]
+    id?: StringFilter<"Reaction"> | string
+    emoji?: StringFilter<"Reaction"> | string
+    messageId?: StringFilter<"Reaction"> | string
+    userId?: StringFilter<"Reaction"> | string
+    createdAt?: DateTimeFilter<"Reaction"> | Date | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ReactionOrderByWithRelationInput = {
+    id?: SortOrder
+    emoji?: SortOrder
+    messageId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    message?: MessageOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ReactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    messageId_userId_emoji?: ReactionMessageIdUserIdEmojiCompoundUniqueInput
+    AND?: ReactionWhereInput | ReactionWhereInput[]
+    OR?: ReactionWhereInput[]
+    NOT?: ReactionWhereInput | ReactionWhereInput[]
+    emoji?: StringFilter<"Reaction"> | string
+    messageId?: StringFilter<"Reaction"> | string
+    userId?: StringFilter<"Reaction"> | string
+    createdAt?: DateTimeFilter<"Reaction"> | Date | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "messageId_userId_emoji">
+
+  export type ReactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    emoji?: SortOrder
+    messageId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    _count?: ReactionCountOrderByAggregateInput
+    _max?: ReactionMaxOrderByAggregateInput
+    _min?: ReactionMinOrderByAggregateInput
+  }
+
+  export type ReactionScalarWhereWithAggregatesInput = {
+    AND?: ReactionScalarWhereWithAggregatesInput | ReactionScalarWhereWithAggregatesInput[]
+    OR?: ReactionScalarWhereWithAggregatesInput[]
+    NOT?: ReactionScalarWhereWithAggregatesInput | ReactionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Reaction"> | string
+    emoji?: StringWithAggregatesFilter<"Reaction"> | string
+    messageId?: StringWithAggregatesFilter<"Reaction"> | string
+    userId?: StringWithAggregatesFilter<"Reaction"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Reaction"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -17085,6 +18525,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17111,6 +18552,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17137,6 +18579,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -17163,6 +18606,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18258,13 +19702,21 @@ export namespace Prisma {
     id?: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replyTo?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionCreateNestedManyWithoutMessageInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
@@ -18275,26 +19727,42 @@ export namespace Prisma {
     receiverId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     replyToId?: string | null
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replies?: MessageUncheckedCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replyTo?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUpdateManyWithoutMessageNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
@@ -18305,13 +19773,21 @@ export namespace Prisma {
     receiverId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replies?: MessageUncheckedUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageCreateManyInput = {
@@ -18320,23 +19796,37 @@ export namespace Prisma {
     receiverId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     replyToId?: string | null
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
   }
 
   export type MessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageUncheckedUpdateManyInput = {
@@ -18345,12 +19835,73 @@ export namespace Prisma {
     receiverId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ReactionCreateInput = {
+    id?: string
+    emoji: string
+    createdAt?: Date | string
+    message: MessageCreateNestedOneWithoutReactionsInput
+    user: UserCreateNestedOneWithoutReactionsInput
+  }
+
+  export type ReactionUncheckedCreateInput = {
+    id?: string
+    emoji: string
+    messageId: string
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type ReactionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    message?: MessageUpdateOneRequiredWithoutReactionsNestedInput
+    user?: UserUpdateOneRequiredWithoutReactionsNestedInput
+  }
+
+  export type ReactionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReactionCreateManyInput = {
+    id?: string
+    emoji: string
+    messageId: string
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type ReactionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReactionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -18460,6 +20011,12 @@ export namespace Prisma {
     none?: MessageWhereInput
   }
 
+  export type ReactionListRelationFilter = {
+    every?: ReactionWhereInput
+    some?: ReactionWhereInput
+    none?: ReactionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -18486,6 +20043,10 @@ export namespace Prisma {
   }
 
   export type MessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19501,12 +21062,19 @@ export namespace Prisma {
     receiverId?: SortOrder
     content?: SortOrder
     read?: SortOrder
+    readAt?: SortOrder
+    delivered?: SortOrder
+    deliveredAt?: SortOrder
     createdAt?: SortOrder
     replyToId?: SortOrder
     attachmentUrl?: SortOrder
     attachmentName?: SortOrder
     attachmentSize?: SortOrder
     attachmentType?: SortOrder
+    edited?: SortOrder
+    editedAt?: SortOrder
+    deleted?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type MessageMaxOrderByAggregateInput = {
@@ -19515,12 +21083,19 @@ export namespace Prisma {
     receiverId?: SortOrder
     content?: SortOrder
     read?: SortOrder
+    readAt?: SortOrder
+    delivered?: SortOrder
+    deliveredAt?: SortOrder
     createdAt?: SortOrder
     replyToId?: SortOrder
     attachmentUrl?: SortOrder
     attachmentName?: SortOrder
     attachmentSize?: SortOrder
     attachmentType?: SortOrder
+    edited?: SortOrder
+    editedAt?: SortOrder
+    deleted?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type MessageMinOrderByAggregateInput = {
@@ -19529,12 +21104,54 @@ export namespace Prisma {
     receiverId?: SortOrder
     content?: SortOrder
     read?: SortOrder
+    readAt?: SortOrder
+    delivered?: SortOrder
+    deliveredAt?: SortOrder
     createdAt?: SortOrder
     replyToId?: SortOrder
     attachmentUrl?: SortOrder
     attachmentName?: SortOrder
     attachmentSize?: SortOrder
     attachmentType?: SortOrder
+    edited?: SortOrder
+    editedAt?: SortOrder
+    deleted?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type MessageScalarRelationFilter = {
+    is?: MessageWhereInput
+    isNot?: MessageWhereInput
+  }
+
+  export type ReactionMessageIdUserIdEmojiCompoundUniqueInput = {
+    messageId: string
+    userId: string
+    emoji: string
+  }
+
+  export type ReactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    emoji?: SortOrder
+    messageId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ReactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    emoji?: SortOrder
+    messageId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ReactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    emoji?: SortOrder
+    messageId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type StudentCreateNestedOneWithoutUserInput = {
@@ -19606,6 +21223,13 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type ReactionCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReactionCreateWithoutUserInput, ReactionUncheckedCreateWithoutUserInput> | ReactionCreateWithoutUserInput[] | ReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutUserInput | ReactionCreateOrConnectWithoutUserInput[]
+    createMany?: ReactionCreateManyUserInputEnvelope
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+  }
+
   export type StudentUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<StudentCreateWithoutUserInput, StudentUncheckedCreateWithoutUserInput>
     connectOrCreate?: StudentCreateOrConnectWithoutUserInput
@@ -19673,6 +21297,13 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutReceiverInput | MessageCreateOrConnectWithoutReceiverInput[]
     createMany?: MessageCreateManyReceiverInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type ReactionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReactionCreateWithoutUserInput, ReactionUncheckedCreateWithoutUserInput> | ReactionCreateWithoutUserInput[] | ReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutUserInput | ReactionCreateOrConnectWithoutUserInput[]
+    createMany?: ReactionCreateManyUserInputEnvelope
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -19835,6 +21466,20 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
+  export type ReactionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReactionCreateWithoutUserInput, ReactionUncheckedCreateWithoutUserInput> | ReactionCreateWithoutUserInput[] | ReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutUserInput | ReactionCreateOrConnectWithoutUserInput[]
+    upsert?: ReactionUpsertWithWhereUniqueWithoutUserInput | ReactionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReactionCreateManyUserInputEnvelope
+    set?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    disconnect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    delete?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    update?: ReactionUpdateWithWhereUniqueWithoutUserInput | ReactionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReactionUpdateManyWithWhereWithoutUserInput | ReactionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReactionScalarWhereInput | ReactionScalarWhereInput[]
+  }
+
   export type StudentUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<StudentCreateWithoutUserInput, StudentUncheckedCreateWithoutUserInput>
     connectOrCreate?: StudentCreateOrConnectWithoutUserInput
@@ -19969,6 +21614,20 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutReceiverInput | MessageUpdateWithWhereUniqueWithoutReceiverInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutReceiverInput | MessageUpdateManyWithWhereWithoutReceiverInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type ReactionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReactionCreateWithoutUserInput, ReactionUncheckedCreateWithoutUserInput> | ReactionCreateWithoutUserInput[] | ReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutUserInput | ReactionCreateOrConnectWithoutUserInput[]
+    upsert?: ReactionUpsertWithWhereUniqueWithoutUserInput | ReactionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReactionCreateManyUserInputEnvelope
+    set?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    disconnect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    delete?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    update?: ReactionUpdateWithWhereUniqueWithoutUserInput | ReactionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReactionUpdateManyWithWhereWithoutUserInput | ReactionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReactionScalarWhereInput | ReactionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutStudentInput = {
@@ -20287,6 +21946,13 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type ReactionCreateNestedManyWithoutMessageInput = {
+    create?: XOR<ReactionCreateWithoutMessageInput, ReactionUncheckedCreateWithoutMessageInput> | ReactionCreateWithoutMessageInput[] | ReactionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutMessageInput | ReactionCreateOrConnectWithoutMessageInput[]
+    createMany?: ReactionCreateManyMessageInputEnvelope
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+  }
+
   export type UserCreateNestedOneWithoutSentMessagesInput = {
     create?: XOR<UserCreateWithoutSentMessagesInput, UserUncheckedCreateWithoutSentMessagesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSentMessagesInput
@@ -20304,6 +21970,13 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutReplyToInput | MessageCreateOrConnectWithoutReplyToInput[]
     createMany?: MessageCreateManyReplyToInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type ReactionUncheckedCreateNestedManyWithoutMessageInput = {
+    create?: XOR<ReactionCreateWithoutMessageInput, ReactionUncheckedCreateWithoutMessageInput> | ReactionCreateWithoutMessageInput[] | ReactionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutMessageInput | ReactionCreateOrConnectWithoutMessageInput[]
+    createMany?: ReactionCreateManyMessageInputEnvelope
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
   }
 
   export type MessageUpdateOneWithoutRepliesNestedInput = {
@@ -20328,6 +22001,20 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutReplyToInput | MessageUpdateWithWhereUniqueWithoutReplyToInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutReplyToInput | MessageUpdateManyWithWhereWithoutReplyToInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type ReactionUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<ReactionCreateWithoutMessageInput, ReactionUncheckedCreateWithoutMessageInput> | ReactionCreateWithoutMessageInput[] | ReactionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutMessageInput | ReactionCreateOrConnectWithoutMessageInput[]
+    upsert?: ReactionUpsertWithWhereUniqueWithoutMessageInput | ReactionUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: ReactionCreateManyMessageInputEnvelope
+    set?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    disconnect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    delete?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    update?: ReactionUpdateWithWhereUniqueWithoutMessageInput | ReactionUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: ReactionUpdateManyWithWhereWithoutMessageInput | ReactionUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: ReactionScalarWhereInput | ReactionScalarWhereInput[]
   }
 
   export type UserUpdateOneRequiredWithoutSentMessagesNestedInput = {
@@ -20358,6 +22045,48 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutReplyToInput | MessageUpdateWithWhereUniqueWithoutReplyToInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutReplyToInput | MessageUpdateManyWithWhereWithoutReplyToInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type ReactionUncheckedUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<ReactionCreateWithoutMessageInput, ReactionUncheckedCreateWithoutMessageInput> | ReactionCreateWithoutMessageInput[] | ReactionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ReactionCreateOrConnectWithoutMessageInput | ReactionCreateOrConnectWithoutMessageInput[]
+    upsert?: ReactionUpsertWithWhereUniqueWithoutMessageInput | ReactionUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: ReactionCreateManyMessageInputEnvelope
+    set?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    disconnect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    delete?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    connect?: ReactionWhereUniqueInput | ReactionWhereUniqueInput[]
+    update?: ReactionUpdateWithWhereUniqueWithoutMessageInput | ReactionUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: ReactionUpdateManyWithWhereWithoutMessageInput | ReactionUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: ReactionScalarWhereInput | ReactionScalarWhereInput[]
+  }
+
+  export type MessageCreateNestedOneWithoutReactionsInput = {
+    create?: XOR<MessageCreateWithoutReactionsInput, MessageUncheckedCreateWithoutReactionsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutReactionsInput
+    connect?: MessageWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutReactionsInput = {
+    create?: XOR<UserCreateWithoutReactionsInput, UserUncheckedCreateWithoutReactionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReactionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type MessageUpdateOneRequiredWithoutReactionsNestedInput = {
+    create?: XOR<MessageCreateWithoutReactionsInput, MessageUncheckedCreateWithoutReactionsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutReactionsInput
+    upsert?: MessageUpsertWithoutReactionsInput
+    connect?: MessageWhereUniqueInput
+    update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutReactionsInput, MessageUpdateWithoutReactionsInput>, MessageUncheckedUpdateWithoutReactionsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReactionsNestedInput = {
+    create?: XOR<UserCreateWithoutReactionsInput, UserUncheckedCreateWithoutReactionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReactionsInput
+    upsert?: UserUpsertWithoutReactionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReactionsInput, UserUpdateWithoutReactionsInput>, UserUncheckedUpdateWithoutReactionsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -21225,13 +22954,21 @@ export namespace Prisma {
     id?: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replyTo?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionCreateNestedManyWithoutMessageInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
 
@@ -21240,13 +22977,21 @@ export namespace Prisma {
     receiverId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     replyToId?: string | null
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replies?: MessageUncheckedCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutSenderInput = {
@@ -21263,13 +23008,21 @@ export namespace Prisma {
     id?: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replyTo?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionCreateNestedManyWithoutMessageInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
   }
 
@@ -21278,13 +23031,21 @@ export namespace Prisma {
     senderId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     replyToId?: string | null
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replies?: MessageUncheckedCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutReceiverInput = {
@@ -21294,6 +23055,30 @@ export namespace Prisma {
 
   export type MessageCreateManyReceiverInputEnvelope = {
     data: MessageCreateManyReceiverInput | MessageCreateManyReceiverInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReactionCreateWithoutUserInput = {
+    id?: string
+    emoji: string
+    createdAt?: Date | string
+    message: MessageCreateNestedOneWithoutReactionsInput
+  }
+
+  export type ReactionUncheckedCreateWithoutUserInput = {
+    id?: string
+    emoji: string
+    messageId: string
+    createdAt?: Date | string
+  }
+
+  export type ReactionCreateOrConnectWithoutUserInput = {
+    where: ReactionWhereUniqueInput
+    create: XOR<ReactionCreateWithoutUserInput, ReactionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReactionCreateManyUserInputEnvelope = {
+    data: ReactionCreateManyUserInput | ReactionCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -21582,12 +23367,19 @@ export namespace Prisma {
     receiverId?: StringFilter<"Message"> | string
     content?: StringFilter<"Message"> | string
     read?: BoolFilter<"Message"> | boolean
+    readAt?: DateTimeNullableFilter<"Message"> | Date | string | null
+    delivered?: BoolFilter<"Message"> | boolean
+    deliveredAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     replyToId?: StringNullableFilter<"Message"> | string | null
     attachmentUrl?: StringNullableFilter<"Message"> | string | null
     attachmentName?: StringNullableFilter<"Message"> | string | null
     attachmentSize?: StringNullableFilter<"Message"> | string | null
     attachmentType?: StringNullableFilter<"Message"> | string | null
+    edited?: BoolFilter<"Message"> | boolean
+    editedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
+    deleted?: BoolFilter<"Message"> | boolean
+    deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
   }
 
   export type MessageUpsertWithWhereUniqueWithoutReceiverInput = {
@@ -21604,6 +23396,33 @@ export namespace Prisma {
   export type MessageUpdateManyWithWhereWithoutReceiverInput = {
     where: MessageScalarWhereInput
     data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutReceiverInput>
+  }
+
+  export type ReactionUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReactionWhereUniqueInput
+    update: XOR<ReactionUpdateWithoutUserInput, ReactionUncheckedUpdateWithoutUserInput>
+    create: XOR<ReactionCreateWithoutUserInput, ReactionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReactionUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReactionWhereUniqueInput
+    data: XOR<ReactionUpdateWithoutUserInput, ReactionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReactionUpdateManyWithWhereWithoutUserInput = {
+    where: ReactionScalarWhereInput
+    data: XOR<ReactionUpdateManyMutationInput, ReactionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ReactionScalarWhereInput = {
+    AND?: ReactionScalarWhereInput | ReactionScalarWhereInput[]
+    OR?: ReactionScalarWhereInput[]
+    NOT?: ReactionScalarWhereInput | ReactionScalarWhereInput[]
+    id?: StringFilter<"Reaction"> | string
+    emoji?: StringFilter<"Reaction"> | string
+    messageId?: StringFilter<"Reaction"> | string
+    userId?: StringFilter<"Reaction"> | string
+    createdAt?: DateTimeFilter<"Reaction"> | Date | string
   }
 
   export type UserCreateWithoutStudentInput = {
@@ -21629,6 +23448,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentInput = {
@@ -21654,6 +23474,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentInput = {
@@ -21771,6 +23592,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentInput = {
@@ -21796,6 +23618,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PaymentUpsertWithWhereUniqueWithoutStudentInput = {
@@ -21878,6 +23701,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReconciledPaymentsInput = {
@@ -21903,6 +23727,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReconciledPaymentsInput = {
@@ -21933,6 +23758,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutVerifiedPaymentsInput = {
@@ -21958,6 +23784,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutVerifiedPaymentsInput = {
@@ -21988,6 +23815,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewedPaymentsInput = {
@@ -22013,6 +23841,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedPaymentsInput = {
@@ -22101,6 +23930,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReconciledPaymentsInput = {
@@ -22126,6 +23956,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutVerifiedPaymentsInput = {
@@ -22162,6 +23993,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVerifiedPaymentsInput = {
@@ -22187,6 +24019,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReviewedPaymentsInput = {
@@ -22223,6 +24056,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedPaymentsInput = {
@@ -22248,6 +24082,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStatementImportsInput = {
@@ -22273,6 +24108,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStatementImportsInput = {
@@ -22298,6 +24134,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStatementImportsInput = {
@@ -22381,6 +24218,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStatementImportsInput = {
@@ -22406,6 +24244,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StatementImportRowUpsertWithWhereUniqueWithoutStatementImportInput = {
@@ -22531,6 +24370,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReminderCampaignsInput = {
@@ -22556,6 +24396,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReminderCampaignsInput = {
@@ -22597,6 +24438,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReminderCampaignsInput = {
@@ -22622,6 +24464,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutGeneratedReportsInput = {
@@ -22647,6 +24490,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGeneratedReportsInput = {
@@ -22672,6 +24516,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGeneratedReportsInput = {
@@ -22713,6 +24558,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGeneratedReportsInput = {
@@ -22738,6 +24584,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -22763,6 +24610,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -22788,6 +24636,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -22829,6 +24678,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -22854,18 +24704,27 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MessageCreateWithoutRepliesInput = {
     id?: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replyTo?: MessageCreateNestedOneWithoutRepliesInput
+    reactions?: ReactionCreateNestedManyWithoutMessageInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
@@ -22876,12 +24735,20 @@ export namespace Prisma {
     receiverId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     replyToId?: string | null
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
+    reactions?: ReactionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutRepliesInput = {
@@ -22893,12 +24760,20 @@ export namespace Prisma {
     id?: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replies?: MessageCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionCreateNestedManyWithoutMessageInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
@@ -22909,12 +24784,20 @@ export namespace Prisma {
     receiverId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
     replies?: MessageUncheckedCreateNestedManyWithoutReplyToInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutReplyToInput = {
@@ -22924,6 +24807,30 @@ export namespace Prisma {
 
   export type MessageCreateManyReplyToInputEnvelope = {
     data: MessageCreateManyReplyToInput | MessageCreateManyReplyToInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReactionCreateWithoutMessageInput = {
+    id?: string
+    emoji: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutReactionsInput
+  }
+
+  export type ReactionUncheckedCreateWithoutMessageInput = {
+    id?: string
+    emoji: string
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type ReactionCreateOrConnectWithoutMessageInput = {
+    where: ReactionWhereUniqueInput
+    create: XOR<ReactionCreateWithoutMessageInput, ReactionUncheckedCreateWithoutMessageInput>
+  }
+
+  export type ReactionCreateManyMessageInputEnvelope = {
+    data: ReactionCreateManyMessageInput | ReactionCreateManyMessageInput[]
     skipDuplicates?: boolean
   }
 
@@ -22950,6 +24857,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -22975,6 +24883,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -23005,6 +24914,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    reactions?: ReactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -23030,6 +24940,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    reactions?: ReactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -23052,12 +24963,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replyTo?: MessageUpdateOneWithoutRepliesNestedInput
+    reactions?: ReactionUpdateManyWithoutMessageNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
@@ -23068,12 +24987,20 @@ export namespace Prisma {
     receiverId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reactions?: ReactionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUpsertWithWhereUniqueWithoutReplyToInput = {
@@ -23090,6 +25017,22 @@ export namespace Prisma {
   export type MessageUpdateManyWithWhereWithoutReplyToInput = {
     where: MessageScalarWhereInput
     data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutReplyToInput>
+  }
+
+  export type ReactionUpsertWithWhereUniqueWithoutMessageInput = {
+    where: ReactionWhereUniqueInput
+    update: XOR<ReactionUpdateWithoutMessageInput, ReactionUncheckedUpdateWithoutMessageInput>
+    create: XOR<ReactionCreateWithoutMessageInput, ReactionUncheckedCreateWithoutMessageInput>
+  }
+
+  export type ReactionUpdateWithWhereUniqueWithoutMessageInput = {
+    where: ReactionWhereUniqueInput
+    data: XOR<ReactionUpdateWithoutMessageInput, ReactionUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type ReactionUpdateManyWithWhereWithoutMessageInput = {
+    where: ReactionScalarWhereInput
+    data: XOR<ReactionUpdateManyMutationInput, ReactionUncheckedUpdateManyWithoutMessageInput>
   }
 
   export type UserUpsertWithoutSentMessagesInput = {
@@ -23126,6 +25069,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -23151,6 +25095,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReceivedMessagesInput = {
@@ -23187,6 +25132,7 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    reactions?: ReactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -23212,6 +25158,231 @@ export namespace Prisma {
     generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MessageCreateWithoutReactionsInput = {
+    id?: string
+    content: string
+    read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
+    createdAt?: Date | string
+    attachmentUrl?: string | null
+    attachmentName?: string | null
+    attachmentSize?: string | null
+    attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
+    replyTo?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutReplyToInput
+    sender: UserCreateNestedOneWithoutSentMessagesInput
+    receiver: UserCreateNestedOneWithoutReceivedMessagesInput
+  }
+
+  export type MessageUncheckedCreateWithoutReactionsInput = {
+    id?: string
+    senderId: string
+    receiverId: string
+    content: string
+    read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
+    createdAt?: Date | string
+    replyToId?: string | null
+    attachmentUrl?: string | null
+    attachmentName?: string | null
+    attachmentSize?: string | null
+    attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
+    replies?: MessageUncheckedCreateNestedManyWithoutReplyToInput
+  }
+
+  export type MessageCreateOrConnectWithoutReactionsInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutReactionsInput, MessageUncheckedCreateWithoutReactionsInput>
+  }
+
+  export type UserCreateWithoutReactionsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName?: string | null
+    lastName?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
+    profilePictureUrl?: string | null
+    currentSessionId?: string | null
+    sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student?: StudentCreateNestedOneWithoutUserInput
+    verifiedPayments?: PaymentCreateNestedManyWithoutVerifierInput
+    reviewedPayments?: PaymentCreateNestedManyWithoutReviewerInput
+    reconciledPayments?: PaymentCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignCreateNestedManyWithoutUserInput
+    generatedReports?: GeneratedReportCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+  }
+
+  export type UserUncheckedCreateWithoutReactionsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName?: string | null
+    lastName?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
+    profilePictureUrl?: string | null
+    currentSessionId?: string | null
+    sessionExpires?: Date | string | null
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student?: StudentUncheckedCreateNestedOneWithoutUserInput
+    verifiedPayments?: PaymentUncheckedCreateNestedManyWithoutVerifierInput
+    reviewedPayments?: PaymentUncheckedCreateNestedManyWithoutReviewerInput
+    reconciledPayments?: PaymentUncheckedCreateNestedManyWithoutReconcilerInput
+    statementImports?: StatementImportUncheckedCreateNestedManyWithoutUserInput
+    reminderCampaigns?: ReminderCampaignUncheckedCreateNestedManyWithoutUserInput
+    generatedReports?: GeneratedReportUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+  }
+
+  export type UserCreateOrConnectWithoutReactionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReactionsInput, UserUncheckedCreateWithoutReactionsInput>
+  }
+
+  export type MessageUpsertWithoutReactionsInput = {
+    update: XOR<MessageUpdateWithoutReactionsInput, MessageUncheckedUpdateWithoutReactionsInput>
+    create: XOR<MessageCreateWithoutReactionsInput, MessageUncheckedCreateWithoutReactionsInput>
+    where?: MessageWhereInput
+  }
+
+  export type MessageUpdateToOneWithWhereWithoutReactionsInput = {
+    where?: MessageWhereInput
+    data: XOR<MessageUpdateWithoutReactionsInput, MessageUncheckedUpdateWithoutReactionsInput>
+  }
+
+  export type MessageUpdateWithoutReactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
+    attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
+    attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replyTo?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutReplyToNestedInput
+    sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
+    receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutReactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    receiverId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
+    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
+    attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
+    attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    replies?: MessageUncheckedUpdateManyWithoutReplyToNestedInput
+  }
+
+  export type UserUpsertWithoutReactionsInput = {
+    update: XOR<UserUpdateWithoutReactionsInput, UserUncheckedUpdateWithoutReactionsInput>
+    create: XOR<UserCreateWithoutReactionsInput, UserUncheckedCreateWithoutReactionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReactionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReactionsInput, UserUncheckedUpdateWithoutReactionsInput>
+  }
+
+  export type UserUpdateWithoutReactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUpdateOneWithoutUserNestedInput
+    verifiedPayments?: PaymentUpdateManyWithoutVerifierNestedInput
+    reviewedPayments?: PaymentUpdateManyWithoutReviewerNestedInput
+    reconciledPayments?: PaymentUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUpdateManyWithoutUserNestedInput
+    generatedReports?: GeneratedReportUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    currentSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUncheckedUpdateOneWithoutUserNestedInput
+    verifiedPayments?: PaymentUncheckedUpdateManyWithoutVerifierNestedInput
+    reviewedPayments?: PaymentUncheckedUpdateManyWithoutReviewerNestedInput
+    reconciledPayments?: PaymentUncheckedUpdateManyWithoutReconcilerNestedInput
+    statementImports?: StatementImportUncheckedUpdateManyWithoutUserNestedInput
+    reminderCampaigns?: ReminderCampaignUncheckedUpdateManyWithoutUserNestedInput
+    generatedReports?: GeneratedReportUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
   }
 
   export type PaymentCreateManyVerifierInput = {
@@ -23366,12 +25537,19 @@ export namespace Prisma {
     receiverId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     replyToId?: string | null
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
   }
 
   export type MessageCreateManyReceiverInput = {
@@ -23379,12 +25557,26 @@ export namespace Prisma {
     senderId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     replyToId?: string | null
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
+  }
+
+  export type ReactionCreateManyUserInput = {
+    id?: string
+    emoji: string
+    messageId: string
+    createdAt?: Date | string
   }
 
   export type PaymentUpdateWithoutVerifierInput = {
@@ -23834,13 +26026,21 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replyTo?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUpdateManyWithoutMessageNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
 
@@ -23849,13 +26049,21 @@ export namespace Prisma {
     receiverId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replies?: MessageUncheckedUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutSenderInput = {
@@ -23863,25 +26071,40 @@ export namespace Prisma {
     receiverId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageUpdateWithoutReceiverInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replyTo?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUpdateManyWithoutMessageNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
   }
 
@@ -23890,13 +26113,21 @@ export namespace Prisma {
     senderId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replies?: MessageUncheckedUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutReceiverInput = {
@@ -23904,12 +26135,40 @@ export namespace Prisma {
     senderId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ReactionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    message?: MessageUpdateOneRequiredWithoutReactionsNestedInput
+  }
+
+  export type ReactionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReactionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentCreateManyStudentInput = {
@@ -24114,23 +26373,45 @@ export namespace Prisma {
     receiverId: string
     content: string
     read?: boolean
+    readAt?: Date | string | null
+    delivered?: boolean
+    deliveredAt?: Date | string | null
     createdAt?: Date | string
     attachmentUrl?: string | null
     attachmentName?: string | null
     attachmentSize?: string | null
     attachmentType?: string | null
+    edited?: boolean
+    editedAt?: Date | string | null
+    deleted?: boolean
+    deletedAt?: Date | string | null
+  }
+
+  export type ReactionCreateManyMessageInput = {
+    id?: string
+    emoji: string
+    userId: string
+    createdAt?: Date | string
   }
 
   export type MessageUpdateWithoutReplyToInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replies?: MessageUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUpdateManyWithoutMessageNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
@@ -24141,12 +26422,20 @@ export namespace Prisma {
     receiverId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     replies?: MessageUncheckedUpdateManyWithoutReplyToNestedInput
+    reactions?: ReactionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutReplyToInput = {
@@ -24155,11 +26444,39 @@ export namespace Prisma {
     receiverId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered?: BoolFieldUpdateOperationsInput | boolean
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentSize?: NullableStringFieldUpdateOperationsInput | string | null
     attachmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    edited?: BoolFieldUpdateOperationsInput | boolean
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ReactionUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReactionsNestedInput
+  }
+
+  export type ReactionUncheckedUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReactionUncheckedUpdateManyWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emoji?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
