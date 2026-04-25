@@ -61,6 +61,11 @@ export function MessagesPage() {
         // Load initial messages
         loadMessages(activeUser.id);
 
+        // Mark messages as delivered (when receiver opens conversation)
+        if (user?.id !== activeUser.id) {
+            apiFetch(`/messages/${activeUser.id}/delivered`, { method: 'POST' }).catch(() => {});
+        }
+
         // Join conversation room for real-time updates
         joinConversation(activeUser.id);
 
@@ -856,8 +861,16 @@ export function MessagesPage() {
                                                                             {timeStr}
                                                                         </span>
                                                                         {isMe && !msg.deleted && (
-                                                                            <span className={msg.read || msg.readAt ? "text-[#53bdeb]" : "text-[#8696a0] dark:text-slate-500"}>
+                                                                            <span className={
+                                                                                msg.read || msg.readAt 
+                                                                                    ? "text-[#53bdeb]" // Read - blue double check
+                                                                                    : msg.delivered 
+                                                                                        ? "text-[#8696a0] dark:text-slate-400" // Delivered - grey double check
+                                                                                        : "text-[#8696a0] dark:text-slate-500" // Sent - grey single check
+                                                                            }>
                                                                                 {msg.read || msg.readAt ? (
+                                                                                    <CheckCheck className="h-3.5 w-3.5" />
+                                                                                ) : msg.delivered ? (
                                                                                     <CheckCheck className="h-3.5 w-3.5" />
                                                                                 ) : (
                                                                                     <Check className="h-3.5 w-3.5" />
