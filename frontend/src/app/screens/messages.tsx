@@ -477,24 +477,49 @@ export function MessagesPage() {
                                                         )}
                                                         
                                                         {/* File attachment */}
-                                                        {(msg.attachmentUrl || msg.attachment?.url) && (
-                                                            <div className={`mb-2 p-2.5 rounded-lg flex items-center gap-3 ${isMe ? 'bg-primary/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
-                                                                <div className="h-10 w-10 rounded-lg bg-primary/30 flex items-center justify-center">
-                                                                    <FileText className="h-5 w-5 text-primary" />
+                                                        {(msg.attachmentUrl || msg.attachment?.url) && (() => {
+                                                            const attUrl = msg.attachmentUrl || msg.attachment?.url;
+                                                            const attName = msg.attachmentName || msg.attachment?.name;
+                                                            const attSize = msg.attachmentSize || msg.attachment?.size;
+                                                            const attType = msg.attachment?.type;
+                                                            const fullAttUrl = `${import.meta.env.VITE_API_URL || ''}${attUrl}`;
+                                                            const isImg = (() => {
+                                                                if (attType && attType.startsWith('image/')) return true;
+                                                                if (attUrl) {
+                                                                    const lowerUrl = attUrl.toLowerCase();
+                                                                    return lowerUrl.endsWith('.jpg') || lowerUrl.endsWith('.jpeg') || lowerUrl.endsWith('.png') || lowerUrl.endsWith('.gif') || lowerUrl.endsWith('.webp');
+                                                                }
+                                                                return false;
+                                                            })();
+
+                                                            return (
+                                                                <div className={`mb-2 p-2.5 rounded-lg flex flex-col gap-2 ${isMe ? 'bg-primary/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                                                    {isImg && (
+                                                                        <a href={fullAttUrl} target="_blank" rel="noopener noreferrer" className="block w-full overflow-hidden rounded-md bg-black/5 flex items-center justify-center">
+                                                                            <img src={fullAttUrl} alt={attName} className="max-h-[250px] max-w-full object-contain rounded-md" />
+                                                                        </a>
+                                                                    )}
+                                                                    <div className="flex items-center gap-3 w-full">
+                                                                        <div className="h-10 w-10 shrink-0 rounded-lg bg-primary/30 flex items-center justify-center">
+                                                                            <FileText className="h-5 w-5 text-primary" />
+                                                                        </div>
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <p className="text-sm font-medium truncate">{attName}</p>
+                                                                            <p className="text-xs opacity-60">{attSize}</p>
+                                                                        </div>
+                                                                        <a 
+                                                                            href={fullAttUrl} 
+                                                                            download 
+                                                                            target="_blank" 
+                                                                            rel="noreferrer"
+                                                                            className={`p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 ${isMe ? 'text-[#111b21] dark:text-white' : 'text-[#111b21] dark:text-white'}`}
+                                                                        >
+                                                                            <Download className="h-4 w-4" />
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="flex-1 min-w-0">
-                                                                    <p className="text-sm font-medium truncate">{msg.attachmentName || msg.attachment?.name}</p>
-                                                                    <p className="text-xs opacity-60">{msg.attachmentSize || msg.attachment?.size}</p>
-                                                                </div>
-                                                                <a 
-                                                                    href={`${import.meta.env.VITE_API_URL || ''}${msg.attachmentUrl || msg.attachment?.url}`} 
-                                                                    download 
-                                                                    className="p-1.5 rounded-full hover:bg-black/10 dark:hover:bg-white/10"
-                                                                >
-                                                                    <Download className="h-4 w-4" />
-                                                                </a>
-                                                            </div>
-                                                        )}
+                                                            );
+                                                        })()}
                                                         
                                                         <div className="flex flex-col min-w-[60px]">
                                                             <span className="whitespace-pre-wrap [word-break:break-word] text-[14px] md:text-[15px] pb-0.5">{msg.content}</span>
@@ -588,6 +613,21 @@ export function MessagesPage() {
                             )}
                             
                             <form onSubmit={handleSendMessage} className="flex gap-3 items-end">
+                                {!isStudent && (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button type="button" variant="ghost" size="icon" className="h-11 w-11 rounded-full shrink-0 hover:bg-slate-200 dark:hover:bg-slate-800" title="Quick replies">
+                                                <Zap className="h-5 w-5 text-amber-500" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="start" className="w-64 max-w-[90vw]">
+                                            <DropdownMenuItem onClick={() => setContent('Your receipt is missing a reference number. Please provide it.')}>Missing Reference</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setContent('Your payment has been successfully verified. Thank you.')}>Payment Verified</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setContent('Your financial clearance letter is now available for download on your dashboard.')}>Clearance Ready</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setContent('Please provide a clearer picture of your receipt. The details are illegible.')}>Illegible Receipt</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )}
                                 <input
                                     type="file"
                                     ref={fileInputRef}
