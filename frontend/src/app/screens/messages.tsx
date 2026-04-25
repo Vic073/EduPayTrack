@@ -20,6 +20,7 @@ export function MessagesPage() {
         markMessagesRead,
         onNewMessage, 
         onMessagesRead,
+        onMessageReaction,
         isUserOnline,
         isUserTyping 
     } = useWebSocket();
