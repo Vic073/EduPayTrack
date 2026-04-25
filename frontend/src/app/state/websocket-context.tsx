@@ -37,6 +37,21 @@ type WebSocketContextValue = {
         receiverId: string;
         reactions: any[];
     }) => void) => () => void;
+    onMessageEdited: (callback: (data: {
+        messageId: string;
+        content: string;
+        edited: boolean;
+        editedAt: string;
+        senderId: string;
+        receiverId: string;
+    }) => void) => () => void;
+    onMessageDeleted: (callback: (data: {
+        messageId: string;
+        deleted: boolean;
+        deletedAt: string;
+        senderId: string;
+        receiverId: string;
+    }) => void) => () => void;
     isUserOnline: (userId: string) => boolean;
     isUserTyping: (userId: string) => boolean;
 };
@@ -223,6 +238,39 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
         };
     }, []);
 
+    const onMessageEdited = useCallback((callback: (data: {
+        messageId: string;
+        content: string;
+        edited: boolean;
+        editedAt: string;
+        senderId: string;
+        receiverId: string;
+    }) => void) => {
+        const socket = socketRef.current;
+        if (!socket) return () => {};
+
+        socket.on('message_edited', callback);
+        return () => {
+            socket.off('message_edited', callback);
+        };
+    }, []);
+
+    const onMessageDeleted = useCallback((callback: (data: {
+        messageId: string;
+        deleted: boolean;
+        deletedAt: string;
+        senderId: string;
+        receiverId: string;
+    }) => void) => {
+        const socket = socketRef.current;
+        if (!socket) return () => {};
+
+        socket.on('message_deleted', callback);
+        return () => {
+            socket.off('message_deleted', callback);
+        };
+    }, []);
+
     const isUserOnline = useCallback((userId: string) => {
         return onlineUsers.has(userId);
     }, [onlineUsers]);
@@ -245,6 +293,8 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
         onMessagesRead,
         onUserStatusChange,
         onMessageReaction,
+        onMessageEdited,
+        onMessageDeleted,
         isUserOnline,
         isUserTyping,
     };

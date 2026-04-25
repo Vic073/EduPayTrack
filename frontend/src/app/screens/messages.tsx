@@ -21,6 +21,8 @@ export function MessagesPage() {
         onNewMessage, 
         onMessagesRead,
         onMessageReaction,
+        onMessageEdited,
+        onMessageDeleted,
         isUserOnline,
         isUserTyping 
     } = useWebSocket();
@@ -38,6 +40,8 @@ export function MessagesPage() {
     const [replyingTo, setReplyingTo] = useState<any | null>(null);
     const [uploading, setUploading] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [editingMessage, setEditingMessage] = useState<any | null>(null);
+    const [editContent, setEditContent] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -122,13 +126,49 @@ export function MessagesPage() {
             }
         });
 
+        // Subscribe to message edits
+        const unsubscribeEdit = onMessageEdited((data) => {
+            const isRelevantEdit = 
+                (data.senderId === user?.id && data.receiverId === activeUser.id) ||
+                (data.senderId === activeUser.id && data.receiverId === user?.id);
+
+            if (isRelevantEdit) {
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        msg.id === data.messageId 
+                            ? { ...msg, content: data.content, edited: data.edited, editedAt: data.editedAt } 
+                            : msg
+                    )
+                );
+            }
+        });
+
+        // Subscribe to message deletions
+        const unsubscribeDelete = onMessageDeleted((data) => {
+            const isRelevantDelete = 
+                (data.senderId === user?.id && data.receiverId === activeUser.id) ||
+                (data.senderId === activeUser.id && data.receiverId === user?.id);
+
+            if (isRelevantDelete) {
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        msg.id === data.messageId 
+                            ? { ...msg, content: '[deleted]', deleted: data.deleted, deletedAt: data.deletedAt } 
+                            : msg
+                    )
+                );
+            }
+        });
+
         return () => {
             unsubscribe();
             unsubscribeRead();
             unsubscribeReaction();
+            unsubscribeEdit();
+            unsubscribeDelete();
             leaveConversation(activeUser.id);
         };
-    }, [activeUser, user?.id, joinConversation, leaveConversation, onNewMessage, onMessagesRead, onMessageReaction, markMessagesRead]);
+    }, [activeUser, user?.id, joinConversation, leaveConversation, onNewMessage, onMessagesRead, onMessageReaction, onMessageEdited, onMessageDeleted, markMessagesRead]);
 
     useEffect(() => {
         // Reset lastReadMessageId when conversation changes
