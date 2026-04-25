@@ -28,6 +28,15 @@ type WebSocketContextValue = {
     onNewMessage: (callback: (message: any) => void) => () => void;
     onMessagesRead: (callback: (data: { byUserId: string; conversationId: string }) => void) => () => void;
     onUserStatusChange: (callback: (status: OnlineStatus) => void) => () => void;
+    onMessageReaction: (callback: (data: {
+        messageId: string;
+        emoji: string;
+        userId: string;
+        isAdded: boolean;
+        senderId: string;
+        receiverId: string;
+        reactions: any[];
+    }) => void) => () => void;
     isUserOnline: (userId: string) => boolean;
     isUserTyping: (userId: string) => boolean;
 };
@@ -196,6 +205,24 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
         };
     }, []);
 
+    const onMessageReaction = useCallback((callback: (data: {
+        messageId: string;
+        emoji: string;
+        userId: string;
+        isAdded: boolean;
+        senderId: string;
+        receiverId: string;
+        reactions: any[];
+    }) => void) => {
+        const socket = socketRef.current;
+        if (!socket) return () => {};
+
+        socket.on('message_reaction', callback);
+        return () => {
+            socket.off('message_reaction', callback);
+        };
+    }, []);
+
     const isUserOnline = useCallback((userId: string) => {
         return onlineUsers.has(userId);
     }, [onlineUsers]);
@@ -217,6 +244,7 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
         onNewMessage,
         onMessagesRead,
         onUserStatusChange,
+        onMessageReaction,
         isUserOnline,
         isUserTyping,
     };
