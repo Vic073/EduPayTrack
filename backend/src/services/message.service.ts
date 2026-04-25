@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import { UserRole } from '../generated/prisma';
+import { broadcastNewMessage } from './websocket.service';
 
 interface AttachmentData {
     url: string;
@@ -32,7 +33,7 @@ export async function sendMessage(
         data.attachmentType = attachment.type;
     }
 
-    return prisma.message.create({
+    const message = await prisma.message.create({
         data,
         include: {
             sender: {
@@ -50,6 +51,11 @@ export async function sendMessage(
             }
         }
     });
+
+    // Broadcast the new message via WebSocket
+    broadcastNewMessage(message);
+
+    return message;
 }
 
 export async function getConversation(userId: string, otherUserId: string) {
