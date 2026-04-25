@@ -22,6 +22,7 @@ export function MessagesPage() {
     const [isSearching, setIsSearching] = useState(false);
     const [replyingTo, setReplyingTo] = useState<any | null>(null);
     const [uploading, setUploading] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -327,7 +328,7 @@ export function MessagesPage() {
                                     </div>
                                     <p className={`text-xs truncate ${conv.unreadCount > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
                                         {conv.unreadCount > 0 && <span className="text-primary mr-1">{conv.unreadCount} new •</span>}
-                                        {conv.lastMessage?.content || 'No messages yet'}
+                                        {conv.lastMessage?.content || (conv.lastMessage?.attachmentUrl || conv.lastMessage?.attachment?.url ? ((conv.lastMessage?.attachment?.type && conv.lastMessage.attachment.type.startsWith('image/')) || (conv.lastMessage.attachmentUrl || conv.lastMessage.attachment?.url || '').match(/\.(jpg|jpeg|png|gif|webp)$/i) ? '📷 Photo' : '📎 Attachment') : 'No messages yet')}
                                     </p>
                                 </div>
                             </button>
@@ -495,9 +496,9 @@ export function MessagesPage() {
                                                             return (
                                                                 <div className={`mb-2 p-2.5 rounded-lg flex flex-col gap-2 ${isMe ? 'bg-primary/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
                                                                     {isImg && (
-                                                                        <a href={fullAttUrl} target="_blank" rel="noopener noreferrer" className="block w-full overflow-hidden rounded-md bg-black/5 flex items-center justify-center">
-                                                                            <img src={fullAttUrl} alt={attName} className="max-h-[250px] max-w-full object-contain rounded-md" />
-                                                                        </a>
+                                                                        <button type="button" onClick={() => setSelectedImage(fullAttUrl)} className="block w-full overflow-hidden rounded-md bg-black/5 flex items-center justify-center cursor-zoom-in">
+                                                                            <img src={fullAttUrl} alt={attName} className="max-h-[250px] max-w-full object-contain rounded-md hover:scale-[1.02] transition-transform duration-200" />
+                                                                        </button>
                                                                     )}
                                                                     <div className="flex items-center gap-3 w-full">
                                                                         <div className="h-10 w-10 shrink-0 rounded-lg bg-primary/30 flex items-center justify-center">
@@ -680,6 +681,21 @@ export function MessagesPage() {
                     </div>
                 )}
             </Card>
+            
+            {/* Image Modal */}
+            {selectedImage && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10 animate-in fade-in duration-200" onClick={() => setSelectedImage(null)}>
+                    <button className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2.5 transition-all">
+                        <X className="h-6 w-6" />
+                    </button>
+                    <img 
+                        src={selectedImage} 
+                        alt="Fullscreen preview" 
+                        className="max-w-full max-h-full object-contain shadow-2xl ring-1 ring-white/10 rounded-md animate-in zoom-in-95 duration-200" 
+                        onClick={(e) => e.stopPropagation()} 
+                    />
+                </div>
+            )}
         </div>
     );
 }
