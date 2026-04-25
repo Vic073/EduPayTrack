@@ -106,12 +106,29 @@ export function MessagesPage() {
             }
         });
 
+        // Subscribe to real-time reactions
+        const unsubscribeReaction = onMessageReaction((data) => {
+            // Only update if reaction is for current conversation
+            const isRelevantReaction = 
+                (data.senderId === user?.id && data.receiverId === activeUser.id) ||
+                (data.senderId === activeUser.id && data.receiverId === user?.id);
+
+            if (isRelevantReaction) {
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        msg.id === data.messageId ? { ...msg, reactions: data.reactions } : msg
+                    )
+                );
+            }
+        });
+
         return () => {
             unsubscribe();
             unsubscribeRead();
+            unsubscribeReaction();
             leaveConversation(activeUser.id);
         };
-    }, [activeUser, user?.id, joinConversation, leaveConversation, onNewMessage, onMessagesRead, markMessagesRead]);
+    }, [activeUser, user?.id, joinConversation, leaveConversation, onNewMessage, onMessagesRead, onMessageReaction, markMessagesRead]);
 
     useEffect(() => {
         // Reset lastReadMessageId when conversation changes
