@@ -4,14 +4,17 @@ import { Toaster } from 'sonner';
 
 import { AuthProvider } from './state/auth-context';
 import { AccessibilityProvider } from './state/accessibility-context';
+import { WebSocketProvider } from './state/websocket-context';
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="edu-pay-track-theme">
       <AccessibilityProvider>
         <AuthProvider>
-          {children}
-          <Toaster richColors position="top-right" />
+          <WebSocketProvider>
+            {children}
+            <Toaster richColors position="top-right" />
+          </WebSocketProvider>
         </AuthProvider>
       </AccessibilityProvider>
     </ThemeProvider>
