@@ -12,7 +12,8 @@ import {
     getAccountsUsers,
     toggleReaction,
     editMessage,
-    deleteMessage
+    deleteMessage,
+    markMessagesAsDelivered
 } from '../services/message.service';
 
 // Ensure uploads directory exists
@@ -215,6 +216,21 @@ messageRouter.delete(
         res.status(200).json({
             success: true,
             message: 'Message deleted successfully',
+        });
+    })
+);
+
+// Mark messages from sender as delivered (when receiver opens conversation)
+messageRouter.post(
+    '/:senderId/delivered',
+    asyncHandler(async (req, res) => {
+        const { senderId } = req.params;
+        const receiverId = req.user!.userId;
+
+        const result = await markMessagesAsDelivered(receiverId, senderId);
+        res.status(200).json({
+            success: true,
+            message: `${result.count} messages marked as delivered`,
         });
     })
 );
