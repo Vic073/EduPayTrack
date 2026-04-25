@@ -369,30 +369,43 @@ export function MessagesPage() {
         setReplyingTo(null);
     };
 
-    // Handle reaction
+    // Handle reaction with optimistic UI and WebSocket sync
     const handleReaction = async (msgId: string, emoji: string) => {
+        // Optimistic update for instant feedback
+        const currentMsg = messages.find(m => m.id === msgId);
+        if (!currentMsg) return;
+
+        const currentReactions = currentMsg.reactions || [];
+        const existingReaction = currentReactions.find((r: any) => r.emoji === emoji && r.userId === user?.id);
+        const isAdding = !existingReaction;
+
+        // Apply optimistic update
+        setMessages(messages.map(m => {
+            if (m.id === msgId) {
+                if (isAdding) {
+                    return { ...m, reactions: [...currentReactions, { emoji, userId: user?.id }] };
+                } else {
+                    return { ...m, reactions: currentReactions.filter((r: any) => !(r.emoji === emoji && r.userId === user?.id)) };
+                }
+            }
+            return m;
+        }));
+
         try {
             await apiFetch(`/messages/${msgId}/reaction`, {
                 method: 'POST',
                 body: JSON.stringify({ emoji }),
             });
-            // Update local state
+            // WebSocket will sync the actual state with other users
+        } catch (error) {
+            // Revert on error
+            console.error('Error adding reaction:', error);
             setMessages(messages.map(m => {
                 if (m.id === msgId) {
-                    const reactions = m.reactions || [];
-                    const existing = reactions.find((r: any) => r.emoji === emoji);
-                    if (existing) {
-                        return {
-                            ...m,
-                            reactions: reactions.filter((r: any) => !(r.emoji === emoji && r.userId === user?.id))
-                        };
-                    }
-                    return { ...m, reactions: [...reactions, { emoji, userId: user?.id }] };
+                    return { ...m, reactions: currentReactions };
                 }
                 return m;
             }));
-        } catch (error) {
-            console.error('Error adding reaction:', error);
         }
     };
 
@@ -674,19 +687,34 @@ export function MessagesPage() {
                                                 </div>
                                             </div>
                                             
-                                            {/* Reactions */}
+                                            {/* Reactions - grouped by emoji with counts */}
                                             {msg.reactions && msg.reactions.length > 0 && (
                                                 <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} mt-1`}>
                                                     <div className="flex gap-1 flex-wrap max-w-[80%]">
-                                                        {msg.reactions.map((reaction: any, ridx: number) => (
-                                                            <button
-                                                                key={ridx}
-                                                                onClick={() => handleReaction(msg.id, reaction.emoji)}
-                                                                className={`text-xs px-1.5 py-0.5 rounded-full border shadow-sm transition-all hover:scale-105 ${reaction.userId === user?.id ? 'bg-primary/20 border-primary/30' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
-                                                            >
-                                                                {reaction.emoji} {reaction.count > 1 && <span className="text-[10px] ml-0.5">{reaction.count}</span>}
-                                                            </button>
-                                                        ))}
+                                                        {(() => {
+                                                            // Group reactions by emoji
+                                                            const grouped = msg.reactions.reduce((acc: any, reaction: any) => {
+                                                                if (!acc[reaction.emoji]) {
+                                                                    acc[reaction.emoji] = { count: 0, userIds: [] };
+                                                                }
+                                                                acc[reaction.emoji].count++;
+                                                                acc[reaction.emoji].userIds.push(reaction.userId);
+                                                                return acc;
+                                                            }, {});
+                                                            
+                                                            return Object.entries(grouped).map(([emoji, data]: [string, any]) => {
+                                                                const hasUserReacted = data.userIds.includes(user?.id);
+                                                                return (
+                                                                    <button
+                                                                        key={emoji}
+                                                                        onClick={() => handleReaction(msg.id, emoji)}
+                                                                        className={`text-xs px-1.5 py-0.5 rounded-full border shadow-sm transition-all hover:scale-105 ${hasUserReacted ? 'bg-primary/20 border-primary/30' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
+                                                                    >
+                                                                        {emoji} {data.count > 1 && <span className="text-[10px] ml-0.5">{data.count}</span>}
+                                                                    </button>
+                                                                );
+                                                            });
+                                                        })()}
                                                     </div>
                                                 </div>
                                             )}
