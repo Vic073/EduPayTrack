@@ -26,7 +26,7 @@ function ThemeToggle() {
 }
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
-  const { user, navItems, logout, notifications } = useAuth();
+  const { user, navItems, logout, notifications, unreadMessagesCount } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -71,6 +71,8 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             (item.href !== '/' && location.pathname.startsWith(item.href));
             
           const isNotifs = item.label === 'Notifications';
+          const isMessages = item.label === 'Messages';
+          const badgeCount = isNotifs ? unreadCount : isMessages ? unreadMessagesCount : 0;
 
           return (
             <NavLink
@@ -86,20 +88,20 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             >
               <div className="relative">
                 <Icon className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                {isNotifs && unreadCount > 0 && (
+                {badgeCount > 0 && (
                   <span
-                    key={`dot-${unreadCount}`}
+                    key={`dot-${item.label}-${badgeCount}`}
                     className="absolute -top-[2px] -right-[2px] h-[8px] w-[8px] rounded-full bg-primary ring-2 ring-sidebar border border-transparent animate-in zoom-in fade-in duration-200"
                   />
                 )}
               </div>
               <span className="flex-1 text-left truncate">{item.label}</span>
-              {isNotifs && unreadCount > 0 && (
+              {badgeCount > 0 && (
                 <div
-                  key={`badge-${unreadCount}`}
+                  key={`badge-${item.label}-${badgeCount}`}
                   className="flex h-[18px] min-w-[20px] items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-medium text-primary-foreground animate-in zoom-in fade-in duration-200"
                 >
-                  {unreadCount > 99 ? '99+' : unreadCount}
+                  {badgeCount > 99 ? '99+' : badgeCount}
                 </div>
               )}
             </NavLink>

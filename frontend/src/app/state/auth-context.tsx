@@ -41,6 +41,7 @@ type AuthContextValue = {
   user: AppUser | null;
   isLoading: boolean;
   notifications: NotificationItem[];
+  unreadMessagesCount: number;
   navItems: typeof studentNav | typeof adminNav;
   login: (values: LoginValues) => Promise<void>;
   register: (values: RegisterValues) => Promise<void>;
@@ -87,6 +88,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   });
   const [isLoading, setIsLoading] = useState(() => !!getToken());
   const [appNotifications, setAppNotifications] = useState<NotificationItem[]>([]);
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
 
   // Persist or clear user in localStorage
   useEffect(() => {
@@ -113,6 +115,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
           group: 'Today',
         }))
       );
+    } catch {
+      // ignore
+    }
+
+    try {
+      const convs = await apiFetch<any[]>('/messages/conversations');
+      const unread = convs.reduce((sum, c) => sum + (c.unreadCount || 0), 0);
+      setUnreadMessagesCount(unread);
     } catch {
       // ignore
     }
@@ -218,6 +228,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       user,
       isLoading,
       notifications: appNotifications,
+      unreadMessagesCount,
       navItems: user?.role === 'student'
         ? studentNav
         : user?.role === 'accounts'
@@ -230,7 +241,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       refreshNotifications,
       updateProfile,
     }),
-    [user, isLoading, appNotifications, login, register, logout, markAllRead, refreshNotifications, updateProfile]
+    [user, isLoading, appNotifications, unreadMessagesCount, login, register, logout, markAllRead, refreshNotifications, updateProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
