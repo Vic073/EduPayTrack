@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../state/auth-context';
 import { apiFetch, API_ORIGIN } from '../lib/api';
+import { exportChatToPdf } from '../lib/chat-export';
 import { Card, CardHeader, CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
@@ -249,6 +250,13 @@ export function MessagesPage() {
         }
     };
 
+    const handleExportPdf = () => {
+        if (!activeUser || !user) return;
+        const currentUserName = user.name || 'User';
+        const otherUserName = `${activeUser.firstName || ''} ${activeUser.lastName || ''}`.trim() || 'User';
+        exportChatToPdf(messages, user.id, currentUserName, otherUserName);
+    };
+
     // Search messages
     const filteredMessages = searchQuery.trim()
         ? messages.filter(msg => msg.content?.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -394,9 +402,14 @@ export function MessagesPage() {
                                             </button>
                                         </div>
                                     ) : (
-                                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={() => setIsSearching(true)}>
-                                            <Search className="h-5 w-5" />
-                                        </Button>
+                                        <>
+                                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={() => setIsSearching(true)} title="Search messages">
+                                                <Search className="h-5 w-5" />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={handleExportPdf} title="Export Chat to PDF">
+                                                <Download className="h-5 w-5" />
+                                            </Button>
+                                        </>
                                     )}
                                 </div>
                             </CardTitle>
