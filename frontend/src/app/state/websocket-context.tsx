@@ -52,6 +52,12 @@ type WebSocketContextValue = {
         senderId: string;
         receiverId: string;
     }) => void) => () => void;
+    onMessagesDelivered: (callback: (data: {
+        senderId: string;
+        receiverId: string;
+        messageIds: string[];
+        deliveredAt: string;
+    }) => void) => () => void;
     isUserOnline: (userId: string) => boolean;
     isUserTyping: (userId: string) => boolean;
 };
