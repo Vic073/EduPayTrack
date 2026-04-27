@@ -5,6 +5,12 @@ export const API_ORIGIN = new URL(API_BASE_URL).origin;
 const TOKEN_KEY = 'edu-pay-track-token';
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504]);
 const MAX_RETRIES = 2;
+const AUTH_ERROR_CODES = new Set([
+  'SESSION_REVOKED',
+  'SESSION_EXPIRED',
+  'ACCOUNT_INACTIVE',
+  'SESSION_USER_MISSING',
+]);
 
 /**
  * Retrieve the stored JWT token.
@@ -39,6 +45,22 @@ export class ApiError extends Error {
     this.name = 'ApiError';
     this.status = status;
     this.data = data;
+  }
+}
+
+function notifySessionInvalidated(error: ApiError): void {
+  const code = error.data?.code;
+  const isAuthStatus = error.status === 401 || (error.status === 403 && code === 'ACCOUNT_INACTIVE');
+
+  if (typeof window !== 'undefined' && isAuthStatus && AUTH_ERROR_CODES.has(code)) {
+    window.dispatchEvent(
+      new CustomEvent('auth:session-invalid', {
+        detail: {
+          code,
+          message: error.message,
+        },
+      })
+    );
   }
 }
 
@@ -118,6 +140,7 @@ export async function apiFetch<T>(
             : new ApiError((error as Error).message || 'Network error', 0);
 
       if (!shouldRetry(method, normalizedError, attempt)) {
+        notifySessionInvalidated(normalizedError);
         throw normalizedError;
       }
 
@@ -148,7 +171,9 @@ export async function downloadApiFile(
   if (!response.ok) {
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const rawData = isJson ? await response.json() : null;
-    throw new ApiError(rawData?.message || `Request failed (${response.status})`, response.status, rawData);
+    const error = new ApiError(rawData?.message || `Request failed (${response.status})`, response.status, rawData);
+    notifySessionInvalidated(error);
+    throw error;
   }
 
   const blob = await response.blob();

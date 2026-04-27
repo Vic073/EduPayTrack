@@ -176,6 +176,8 @@ export const resetUserPassword = async (userId: string, input: unknown) => {
         where: { id: user.id },
         data: {
             passwordHash,
+            currentSessionId: null,
+            sessionExpires: null,
         },
     });
 

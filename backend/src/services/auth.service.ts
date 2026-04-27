@@ -39,6 +39,16 @@ const createSession = async (userId: string) => {
     return { sessionId, sessionExpires };
 };
 
+const clearSession = async (userId: string) => {
+    await prisma.user.update({
+        where: { id: userId },
+        data: {
+            currentSessionId: null,
+            sessionExpires: null,
+        },
+    });
+};
+
 /**
  * Retrieve the current authenticated user's profile from their JWT payload.
  * Used by GET /auth/me for session restoration on page reload.
@@ -170,6 +180,21 @@ export const registerStudent = async (input: unknown, ipAddress?: string) => {
         details: {
             studentCode: user.student?.studentCode,
             program: user.student?.program,
+        },
+    });
+
+    writeAuditLog({
+        action: 'session.start',
+        status: 'SUCCESS',
+        actor: {
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+            ipAddress,
+        },
+        details: {
+            login_timestamp: new Date().toISOString(),
+            source: 'registration',
         },
     });
 
@@ -343,10 +368,7 @@ export const logoutUser = async (
         }
     }
 
-    await prisma.user.update({
-        where: { id: userId },
-        data: { currentSessionId: null, sessionExpires: null }
-    });
+    await clearSession(userId);
 
     writeAuditLog({
         action: 'session.end',
@@ -378,10 +400,7 @@ export const terminateActiveSession = async (input: unknown, ipAddress?: string)
     const valid = await bcrypt.compare(data.password, user.passwordHash);
     if (!valid) throw new AppError('Invalid credentials', 401);
 
-    await prisma.user.update({
-        where: { id: user.id },
-        data: { currentSessionId: null, sessionExpires: null }
-    });
+    await clearSession(user.id);
 
     writeAuditLog({
         action: 'session.end',

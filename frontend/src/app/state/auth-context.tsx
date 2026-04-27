@@ -143,6 +143,22 @@ export function AuthProvider({ children }: PropsWithChildren) {
       .finally(() => setIsLoading(false));
   }, [refreshNotifications]);
 
+  useEffect(() => {
+    const handleSessionInvalid = (event: Event) => {
+      const customEvent = event as CustomEvent<{ message?: string }>;
+      clearToken();
+      setUser(null);
+      setAppNotifications([]);
+      setUnreadMessagesCount(0);
+      toast.error(customEvent.detail?.message || 'Your session is no longer active. Please sign in again.');
+    };
+
+    window.addEventListener('auth:session-invalid', handleSessionInvalid as EventListener);
+    return () => {
+      window.removeEventListener('auth:session-invalid', handleSessionInvalid as EventListener);
+    };
+  }, []);
+
   // Real-time notifications polling
   useEffect(() => {
     if (!user) return;
