@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useCallback, useState, type PropsWithChildren } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { getToken, hasLegacyToken } from '../lib/api';
 import { useAuth } from './auth-context';
 
 /* ---------- Types ---------- */
@@ -89,7 +88,6 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
 
         console.log('[WebSocket] Connecting to server...');
         const socket = io(SOCKET_URL, {
-            auth: hasLegacyToken() ? { token: getToken() } : undefined,
             transports: ['websocket', 'polling'],
             withCredentials: true,
             reconnection: true,

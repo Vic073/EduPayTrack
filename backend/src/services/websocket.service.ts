@@ -2,7 +2,7 @@ import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { env } from '../config/env';
 import { prisma } from '../lib/prisma';
-import { extractTokenFromAuthSources, verifyToken } from '../utils/auth';
+import { extractTokenFromCookies, verifyToken } from '../utils/auth';
 
 // User socket mapping: userId -> Set of socket IDs
 const userSockets = new Map<string, Set<string>>();
@@ -46,10 +46,7 @@ export function initializeWebSocket(server: HttpServer): SocketIOServer {
     // Authentication middleware
     io.use(async (socket: AuthenticatedSocket, next) => {
         try {
-            const legacyToken = socket.handshake.auth.token as string | undefined;
-            const token =
-                legacyToken ||
-                extractTokenFromAuthSources(undefined, socket.handshake.headers.cookie);
+            const token = extractTokenFromCookies(socket.handshake.headers.cookie);
             
             if (!token) {
                 return next(new Error('Authentication token required'));

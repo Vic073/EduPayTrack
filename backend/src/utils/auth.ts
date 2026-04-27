@@ -43,14 +43,7 @@ export const parseCookies = (cookieHeader?: string) => {
     return parsed;
 };
 
-export const extractTokenFromAuthSources = (
-    authorizationHeader?: string,
-    cookieHeader?: string
-) => {
-    if (authorizationHeader?.startsWith('Bearer ')) {
-        return authorizationHeader.split(' ')[1];
-    }
-
+export const extractTokenFromCookies = (cookieHeader?: string) => {
     const cookies = parseCookies(cookieHeader);
     return cookies.get(AUTH_COOKIE_NAME) ?? null;
 };

@@ -8,7 +8,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { toast } from 'sonner';
-import { apiFetch, clearToken } from '../lib/api';
+import { apiFetch } from '../lib/api';
 import { listNotifications, markAllNotificationsRead } from '../lib/notifications-api';
 import { adminNav, studentNav } from '../lib/navigation';
 import type { AppUser, NotificationItem, Role } from '../lib/auth-types';
@@ -130,7 +130,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
       })
       .catch(() => {
         // Token invalid — clear everything
-        clearToken();
         setUser(null);
       })
       .finally(() => setIsLoading(false));
@@ -139,7 +138,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const handleSessionInvalid = (event: Event) => {
       const customEvent = event as CustomEvent<{ message?: string }>;
-      clearToken();
       setUser(null);
       setAppNotifications([]);
       setUnreadMessagesCount(0);
@@ -167,7 +165,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    clearToken();
     const mappedUser = mapApiUserToAppUser(payload.user);
     setUser(mappedUser);
     toast.success(`Welcome back, ${mappedUser.name}`);
@@ -190,7 +187,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
         academicYear: values.year || undefined,
       }),
     });
-    clearToken();
     const mappedUser = mapApiUserToAppUser(payload.user);
     setUser(mappedUser);
     toast.success('Account created successfully!');
@@ -203,7 +199,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
     } catch {
       // ignore — log out locally regardless
     }
-    clearToken();
     setUser(null);
     toast.message('You have been signed out');
   }, []);

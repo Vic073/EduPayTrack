@@ -3,10 +3,10 @@ import { NextFunction, Request, Response } from 'express';
 
 import { prisma } from '../lib/prisma';
 import { AppError } from './error-handler';
-import { extractTokenFromAuthSources, verifyToken } from '../utils/auth';
+import { extractTokenFromCookies, verifyToken } from '../utils/auth';
 
 export const requireAuth = async (req: Request, _res: Response, next: NextFunction) => {
-    const token = extractTokenFromAuthSources(req.headers.authorization, req.headers.cookie);
+    const token = extractTokenFromCookies(req.headers.cookie);
 
     if (!token) {
         return next(new AppError('Authentication required', 401));

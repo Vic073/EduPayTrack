@@ -38,9 +38,9 @@ const loadDeps = async (): Promise<AuthDeps> => {
     return cachedDeps;
 };
 
-function createRequest(authorization?: string) {
+function createRequest(cookie?: string) {
     return {
-        headers: authorization ? { authorization } : {},
+        headers: cookie ? { cookie } : {},
     } as Request;
 }
 
@@ -73,16 +73,19 @@ test.afterEach(() => {
         cachedDeps.originalVerifyToken;
 });
 
-test('requireAuth attaches authenticated user when token and active session are valid', async () => {
+test('requireAuth attaches authenticated user when cookie session and active session are valid', async () => {
     const { requireAuth, prismaModule, authUtils, originalVerifyToken, originalFindUnique } = await loadDeps();
 
-    (authUtils as { verifyToken: typeof originalVerifyToken }).verifyToken = (() => ({
-        userId: 'user-1',
-        email: 'student@example.com',
-        role: 'STUDENT',
-        studentId: 'student-1',
-        sessionId: 'session-123',
-    })) as typeof originalVerifyToken;
+    (authUtils as { verifyToken: typeof originalVerifyToken }).verifyToken = ((token: string) => {
+        assert.equal(token, 'valid-cookie-token');
+        return {
+            userId: 'user-1',
+            email: 'student@example.com',
+            role: 'STUDENT',
+            studentId: 'student-1',
+            sessionId: 'session-123',
+        };
+    }) as typeof originalVerifyToken;
 
     prismaModule.prisma.user.findUnique = (async () => ({
         id: 'user-1',
@@ -94,7 +97,7 @@ test('requireAuth attaches authenticated user when token and active session are 
         student: { id: 'student-1' },
     })) as unknown as typeof originalFindUnique;
 
-    const req = createRequest('Bearer valid-token');
+    const req = createRequest('edupaytrack_session=valid-cookie-token');
     const result = await runRequireAuth(requireAuth, req);
 
     assert.equal(result.error, undefined);
@@ -167,7 +170,7 @@ test('requireAuth rejects revoked sessions with a specific error code', async ()
         student: null,
     })) as unknown as typeof originalFindUnique;
 
-    const result = await runRequireAuth(requireAuth, createRequest('Bearer revoked-token'));
+    const result = await runRequireAuth(requireAuth, createRequest('edupaytrack_session=revoked-cookie-token'));
 
     assert.ok(result.error);
     assert.equal(result.error?.message, 'Session is no longer active. Please sign in again.');
@@ -194,7 +197,7 @@ test('requireAuth rejects expired sessions even when the token parses', async ()
         student: null,
     })) as unknown as typeof originalFindUnique;
 
-    const result = await runRequireAuth(requireAuth, createRequest('Bearer expired-session-token'));
+    const result = await runRequireAuth(requireAuth, createRequest('edupaytrack_session=expired-session-cookie'));
 
     assert.ok(result.error);
     assert.equal(result.error?.message, 'Session expired. Please sign in again.');

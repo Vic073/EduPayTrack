@@ -2,7 +2,6 @@ const DEFAULT_API_BASE_URL = 'http://localhost:5000/api';
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
 export const API_BASE_URL = (configuredApiBaseUrl || DEFAULT_API_BASE_URL).replace(/\/+$/, '');
 export const API_ORIGIN = new URL(API_BASE_URL).origin;
-const TOKEN_KEY = 'edu-pay-track-token';
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504]);
 const MAX_RETRIES = 2;
 const AUTH_ERROR_CODES = new Set([
@@ -11,31 +10,6 @@ const AUTH_ERROR_CODES = new Set([
   'ACCOUNT_INACTIVE',
   'SESSION_USER_MISSING',
 ]);
-
-/**
- * Retrieve the stored JWT token.
- */
-export function getToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-/**
- * Store a JWT token.
- */
-export function setToken(token: string): void {
-  localStorage.setItem(TOKEN_KEY, token);
-}
-
-/**
- * Remove the stored JWT token.
- */
-export function clearToken(): void {
-  localStorage.removeItem(TOKEN_KEY);
-}
-
-export function hasLegacyToken(): boolean {
-  return Boolean(getToken());
-}
 
 /**
  * Structured API error with status code and server data.
@@ -87,7 +61,6 @@ function shouldRetry(method: string, error: unknown, attempt: number): boolean {
 /**
  * Low-level API client.
  * - Sends cookies for session-based auth
- * - Optionally attaches a legacy JWT Bearer token during migration
  * - Handles JSON and FormData payloads
  * - 30-second timeout via AbortController
  */
@@ -97,7 +70,6 @@ export async function apiFetch<T>(
   timeoutMs = 30000
 ): Promise<T> {
   const method = (options.method || 'GET').toUpperCase();
-  const token = getToken();
   const isFormData = options.body instanceof FormData;
 
   const headers: Record<string, string> = {
@@ -105,10 +77,6 @@ export async function apiFetch<T>(
     ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
     ...(options.headers as Record<string, string>),
   };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
     const controller = new AbortController();
@@ -163,16 +131,8 @@ export async function downloadApiFile(
   endpoint: string,
   fallbackFilename: string
 ): Promise<void> {
-  const token = getToken();
-  const headers: Record<string, string> = {};
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     credentials: 'include',
-    headers,
   });
 
   if (!response.ok) {
