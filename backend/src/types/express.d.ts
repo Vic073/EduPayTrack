@@ -5,6 +5,7 @@ declare namespace Express {
             email: string;
             role: import('../generated/prisma').UserRole;
             studentId?: string;
+            sessionId: string;
         };
     }
 }

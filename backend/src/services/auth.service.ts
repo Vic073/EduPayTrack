@@ -1,8 +1,10 @@
 import { UserRole } from '../generated/prisma';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { z } from 'zod';
 import path from 'path';
 
+import { env } from '../config/env';
 import { prisma } from '../lib/prisma';
 import { AppError } from '../middleware/error-handler';
 import { createToken } from '../utils/auth';
@@ -14,8 +16,28 @@ import {
 import { writeAuditLog, readAuditLogs } from '../utils/audit-log';
 import { recalculateStudentBalance } from '../utils/balance';
 
-// [SECTION: MEMORY STORAGE] - For temporary reset codes (when SMTP is not configured)
 const resetCodes = new Map<string, { code: string; expires: number }>();
+
+const resetPasswordSchema = z.object({
+    email: z.string().email(),
+    code: z.string().length(6),
+    newPassword: z.string().min(8),
+});
+
+const createSession = async (userId: string) => {
+    const sessionId = crypto.randomBytes(24).toString('hex');
+    const sessionExpires = new Date(Date.now() + 12 * 60 * 60 * 1000);
+
+    await prisma.user.update({
+        where: { id: userId },
+        data: {
+            currentSessionId: sessionId,
+            sessionExpires,
+        },
+    });
+
+    return { sessionId, sessionExpires };
+};
 
 /**
  * Retrieve the current authenticated user's profile from their JWT payload.
@@ -133,6 +155,7 @@ export const registerStudent = async (input: unknown, ipAddress?: string) => {
 
     const updatedStudent = await recalculateStudentBalance(user.student!.id);
     user.student = updatedStudent;
+    const { sessionId } = await createSession(user.id);
 
     writeAuditLog({
         action: 'student.registered',
@@ -156,6 +179,7 @@ export const registerStudent = async (input: unknown, ipAddress?: string) => {
             email: user.email,
             role: user.role,
             studentId: user.student?.id,
+            sessionId,
         }),
         user: {
             id: user.id,
@@ -250,16 +274,12 @@ export const loginUser = async (input: unknown, ipAddress?: string) => {
 
     // ------------------
 
-    const newSessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
-    const sessionExpires = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12h expiry
-
+    const { sessionId } = await createSession(user.id);
     await prisma.user.update({
         where: { id: user.id },
-        data: { 
-            currentSessionId: newSessionId,
-            sessionExpires,
+        data: {
             lastLoginAt: now,
-        }
+        },
     });
 
     clearLoginAttempts(data.email, ipAddress);
@@ -283,6 +303,7 @@ export const loginUser = async (input: unknown, ipAddress?: string) => {
             email: user.email,
             role: user.role,
             studentId: user.student?.id,
+            sessionId,
         }),
         user: {
             id: user.id,
@@ -296,7 +317,13 @@ export const loginUser = async (input: unknown, ipAddress?: string) => {
     };
 };
 
-export const logoutUser = async (userId: string, email: string, role: string, ipAddress?: string) => {
+export const logoutUser = async (
+    userId: string,
+    email: string,
+    role: string,
+    sessionId: string,
+    ipAddress?: string
+) => {
     // Find the last session.start for this user to calculate duration
     const logs = readAuditLogs(200);
     const lastStart = logs.find(l => l.action === 'session.start' && l.actor?.userId === userId);
@@ -334,6 +361,7 @@ export const logoutUser = async (userId: string, email: string, role: string, ip
             logout_timestamp: new Date().toISOString(),
             duration,
             session_start: lastStart?.timestamp,
+            sessionId,
         },
     });
 
@@ -374,9 +402,16 @@ export const terminateActiveSession = async (input: unknown, ipAddress?: string)
 };
 
 export const forgotPassword = async (email: string) => {
+    if (env.PASSWORD_RESET_MODE !== 'insecure-demo') {
+        throw new AppError(
+            'Self-service password reset is disabled in this deployment. Please contact an administrator.',
+            503,
+            'PASSWORD_RESET_DISABLED'
+        );
+    }
+
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-        // Always return success to prevent email enumeration
         return { message: 'If that email exists, a reset code has been generated.' };
     }
 
@@ -386,25 +421,32 @@ export const forgotPassword = async (email: string) => {
         expires: Date.now() + 10 * 60 * 1000, // 10 mins
     });
 
-    // Log the code to the audit log so the user can "receive" it in this environment
     writeAuditLog({
         action: 'auth.reset_code_generated',
         targetType: 'user',
         targetId: user.id,
         details: {
             email,
-            code,
-            note: 'SECURITY ALERT: Reset code logged for environment without SMTP'
+            note: 'Reset code generated in explicitly enabled insecure demo mode.',
         }
     });
 
-    console.log(`[PASS_RESET] Code for ${email}: ${code}`);
-
-    return { message: 'Reset code generated. Check audit logs or console.' };
+    return {
+        message: 'Reset code generated for demo mode.',
+        ...(env.NODE_ENV !== 'production' ? { demoCode: code } : {}),
+    };
 };
 
-export const resetPassword = async (input: any) => {
-    const { email, code, newPassword } = input;
+export const resetPassword = async (input: unknown) => {
+    if (env.PASSWORD_RESET_MODE !== 'insecure-demo') {
+        throw new AppError(
+            'Self-service password reset is disabled in this deployment. Please contact an administrator.',
+            503,
+            'PASSWORD_RESET_DISABLED'
+        );
+    }
+
+    const { email, code, newPassword } = resetPasswordSchema.parse(input);
     const stored = resetCodes.get(email);
 
     if (!stored || stored.code !== code || Date.now() > stored.expires) {
@@ -414,7 +456,11 @@ export const resetPassword = async (input: any) => {
     const passwordHash = await bcrypt.hash(newPassword, 10);
     await prisma.user.update({
         where: { email },
-        data: { passwordHash },
+        data: {
+            passwordHash,
+            currentSessionId: null,
+            sessionExpires: null,
+        },
     });
 
     resetCodes.delete(email);

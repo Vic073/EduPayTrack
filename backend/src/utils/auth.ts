@@ -8,11 +8,12 @@ export type AuthTokenPayload = {
     email: string;
     role: UserRole;
     studentId?: string;
+    sessionId: string;
 };
 
 export const createToken = (payload: AuthTokenPayload) => {
     return jwt.sign(payload, env.JWT_SECRET, {
-        expiresIn: '7d',
+        expiresIn: '12h',
     });
 };
 

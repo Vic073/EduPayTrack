@@ -1,10 +1,11 @@
 import { UserRole } from '../generated/prisma';
 import { NextFunction, Request, Response } from 'express';
 
+import { prisma } from '../lib/prisma';
 import { AppError } from './error-handler';
 import { verifyToken } from '../utils/auth';
 
-export const requireAuth = (req: Request, _res: Response, next: NextFunction) => {
+export const requireAuth = async (req: Request, _res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader?.startsWith('Bearer ')) {
@@ -14,9 +15,53 @@ export const requireAuth = (req: Request, _res: Response, next: NextFunction) =>
     const token = authHeader.split(' ')[1];
 
     try {
-        req.user = verifyToken(token);
+        const decoded = verifyToken(token);
+        const user = await prisma.user.findUnique({
+            where: { id: decoded.userId },
+            select: {
+                id: true,
+                email: true,
+                role: true,
+                status: true,
+                currentSessionId: true,
+                sessionExpires: true,
+                student: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+
+        if (!user) {
+            return next(new AppError('User not found', 401, 'SESSION_USER_MISSING'));
+        }
+
+        if (user.status !== 'ACTIVE') {
+            return next(new AppError('Account is not active', 403, 'ACCOUNT_INACTIVE'));
+        }
+
+        if (!user.currentSessionId || user.currentSessionId !== decoded.sessionId) {
+            return next(new AppError('Session is no longer active. Please sign in again.', 401, 'SESSION_REVOKED'));
+        }
+
+        if (!user.sessionExpires || user.sessionExpires <= new Date()) {
+            return next(new AppError('Session expired. Please sign in again.', 401, 'SESSION_EXPIRED'));
+        }
+
+        req.user = {
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+            studentId: user.student?.id,
+            sessionId: decoded.sessionId,
+        };
         next();
-    } catch {
+    } catch (error) {
+        if (error instanceof AppError) {
+            return next(error);
+        }
+
         next(new AppError('Invalid or expired token', 401));
     }
 };

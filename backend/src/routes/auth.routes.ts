@@ -65,6 +65,7 @@ authRouter.post(
             req.user!.userId,
             req.user!.email,
             req.user!.role,
+            req.user!.sessionId,
             req.ip
         );
         res.status(200).json(result);

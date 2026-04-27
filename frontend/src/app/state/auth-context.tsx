@@ -10,14 +10,8 @@ import {
 import { toast } from 'sonner';
 import { apiFetch, setToken, clearToken, getToken } from '../lib/api';
 import { listNotifications, markAllNotificationsRead } from '../lib/notifications-api';
-
-import {
-  adminNav,
-  studentNav,
-  type AppUser,
-  type NotificationItem,
-  type Role,
-} from '../lib/mock-data';
+import { adminNav, studentNav } from '../lib/navigation';
+import type { AppUser, NotificationItem, Role } from '../lib/auth-types';
 
 /* ---------- Types ---------- */
 
