@@ -1,8 +1,8 @@
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 import { prisma } from '../lib/prisma';
+import { extractTokenFromAuthSources, verifyToken } from '../utils/auth';
 
 // User socket mapping: userId -> Set of socket IDs
 const userSockets = new Map<string, Set<string>>();
@@ -46,24 +46,47 @@ export function initializeWebSocket(server: HttpServer): SocketIOServer {
     // Authentication middleware
     io.use(async (socket: AuthenticatedSocket, next) => {
         try {
-            const token = socket.handshake.auth.token as string;
+            const legacyToken = socket.handshake.auth.token as string | undefined;
+            const token =
+                legacyToken ||
+                extractTokenFromAuthSources(undefined, socket.handshake.headers.cookie);
             
             if (!token) {
                 return next(new Error('Authentication token required'));
             }
 
-            const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string; role: string };
+            const decoded = verifyToken(token);
             socket.userId = decoded.userId;
             socket.userRole = decoded.role;
             
-            // Verify user exists in database
+            // Verify user exists and the session is still active
             const user = await prisma.user.findUnique({
                 where: { id: decoded.userId },
-                select: { id: true, role: true, firstName: true, lastName: true }
+                select: {
+                    id: true,
+                    role: true,
+                    firstName: true,
+                    lastName: true,
+                    status: true,
+                    currentSessionId: true,
+                    sessionExpires: true,
+                }
             });
 
             if (!user) {
                 return next(new Error('User not found'));
+            }
+
+            if (user.status !== 'ACTIVE') {
+                return next(new Error('Account is not active'));
+            }
+
+            if (!user.currentSessionId || user.currentSessionId !== decoded.sessionId) {
+                return next(new Error('Session revoked'));
+            }
+
+            if (!user.sessionExpires || user.sessionExpires <= new Date()) {
+                return next(new Error('Session expired'));
             }
 
             next();

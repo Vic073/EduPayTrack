@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useCallback, useState, type PropsWithChildren } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { getToken } from '../lib/api';
+import { getToken, hasLegacyToken } from '../lib/api';
+import { useAuth } from './auth-context';
 
 /* ---------- Types ---------- */
 
@@ -69,6 +70,7 @@ const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export function WebSocketProvider({ children }: PropsWithChildren) {
+    const { user } = useAuth();
     const socketRef = useRef<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
@@ -76,16 +78,20 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
 
     // Initialize socket connection
     useEffect(() => {
-        const token = getToken();
-        if (!token) {
-            console.log('[WebSocket] No token available, skipping connection');
+        if (!user) {
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
+            }
+            setIsConnected(false);
             return;
         }
 
         console.log('[WebSocket] Connecting to server...');
         const socket = io(SOCKET_URL, {
-            auth: { token },
+            auth: hasLegacyToken() ? { token: getToken() } : undefined,
             transports: ['websocket', 'polling'],
+            withCredentials: true,
             reconnection: true,
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
@@ -145,21 +151,7 @@ export function WebSocketProvider({ children }: PropsWithChildren) {
             socketRef.current = null;
             setIsConnected(false);
         };
-    }, []);
-
-    // Reconnect when token changes
-    useEffect(() => {
-        const handleStorageChange = () => {
-            const token = getToken();
-            if (token && !socketRef.current?.connected) {
-                // Token restored, reconnect
-                window.location.reload();
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
+    }, [user]);
 
     const joinConversation = useCallback((otherUserId: string) => {
         const socket = socketRef.current;

@@ -33,6 +33,10 @@ export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+export function hasLegacyToken(): boolean {
+  return Boolean(getToken());
+}
+
 /**
  * Structured API error with status code and server data.
  */
@@ -82,7 +86,8 @@ function shouldRetry(method: string, error: unknown, attempt: number): boolean {
 
 /**
  * Low-level API client.
- * - Automatically attaches JWT Bearer token
+ * - Sends cookies for session-based auth
+ * - Optionally attaches a legacy JWT Bearer token during migration
  * - Handles JSON and FormData payloads
  * - 30-second timeout via AbortController
  */
@@ -112,6 +117,7 @@ export async function apiFetch<T>(
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
+        credentials: 'include',
         headers,
         signal: controller.signal,
       });
@@ -165,6 +171,7 @@ export async function downloadApiFile(
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    credentials: 'include',
     headers,
   });
 

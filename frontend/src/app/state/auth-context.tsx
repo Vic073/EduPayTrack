@@ -8,7 +8,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { toast } from 'sonner';
-import { apiFetch, setToken, clearToken, getToken } from '../lib/api';
+import { apiFetch, clearToken } from '../lib/api';
 import { listNotifications, markAllNotificationsRead } from '../lib/notifications-api';
 import { adminNav, studentNav } from '../lib/navigation';
 import type { AppUser, NotificationItem, Role } from '../lib/auth-types';
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return null;
     }
   });
-  const [isLoading, setIsLoading] = useState(() => !!getToken());
+  const [isLoading, setIsLoading] = useState(true);
   const [appNotifications, setAppNotifications] = useState<NotificationItem[]>([]);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
 
@@ -94,7 +94,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, [user]);
 
   const refreshNotifications = useCallback(async () => {
-    if (!getToken()) return;
     try {
       const data = await listNotifications();
       // map backend schema to NotificationItem format
@@ -124,12 +123,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   // On mount, validate token by calling /auth/me
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
     apiFetch<{ user: any }>('/auth/me')
       .then((data) => {
         setUser(mapApiUserToAppUser(data.user));
@@ -170,11 +163,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
 
   const login = useCallback(async ({ email, password }: LoginValues) => {
-    const payload = await apiFetch<any>('/auth/login', {
+    const payload = await apiFetch<{ user: any }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    setToken(payload.token);
+    clearToken();
     const mappedUser = mapApiUserToAppUser(payload.user);
     setUser(mappedUser);
     toast.success(`Welcome back, ${mappedUser.name}`);
@@ -183,7 +176,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const register = useCallback(async (values: RegisterValues) => {
     const [firstName, ...lastNameParts] = values.fullName.split(' ');
-    const payload = await apiFetch<any>('/auth/register/student', {
+    const payload = await apiFetch<{ user: any }>('/auth/register/student', {
       method: 'POST',
       body: JSON.stringify({
         email: values.email,
@@ -197,7 +190,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         academicYear: values.year || undefined,
       }),
     });
-    setToken(payload.token);
+    clearToken();
     const mappedUser = mapApiUserToAppUser(payload.user);
     setUser(mappedUser);
     toast.success('Account created successfully!');

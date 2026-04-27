@@ -3,16 +3,14 @@ import { NextFunction, Request, Response } from 'express';
 
 import { prisma } from '../lib/prisma';
 import { AppError } from './error-handler';
-import { verifyToken } from '../utils/auth';
+import { extractTokenFromAuthSources, verifyToken } from '../utils/auth';
 
 export const requireAuth = async (req: Request, _res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+    const token = extractTokenFromAuthSources(req.headers.authorization, req.headers.cookie);
 
-    if (!authHeader?.startsWith('Bearer ')) {
+    if (!token) {
         return next(new AppError('Authentication required', 401));
     }
-
-    const token = authHeader.split(' ')[1];
 
     try {
         const decoded = verifyToken(token);

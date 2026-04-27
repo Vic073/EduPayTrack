@@ -5,6 +5,7 @@ import { requireAuth } from '../middleware/auth';
 import { uploadReceipt, uploadProfilePicture } from '../middleware/upload';
 import { changePassword, getCurrentUser, loginUser, logoutUser, registerStudent, updateProfilePicture, forgotPassword, resetPassword, terminateActiveSession } from '../services/auth.service';
 import { prisma } from '../lib/prisma';
+import { attachAuthCookie, clearAuthCookie } from '../utils/auth';
 
 export const authRouter = Router();
 
@@ -22,7 +23,8 @@ authRouter.post(
     '/register/student',
     asyncHandler(async (req, res) => {
         const result = await registerStudent(req.body, req.ip);
-        res.status(201).json(result);
+        attachAuthCookie(res, result.token);
+        res.status(201).json({ user: result.user });
     })
 );
 
@@ -30,7 +32,8 @@ authRouter.post(
     '/login',
     asyncHandler(async (req, res) => {
         const result = await loginUser(req.body, req.ip);
-        res.status(200).json(result);
+        attachAuthCookie(res, result.token);
+        res.status(200).json({ user: result.user });
     })
 );
 
@@ -68,6 +71,7 @@ authRouter.post(
             req.user!.sessionId,
             req.ip
         );
+        clearAuthCookie(res);
         res.status(200).json(result);
     })
 );
@@ -76,6 +80,7 @@ authRouter.post(
     requireAuth,
     asyncHandler(async (req, res) => {
         const result = await changePassword(req.user!.userId, req.body, req.ip);
+        clearAuthCookie(res);
         res.status(200).json(result);
     })
 );
@@ -111,6 +116,7 @@ authRouter.delete(
         }
         
         await prisma.user.delete({ where: { id: userId } });
+        clearAuthCookie(res);
         res.status(200).json({ message: 'Account deleted successfully' });
     })
 );
