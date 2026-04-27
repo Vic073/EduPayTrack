@@ -4,3 +4,5 @@ dist
 logs
 .npm-cache
 uploads
+src/generated/prisma/query_engine-windows.dll.node.tmp*
+*.bak
