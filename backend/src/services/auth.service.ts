@@ -350,7 +350,7 @@ export const logoutUser = async (
     ipAddress?: string
 ) => {
     // Find the last session.start for this user to calculate duration
-    const logs = readAuditLogs(200);
+    const logs = await readAuditLogs(200);
     const lastStart = logs.find(l => l.action === 'session.start' && l.actor?.userId === userId);
     
     let duration = 'Unknown';

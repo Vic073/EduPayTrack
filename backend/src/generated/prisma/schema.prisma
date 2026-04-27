@@ -81,6 +81,7 @@ model User {
   reminderCampaigns  ReminderCampaign[]
   generatedReports   GeneratedReport[]
   notifications      Notification[]
+  auditLogs          AuditLog[]         @relation("AuditLogActor")
   sentMessages       Message[]          @relation("SentMessages")
   receivedMessages   Message[]          @relation("ReceivedMessages")
   reactions          Reaction[]
@@ -252,6 +253,28 @@ model Notification {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, read])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @default(now())
+  action      String
+  actorUserId String?
+  actorEmail  String?
+  actorRole   String?
+  ipAddress   String?
+  userAgent   String?
+  sessionId   String?
+  targetType  String?
+  targetId    String?
+  status      String   @default("SUCCESS")
+  reason      String?
+  details     Json?
+  actorUser   User?    @relation("AuditLogActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([timestamp])
+  @@index([action, timestamp])
+  @@index([actorUserId, timestamp])
 }
 
 model SystemRegistry {

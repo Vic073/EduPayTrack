@@ -276,6 +276,23 @@ exports.Prisma.NotificationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  timestamp: 'timestamp',
+  action: 'action',
+  actorUserId: 'actorUserId',
+  actorEmail: 'actorEmail',
+  actorRole: 'actorRole',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  sessionId: 'sessionId',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  status: 'status',
+  reason: 'reason',
+  details: 'details'
+};
+
 exports.Prisma.SystemRegistryScalarFieldEnum = {
   id: 'id',
   institutionName: 'institutionName',
@@ -405,6 +422,7 @@ exports.Prisma.ModelName = {
   ReminderCampaign: 'ReminderCampaign',
   GeneratedReport: 'GeneratedReport',
   Notification: 'Notification',
+  AuditLog: 'AuditLog',
   SystemRegistry: 'SystemRegistry',
   Message: 'Message',
   Reaction: 'Reaction'

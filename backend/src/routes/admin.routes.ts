@@ -466,7 +466,7 @@ adminRouter.get(
     requireRole(UserRole.ADMIN),
     asyncHandler(async (req, res) => {
         const limit = Number(req.query.limit ?? 100);
-        const logs = readAuditLogs(Number.isNaN(limit) ? 100 : Math.min(limit, 250));
+        const logs = await readAuditLogs(Number.isNaN(limit) ? 100 : Math.min(limit, 250));
         res.status(200).json(logs);
     })
 );
@@ -475,7 +475,7 @@ adminRouter.delete(
     '/audit-logs',
     requireRole(UserRole.ADMIN),
     asyncHandler(async (req, res) => {
-        const result = deleteAuditLogs(req.body);
+        const result = await deleteAuditLogs(req.body);
         res.status(200).json(result);
     })
 );
