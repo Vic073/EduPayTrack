@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BarChart3, CheckCircle, Menu, Moon, Sun, Upload, X } from 'lucide-react';
+import { ArrowRight, BarChart3, CheckCircle, Menu, Moon, Sun, Upload, X, CreditCard, TrendingUp, FileCheck, Clock, ShieldCheck } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
 
@@ -9,10 +9,42 @@ import { StackedLogo } from '../../components/StackedLogo';
 const SLATE_HSL = '215 16% 47%';
 const SLATE_DARK = '215 14% 55%';
 
+/* Animated counter hook */
+function useCountUp(target: number, duration = 1800, startDelay = 600) {
+  const [value, setValue] = useState(0);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const start = performance.now();
+      const step = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setValue(Math.round(eased * target));
+        if (progress < 1) rafRef.current = requestAnimationFrame(step);
+      };
+      rafRef.current = requestAnimationFrame(step);
+    }, startDelay);
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, duration, startDelay]);
+
+  return value;
+}
+
 export function LandingPage() {
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isDark = theme === 'dark';
+
+  /* Animated values for the dashboard mockup */
+  const paidAmount = useCountUp(285000, 2000, 800);
+  const totalFees = 450000;
+  const progressPct = useCountUp(63, 1800, 800);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -119,31 +151,88 @@ export function LandingPage() {
               </div>
             </div>
 
+            {/* ── Interactive Dashboard Mockup ── */}
             <div className="relative z-[1] flex-1 md:block animate-slide-in-right animate-delay-200">
               <div className="overflow-hidden rounded-lg border border-border bg-card md:ml-12 md:mt-4 shadow-lg transition-shadow duration-300 hover:shadow-xl">
-                <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+                {/* Window chrome */}
+                <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
                   <div className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
                   <div className="h-2.5 w-2.5 rounded-full bg-warning/60" />
                   <div className="h-2.5 w-2.5 rounded-full bg-success/60" />
-                  <div className="ml-4 h-2 w-24 rounded-full bg-muted-foreground/15" />
-                </div>
-                <div className="space-y-3 p-4">
-                  <div className="rounded border border-border p-3">
-                    <div className="mb-2 h-1.5 w-16 rounded-full bg-muted-foreground/15" />
-                    <div className="mb-1 h-4 w-28 rounded bg-foreground/15" />
-                    <div className="h-1.5 w-20 rounded-full bg-success/40" />
+                  <div className="ml-3 flex items-center gap-1.5 rounded-md bg-muted/60 px-3 py-1">
+                    <ShieldCheck className="h-3 w-3 text-success/70" />
+                    <span className="text-[10px] text-muted-foreground">edupaytrack.app/dashboard</span>
                   </div>
-                  {[
-                    { status: 'bg-success', width: 'w-32' },
-                    { status: 'bg-warning', width: 'w-28' },
-                    { status: 'bg-info', width: 'w-36' },
-                  ].map((row, index) => (
-                    <div key={index} className="flex items-center gap-3 rounded border border-border px-3 py-2">
-                      <div className={`h-2 w-2 rounded-full ${row.status}`} />
-                      <div className={`h-1.5 rounded-full bg-foreground/15 ${row.width}`} />
-                      <div className="ml-auto h-1.5 w-12 rounded-full bg-muted-foreground/10" />
+                </div>
+
+                <div className="p-4 space-y-3">
+                  {/* Student Balance Card */}
+                  <div className="rounded-lg border border-border bg-gradient-to-br from-primary/5 via-transparent to-success/5 p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15">
+                          <CreditCard className="h-3.5 w-3.5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Student Balance</p>
+                          <p className="text-[11px] font-medium text-foreground/70">Chisomo Banda — Term 2</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5">
+                        <TrendingUp className="h-3 w-3 text-success" />
+                        <span className="text-[10px] font-medium text-success">On track</span>
+                      </div>
                     </div>
-                  ))}
+
+                    <div className="flex items-baseline gap-1 mb-3">
+                      <span className="text-[22px] font-semibold tracking-tight text-foreground tabular-nums">
+                        MK {paidAmount.toLocaleString()}
+                      </span>
+                      <span className="text-[12px] text-muted-foreground">
+                        / {totalFees.toLocaleString()}
+                      </span>
+                    </div>
+
+                    {/* Progress bar */}
+                    <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-success transition-all duration-[2000ms] ease-out"
+                        style={{ width: `${progressPct}%` }}
+                      />
+                    </div>
+                    <div className="mt-1.5 flex justify-between">
+                      <span className="text-[10px] text-muted-foreground">{progressPct}% paid</span>
+                      <span className="text-[10px] text-muted-foreground">MK {(totalFees - paidAmount).toLocaleString()} remaining</span>
+                    </div>
+                  </div>
+
+                  {/* Recent Payments */}
+                  <div className="space-y-1.5">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground px-1">Recent Payments</p>
+                    {[
+                      { name: 'Bank Transfer', amount: 'MK 150,000', status: 'Verified', icon: CheckCircle, color: 'text-success', bg: 'bg-success/10', date: 'Apr 15' },
+                      { name: 'Mobile Money', amount: 'MK 85,000', status: 'Verified', icon: CheckCircle, color: 'text-success', bg: 'bg-success/10', date: 'Mar 28' },
+                      { name: 'Bank Deposit', amount: 'MK 50,000', status: 'Pending', icon: Clock, color: 'text-warning', bg: 'bg-warning/10', date: 'Apr 25' },
+                    ].map((tx, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 rounded-md border border-border px-3 py-2 transition-colors duration-200 hover:bg-muted/40"
+                        style={{ animationDelay: `${800 + i * 150}ms` }}
+                      >
+                        <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${tx.bg}`}>
+                          <tx.icon className={`h-3 w-3 ${tx.color}`} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[12px] font-medium text-foreground truncate">{tx.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{tx.date}</p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="text-[12px] font-semibold text-foreground tabular-nums">{tx.amount}</p>
+                          <p className={`text-[10px] font-medium ${tx.color}`}>{tx.status}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
