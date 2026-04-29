@@ -55,3 +55,33 @@ test('parseReceiptText avoids selecting date-like values as references', () => {
     assert.equal(result.amount, 98000);
     assert.equal(result.paymentDate, '2026-04-27');
 });
+
+test('parseReceiptText extracts account name style depositor labels', () => {
+    const sample = `
+        Airtel Money Receipt
+        Account Name: Mary Jane Phiri
+        Transaction ID: AMX-2026-77881
+        Amount Paid: MWK 75,000
+        Date: 2026-04-28
+    `;
+
+    const result = parseReceiptText(sample);
+
+    assert.equal(result.depositorName, 'Mary Jane Phiri');
+    assert.equal(result.reference, 'AMX-2026-77881');
+});
+
+test('parseReceiptText ignores non-person values after name-like labels', () => {
+    const sample = `
+        Mobile Transfer Receipt
+        Name: National Bank of Malawi
+        Reference Number: MBT/2026/9981
+        Amount: MWK 64,500
+        Date: 2026-04-28
+    `;
+
+    const result = parseReceiptText(sample);
+
+    assert.equal(result.depositorName, null);
+    assert.equal(result.reference, 'MBT/2026/9981');
+});

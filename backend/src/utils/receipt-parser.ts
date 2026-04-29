@@ -34,6 +34,12 @@ const depositorPatterns = [
     /(?:depositor|paid by|received from|name|customer(?:'s)? name)\s*[:\-]?\s*([A-Za-z\s]{3,40})(?=\s*MWK|\s*[0-9]|$)/i,
 ];
 
+const depositorLabelPattern =
+    /(?:depositor|depositor name|paid by|received from|customer(?:'s)? name|account name|sender name|deposited by|depositor's name|name)\s*[:\-]?\s*/i;
+
+const nonPersonNamePattern =
+    /\b(?:bank|malawi|fastserve|deposit|withdrawal|transfer|transaction|receipt|branch|agent|account|number|reference|mwk|amount|date|time|phone|balance)\b/i;
+
 type ReferenceCandidate = {
     score: number;
     token: string;
@@ -186,6 +192,61 @@ const pickBestCandidate = (candidates: ReferenceCandidate[]): string | null => {
     return sorted[0].score >= 2 ? sorted[0].token : null;
 };
 
+const normalizePersonName = (value: string) =>
+    value
+        .replace(/\s+/g, ' ')
+        .replace(/^[^A-Za-z]+|[^A-Za-z]+$/g, '')
+        .trim();
+
+const isLikelyPersonName = (value: string) => {
+    const normalized = normalizePersonName(value);
+    if (normalized.length < 4 || normalized.length > 60) {
+        return false;
+    }
+
+    const words = normalized.split(/\s+/).filter(Boolean);
+    if (words.length < 2 || words.length > 4) {
+        return false;
+    }
+
+    if (nonPersonNamePattern.test(normalized) || /\d/.test(normalized)) {
+        return false;
+    }
+
+    return words.every((word) => /^[A-Za-z][A-Za-z'.-]*$/.test(word));
+};
+
+const extractDepositorName = (rawText: string) => {
+    const lines = rawText
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+    for (const line of lines) {
+        if (!depositorLabelPattern.test(line)) {
+            continue;
+        }
+
+        const inlineMatch = line.match(/[:\-]\s*([A-Za-z][A-Za-z\s'.-]{2,59})$/);
+        const inlineValue = inlineMatch?.[1] ? normalizePersonName(inlineMatch[1]) : '';
+        if (inlineValue && isLikelyPersonName(inlineValue)) {
+            return inlineValue;
+        }
+
+        const labelStripped = normalizePersonName(line.replace(depositorLabelPattern, ''));
+        if (labelStripped && isLikelyPersonName(labelStripped)) {
+            return labelStripped;
+        }
+    }
+
+    const singleLineMatch = rawText.match(
+        /(?:depositor|depositor name|paid by|received from|customer(?:'s)? name|account name|sender name|deposited by|depositor's name|name)\s*[:\-]?\s*([A-Za-z][A-Za-z\s'.-]{2,59})/i
+    );
+    const singleLineValue = singleLineMatch?.[1] ? normalizePersonName(singleLineMatch[1]) : '';
+
+    return singleLineValue && isLikelyPersonName(singleLineValue) ? singleLineValue : null;
+};
+
 const extractReference = (rawText: string): string | null => {
     const templateReference = extractTemplateReference(rawText);
     if (templateReference) {
@@ -245,7 +306,7 @@ export const parseReceiptText = (rawText: string) => {
     const paymentDate = matchedDate?.[1] ?? null;
     const registrationNumber = matchedReg?.[1] ?? null;
     const codeNumber = matchedCode?.[1] ?? null;
-    const depositorName = matchedDepositor?.[1]?.trim() || null;
+    const depositorName = extractDepositorName(normalizedText) || matchedDepositor?.[1]?.trim() || null;
 
     const confidenceSignals = [
         amount !== null,
