@@ -374,6 +374,49 @@ export function UploadPaymentPage() {
     reference: false,
   });
   const referenceRequired = method === 'BANK_TRANSFER' || method === 'MOBILE_CREDIT_CARD';
+  const ocrStatus = useMemo(() => {
+    if (isUploading) {
+      return {
+        title: 'Uploading receipt...',
+        description: 'We are saving your receipt before reading its details.',
+        tone: 'border-primary/30 bg-primary/5 text-primary',
+      };
+    }
+
+    if (isScanning) {
+      return {
+        title: 'OCR is running...',
+        description: 'We are extracting the amount and reference from your receipt. Please wait a moment.',
+        tone: 'border-warning/30 bg-warning/5 text-warning',
+      };
+    }
+
+    if (scanIssue) {
+      return {
+        title: 'OCR needs your review',
+        description: 'Some details could not be read automatically. Please check the form and enter anything missing.',
+        tone: 'border-warning/30 bg-warning/5 text-warning',
+      };
+    }
+
+    if (ocrResult) {
+      return {
+        title: 'OCR complete',
+        description: 'We filled what we could from your receipt. Please review the values before submitting.',
+        tone: 'border-success/30 bg-success/5 text-success',
+      };
+    }
+
+    if (proofUrl) {
+      return {
+        title: 'Receipt uploaded',
+        description: 'Your receipt is attached and OCR has finished or is ready to run automatically.',
+        tone: 'border-border bg-muted/20 text-muted-foreground',
+      };
+    }
+
+    return null;
+  }, [isUploading, isScanning, scanIssue, ocrResult, proofUrl]);
 
   // Memoize form data to prevent infinite loop in useFormAutosave
   const formData = useMemo(() => ({ 
@@ -650,7 +693,7 @@ export function UploadPaymentPage() {
                 />
               </div>
             ) : (
-              <div className="border border-border rounded-lg p-4 relative">
+              <div className="border border-border rounded-lg p-4 relative space-y-3">
                 <Button
                   type="button"
                   variant="ghost"
@@ -705,6 +748,21 @@ export function UploadPaymentPage() {
                     )}
                   </div>
                 </div>
+                {ocrStatus && (
+                  <div className={cn('rounded-md border p-3', ocrStatus.tone)}>
+                    <div className="flex items-start gap-2">
+                      {(isUploading || isScanning) ? (
+                        <Loader2 className="mt-0.5 h-4 w-4 animate-spin" />
+                      ) : (
+                        <AlertCircle className="mt-0.5 h-4 w-4" />
+                      )}
+                      <div>
+                        <p className="text-[12px] font-medium">{ocrStatus.title}</p>
+                        <p className="mt-1 text-[11px] opacity-90">{ocrStatus.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </CardContent>
