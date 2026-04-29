@@ -1,6 +1,6 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BarChart3, CheckCircle, Menu, Moon, Sun, Upload, X, CreditCard, TrendingUp, FileCheck, Clock, ShieldCheck } from 'lucide-react';
+import { ArrowRight, BarChart3, CheckCircle, Menu, Moon, Sun, Upload, X, CreditCard, TrendingUp, Clock, ShieldCheck } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
 
