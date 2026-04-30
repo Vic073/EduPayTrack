@@ -190,7 +190,7 @@ export const runDueReminderCampaigns = async () => {
         },
     });
 
-    const results = [];
+    const results : any[] = [];
     for (const campaign of dueCampaigns) {
         results.push(await runReminderCampaign(campaign.id));
     }

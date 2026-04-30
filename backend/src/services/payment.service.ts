@@ -68,7 +68,7 @@ export const submitPayment = async (userId: string, input: unknown) => {
         throw new AppError('Student profile not found', 404);
     }
 
-    const duplicateFilters = [];
+    const duplicateFilters : any[] = [];
 
     if (normalizedExternalReference) {
         duplicateFilters.push({ externalReference: normalizedExternalReference });
