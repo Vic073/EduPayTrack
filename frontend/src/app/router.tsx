@@ -1,6 +1,5 @@
 import type { ReactElement } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
 
 import { AppLayout } from './components/layout';
 import {
