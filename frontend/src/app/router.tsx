@@ -33,10 +33,20 @@ function RequireAuth({ children }: { children: ReactElement }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Loading your session...</p>
+      <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-info/5" />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '3s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-info/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} />
+
+        <div className="flex flex-col items-center gap-4 relative z-10">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+            <div className="absolute inset-0 rounded-xl border-2 border-primary/20 animate-ping" style={{ animationDuration: '2s' }} />
+          </div>
+          <p className="text-sm text-muted-foreground animate-pulse">Loading...</p>
         </div>
       </div>
     );
@@ -64,10 +74,20 @@ export function AppRouter() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Restoring session...</p>
+      <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-info/5" />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '3s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-info/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} />
+
+        <div className="flex flex-col items-center gap-4 relative z-10">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+            <div className="absolute inset-0 rounded-xl border-2 border-primary/20 animate-ping" style={{ animationDuration: '2s' }} />
+          </div>
+          <p className="text-sm text-muted-foreground animate-pulse">Loading...</p>
         </div>
       </div>
     );

@@ -43,23 +43,28 @@ const registerSchema = z.object({
 
 export function AuthLayout() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden p-4 md:p-8">
-      {/* Background decorations */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/8 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-15%] right-[-8%] w-[45%] h-[45%] bg-info/8 blur-[100px] rounded-full pointer-events-none" />
-      <div className="absolute top-[20%] right-[10%] w-[25%] h-[25%] bg-success/5 blur-[80px] rounded-full pointer-events-none" />
+    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden p-3 sm:p-4 md:p-8">
+      {/* Animated background decorations */}
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/8 blur-[120px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
+      <div className="absolute bottom-[-15%] right-[-8%] w-[45%] h-[45%] bg-info/8 blur-[100px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
+      <div className="absolute top-[20%] right-[10%] w-[25%] h-[25%] bg-success/5 blur-[80px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }} />
 
       <div className="w-full max-w-[440px] relative z-10">
-        <div className="flex flex-col items-center mb-8 gap-3">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary">
-            <GraduationCap className="h-6 w-6" />
+        {/* Logo with entrance animation */}
+        <div className="flex flex-col items-center mb-6 sm:mb-8 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-primary/10 text-primary shadow-lg shadow-primary/10 transition-transform hover:scale-105 duration-300">
+            <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7" />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold tracking-tight">EduPayTrack</h1>
-            <p className="text-sm text-muted-foreground mt-1">School fee payment management</p>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              EduPayTrack
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">School fee payment management</p>
           </div>
         </div>
-        <Outlet />
+        <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
@@ -119,10 +124,10 @@ export function LoginPage() {
   };
 
   return (
-    <Card className="border-border/50 shadow-lg backdrop-blur-sm bg-card/95">
+    <Card className="border-border/50 shadow-xl backdrop-blur-sm bg-card/95 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5">
       <CardHeader className="space-y-1 pb-4">
-        <CardTitle className="text-xl font-semibold">Welcome back</CardTitle>
-        <CardDescription className="text-[13px]">Sign in with your email and password</CardDescription>
+        <CardTitle className="text-lg sm:text-xl font-semibold">Welcome back</CardTitle>
+        <CardDescription className="text-[12px] sm:text-[13px]">Sign in with your email and password</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -165,6 +170,13 @@ export function LoginPage() {
               <FormItem>
                 <div className="flex items-center justify-between">
                   <FormLabel className="text-[13px] font-medium">Password</FormLabel>
+                  <button
+                    type="button"
+                    onClick={() => alert('Password reset feature coming soon!')}
+                    className="text-[12px] text-primary hover:text-primary/80 hover:underline transition-colors"
+                  >
+                    Forgot password?
+                  </button>
                 </div>
                 <FormControl>
                   <div className="relative">
@@ -193,7 +205,7 @@ export function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full h-10 font-medium mt-2"
+              className="w-full h-10 sm:h-11 font-medium mt-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -202,16 +214,32 @@ export function LoginPage() {
                   Signing in...
                 </>
               ) : (
-                'Sign in'
+                <span className="flex items-center gap-2">
+                  Sign in
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
               )}
             </Button>
 
-            <p className="text-[13px] text-center text-muted-foreground mt-4">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-primary font-medium hover:underline">
-                Create account
-              </Link>
-            </p>
+            <div className="space-y-3 mt-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border/50" />
+                </div>
+                <div className="relative flex justify-center text-[11px] uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">Or</span>
+                </div>
+              </div>
+
+              <p className="text-[13px] text-center text-muted-foreground">
+                Don't have an account?{' '}
+                <Link to="/register" className="text-primary font-medium hover:underline transition-all hover:text-primary/80">
+                  Create account
+                </Link>
+              </p>
+            </div>
           </form>
         </Form>
       </CardContent>
@@ -271,10 +299,10 @@ export function RegisterPage() {
   const strengthColors = ['', 'bg-destructive', 'bg-warning', 'bg-info', 'bg-success'];
 
   return (
-    <Card className="border-border/50 shadow-lg backdrop-blur-sm bg-card/95">
+    <Card className="border-border/50 shadow-xl backdrop-blur-sm bg-card/95 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5">
       <CardHeader className="space-y-1 pb-4">
-        <CardTitle className="text-xl font-semibold">Create account</CardTitle>
-        <CardDescription className="text-[13px]">Register as a student to submit and track fee payments</CardDescription>
+        <CardTitle className="text-lg sm:text-xl font-semibold">Create account</CardTitle>
+        <CardDescription className="text-[12px] sm:text-[13px]">Register as a student to submit and track fee payments</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -528,7 +556,7 @@ export function RegisterPage() {
 
             <Button
               type="submit"
-              className="w-full h-10 font-medium mt-2"
+              className="w-full h-10 sm:h-11 font-medium mt-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -537,16 +565,32 @@ export function RegisterPage() {
                   Creating account...
                 </>
               ) : (
-                'Create account'
+                <span className="flex items-center gap-2">
+                  Create account
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                  </svg>
+                </span>
               )}
             </Button>
 
-            <p className="text-[13px] text-center text-muted-foreground mt-4">
-              Already have an account?{' '}
-              <Link to="/login" className="text-primary font-medium hover:underline">
-                Sign in
-              </Link>
-            </p>
+            <div className="space-y-3 mt-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border/50" />
+                </div>
+                <div className="relative flex justify-center text-[11px] uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">Or</span>
+                </div>
+              </div>
+
+              <p className="text-[13px] text-center text-muted-foreground">
+                Already have an account?{' '}
+                <Link to="/login" className="text-primary font-medium hover:underline transition-all hover:text-primary/80">
+                  Sign in
+                </Link>
+              </p>
+            </div>
           </form>
         </Form>
       </CardContent>
