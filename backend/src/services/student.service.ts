@@ -1,8 +1,75 @@
-import { PaymentStatus } from '../generated/prisma';
+import { PaymentStatus, type Prisma, type SchoolLevel } from '../generated/prisma';
 
 import { prisma } from '../lib/prisma';
 import { AppError } from '../middleware/error-handler';
 import { recalculateStudentBalance } from '../utils/balance';
+
+const FEE_TYPE_LABELS: Record<string, string> = {
+    tuition: 'Tuition',
+    hostel: 'Hostel',
+    exam: 'Exam',
+    library: 'Library',
+    other: 'Other',
+};
+
+const buildFeeStructureWhere = (student: {
+    program?: string | null;
+    classLevel?: string | null;
+    academicYear?: string | null;
+    schoolLevel?: SchoolLevel | null;
+}): Prisma.FeeStructureWhereInput => {
+    const normalizedProgram = student.program?.trim() || null;
+    const normalizedClassLevel = student.classLevel?.trim() || null;
+    const normalizedAcademicYear = student.academicYear?.trim() || null;
+
+    return {
+        active: true,
+        AND: [
+            {
+                OR: [
+                    { program: null },
+                    { program: '' },
+                    { program: normalizedProgram },
+                ],
+            },
+            {
+                OR: [
+                    { classLevel: null },
+                    { classLevel: '' },
+                    { classLevel: normalizedClassLevel },
+                ],
+            },
+            {
+                OR: [
+                    { academicYear: null },
+                    { academicYear: '' },
+                    { academicYear: normalizedAcademicYear },
+                ],
+            },
+            {
+                ...(student.schoolLevel ? { schoolLevel: student.schoolLevel } : {}),
+            },
+        ],
+    };
+};
+
+export const getApplicableFeeStructures = async (studentId: string) => {
+    const student = await prisma.student.findUnique({
+        where: { id: studentId },
+    });
+
+    if (!student) {
+        throw new AppError('Student not found', 404);
+    }
+
+    return prisma.feeStructure.findMany({
+        where: buildFeeStructureWhere(student),
+        orderBy: [
+            { dueDate: 'asc' },
+            { createdAt: 'asc' },
+        ],
+    });
+};
 
 /**
  * Fetch the applicable fee structure deadlines for a student.
@@ -23,41 +90,9 @@ export const getStudentDeadlines = async (studentId: string) => {
         throw new AppError('Student not found', 404);
     }
 
-    const normalizedProgram = student.program?.trim() || null;
-    const normalizedClassLevel = student.classLevel?.trim() || null;
-    const normalizedAcademicYear = student.academicYear?.trim() || null;
-
-    // Same matching logic as balance.ts
-    const applicableFeeStructures = await prisma.feeStructure.findMany({
-        where: {
-            active: true,
-            dueDate: { not: null }, // Only those with a deadline set
-            AND: [
-                {
-                    OR: [
-                        { program: null },
-                        { program: '' },
-                        { program: normalizedProgram },
-                    ],
-                },
-                {
-                    OR: [
-                        { classLevel: null },
-                        { classLevel: '' },
-                        { classLevel: normalizedClassLevel },
-                    ],
-                },
-                {
-                    OR: [
-                        { academicYear: null },
-                        { academicYear: '' },
-                        { academicYear: normalizedAcademicYear },
-                    ],
-                },
-            ],
-        },
-        orderBy: { dueDate: 'asc' },
-    });
+    const applicableFeeStructures = (await getApplicableFeeStructures(studentId)).filter(
+        (fee) => fee.dueDate !== null
+    );
 
     const totalPaid = student.payments.reduce((sum, p) => sum + Number(p.amount), 0);
     const totalFees = applicableFeeStructures.reduce((sum, f) => sum + Number(f.amount), 0);
@@ -134,6 +169,34 @@ export const getStudentDashboard = async (userId: string) => {
 
     // Fetch real deadlines from fee structures
     const deadlines = await getStudentDeadlines(user.student.id);
+    const applicableFeeStructures = await getApplicableFeeStructures(user.student.id);
+    const feeOptionsByType = new Map<string, {
+        id: string;
+        type: string;
+        label: string;
+        title: string;
+        amount: number;
+        dueDate: string | null;
+    }>();
+
+    applicableFeeStructures
+        .filter((fee) => fee.feeType)
+        .forEach((fee) => {
+            if (!fee.feeType || feeOptionsByType.has(fee.feeType)) {
+                return;
+            }
+
+            feeOptionsByType.set(fee.feeType, {
+                id: fee.id,
+                type: fee.feeType,
+                label: FEE_TYPE_LABELS[fee.feeType || 'other'] || fee.feeType,
+                title: fee.title,
+                amount: Number(fee.amount),
+                dueDate: fee.dueDate ? fee.dueDate.toISOString().split('T')[0] : null,
+            });
+        });
+
+    const feeOptions = Array.from(feeOptionsByType.values());
 
     return {
         student: updatedStudent,
@@ -146,5 +209,6 @@ export const getStudentDashboard = async (userId: string) => {
         },
         payments: user.student.payments,
         deadlines,
+        feeOptions,
     };
 };

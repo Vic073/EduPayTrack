@@ -1,0 +1,2 @@
+ALTER TABLE "Payment"
+ADD COLUMN "feeType" TEXT;

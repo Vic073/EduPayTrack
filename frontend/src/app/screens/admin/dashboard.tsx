@@ -119,7 +119,7 @@ export function AdminDashboardPage() {
 
   const monthlyComparison = useMemo(() => {
     return { 
-      current: stats?.currentMonthRevenue || 0, 
+      current: stats?.monthlyRevenue || 0, 
       previous: stats?.previousMonthRevenue || 0, 
       change: stats?.revenueChange || 0 
     };

@@ -6209,6 +6209,7 @@ export namespace Prisma {
     studentId: string | null
     amount: Decimal | null
     currency: string | null
+    feeType: string | null
     method: $Enums.PaymentMethod | null
     externalReference: string | null
     receiptNumber: string | null
@@ -6243,6 +6244,7 @@ export namespace Prisma {
     studentId: string | null
     amount: Decimal | null
     currency: string | null
+    feeType: string | null
     method: $Enums.PaymentMethod | null
     externalReference: string | null
     receiptNumber: string | null
@@ -6277,6 +6279,7 @@ export namespace Prisma {
     studentId: number
     amount: number
     currency: number
+    feeType: number
     method: number
     externalReference: number
     receiptNumber: number
@@ -6323,6 +6326,7 @@ export namespace Prisma {
     studentId?: true
     amount?: true
     currency?: true
+    feeType?: true
     method?: true
     externalReference?: true
     receiptNumber?: true
@@ -6357,6 +6361,7 @@ export namespace Prisma {
     studentId?: true
     amount?: true
     currency?: true
+    feeType?: true
     method?: true
     externalReference?: true
     receiptNumber?: true
@@ -6391,6 +6396,7 @@ export namespace Prisma {
     studentId?: true
     amount?: true
     currency?: true
+    feeType?: true
     method?: true
     externalReference?: true
     receiptNumber?: true
@@ -6512,6 +6518,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal
     currency: string
+    feeType: string | null
     method: $Enums.PaymentMethod
     externalReference: string | null
     receiptNumber: string | null
@@ -6565,6 +6572,7 @@ export namespace Prisma {
     studentId?: boolean
     amount?: boolean
     currency?: boolean
+    feeType?: boolean
     method?: boolean
     externalReference?: boolean
     receiptNumber?: boolean
@@ -6603,6 +6611,7 @@ export namespace Prisma {
     studentId?: boolean
     amount?: boolean
     currency?: boolean
+    feeType?: boolean
     method?: boolean
     externalReference?: boolean
     receiptNumber?: boolean
@@ -6641,6 +6650,7 @@ export namespace Prisma {
     studentId?: boolean
     amount?: boolean
     currency?: boolean
+    feeType?: boolean
     method?: boolean
     externalReference?: boolean
     receiptNumber?: boolean
@@ -6679,6 +6689,7 @@ export namespace Prisma {
     studentId?: boolean
     amount?: boolean
     currency?: boolean
+    feeType?: boolean
     method?: boolean
     externalReference?: boolean
     receiptNumber?: boolean
@@ -6708,7 +6719,7 @@ export namespace Prisma {
     semester?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "amount" | "currency" | "method" | "externalReference" | "receiptNumber" | "proofUrl" | "payerName" | "paymentDate" | "submittedAt" | "status" | "verificationStatus" | "duplicateFlag" | "ocrText" | "ocrAmount" | "ocrReference" | "notes" | "verificationNotes" | "reviewNotes" | "reconciliationStatus" | "reconciliationNote" | "reconciledAt" | "reconciledBy" | "verifiedBy" | "verifiedAt" | "reviewedAt" | "reviewerId" | "academicYear" | "term" | "semester", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "amount" | "currency" | "feeType" | "method" | "externalReference" | "receiptNumber" | "proofUrl" | "payerName" | "paymentDate" | "submittedAt" | "status" | "verificationStatus" | "duplicateFlag" | "ocrText" | "ocrAmount" | "ocrReference" | "notes" | "verificationNotes" | "reviewNotes" | "reconciliationStatus" | "reconciliationNote" | "reconciledAt" | "reconciledBy" | "verifiedBy" | "verifiedAt" | "reviewedAt" | "reviewerId" | "academicYear" | "term" | "semester", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     reconciler?: boolean | Payment$reconcilerArgs<ExtArgs>
@@ -6741,6 +6752,7 @@ export namespace Prisma {
       studentId: string
       amount: Prisma.Decimal
       currency: string
+      feeType: string | null
       method: $Enums.PaymentMethod
       externalReference: string | null
       receiptNumber: string | null
@@ -7199,6 +7211,7 @@ export namespace Prisma {
     readonly studentId: FieldRef<"Payment", 'String'>
     readonly amount: FieldRef<"Payment", 'Decimal'>
     readonly currency: FieldRef<"Payment", 'String'>
+    readonly feeType: FieldRef<"Payment", 'String'>
     readonly method: FieldRef<"Payment", 'PaymentMethod'>
     readonly externalReference: FieldRef<"Payment", 'String'>
     readonly receiptNumber: FieldRef<"Payment", 'String'>
@@ -18165,6 +18178,7 @@ export namespace Prisma {
     studentId: 'studentId',
     amount: 'amount',
     currency: 'currency',
+    feeType: 'feeType',
     method: 'method',
     externalReference: 'externalReference',
     receiptNumber: 'receiptNumber',
@@ -18972,6 +18986,7 @@ export namespace Prisma {
     studentId?: StringFilter<"Payment"> | string
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Payment"> | string
+    feeType?: StringNullableFilter<"Payment"> | string | null
     method?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
     externalReference?: StringNullableFilter<"Payment"> | string | null
     receiptNumber?: StringNullableFilter<"Payment"> | string | null
@@ -19010,6 +19025,7 @@ export namespace Prisma {
     studentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
+    feeType?: SortOrderInput | SortOrder
     method?: SortOrder
     externalReference?: SortOrderInput | SortOrder
     receiptNumber?: SortOrderInput | SortOrder
@@ -19051,6 +19067,7 @@ export namespace Prisma {
     studentId?: StringFilter<"Payment"> | string
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Payment"> | string
+    feeType?: StringNullableFilter<"Payment"> | string | null
     method?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
     externalReference?: StringNullableFilter<"Payment"> | string | null
     receiptNumber?: StringNullableFilter<"Payment"> | string | null
@@ -19089,6 +19106,7 @@ export namespace Prisma {
     studentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
+    feeType?: SortOrderInput | SortOrder
     method?: SortOrder
     externalReference?: SortOrderInput | SortOrder
     receiptNumber?: SortOrderInput | SortOrder
@@ -19131,6 +19149,7 @@ export namespace Prisma {
     studentId?: StringWithAggregatesFilter<"Payment"> | string
     amount?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringWithAggregatesFilter<"Payment"> | string
+    feeType?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     method?: EnumPaymentMethodWithAggregatesFilter<"Payment"> | $Enums.PaymentMethod
     externalReference?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     receiptNumber?: StringNullableWithAggregatesFilter<"Payment"> | string | null
@@ -20361,6 +20380,7 @@ export namespace Prisma {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -20396,6 +20416,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -20429,6 +20450,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20464,6 +20486,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20498,6 +20521,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -20531,6 +20555,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20562,6 +20587,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21995,6 +22021,7 @@ export namespace Prisma {
     studentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
+    feeType?: SortOrder
     method?: SortOrder
     externalReference?: SortOrder
     receiptNumber?: SortOrder
@@ -22034,6 +22061,7 @@ export namespace Prisma {
     studentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
+    feeType?: SortOrder
     method?: SortOrder
     externalReference?: SortOrder
     receiptNumber?: SortOrder
@@ -22068,6 +22096,7 @@ export namespace Prisma {
     studentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
+    feeType?: SortOrder
     method?: SortOrder
     externalReference?: SortOrder
     receiptNumber?: SortOrder
@@ -24268,6 +24297,7 @@ export namespace Prisma {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -24302,6 +24332,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -24344,6 +24375,7 @@ export namespace Prisma {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -24378,6 +24410,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -24420,6 +24453,7 @@ export namespace Prisma {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -24454,6 +24488,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -24875,6 +24910,7 @@ export namespace Prisma {
     studentId?: StringFilter<"Payment"> | string
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Payment"> | string
+    feeType?: StringNullableFilter<"Payment"> | string | null
     method?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
     externalReference?: StringNullableFilter<"Payment"> | string | null
     receiptNumber?: StringNullableFilter<"Payment"> | string | null
@@ -25246,6 +25282,7 @@ export namespace Prisma {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -25279,6 +25316,7 @@ export namespace Prisma {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -27316,6 +27354,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -27349,6 +27388,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -27382,6 +27422,7 @@ export namespace Prisma {
     studentId: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -27525,6 +27566,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27559,6 +27601,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27592,6 +27635,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27624,6 +27668,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27658,6 +27703,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27691,6 +27737,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27723,6 +27770,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27757,6 +27805,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27790,6 +27839,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28165,6 +28215,7 @@ export namespace Prisma {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
+    feeType?: string | null
     method: $Enums.PaymentMethod
     externalReference?: string | null
     receiptNumber?: string | null
@@ -28198,6 +28249,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28231,6 +28283,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28264,6 +28317,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
+    feeType?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     externalReference?: NullableStringFieldUpdateOperationsInput | string | null
     receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null

@@ -130,6 +130,7 @@ model Payment {
   studentId            String
   amount               Decimal              @db.Decimal(12, 2)
   currency             String               @default("MWK")
+  feeType              String?
   method               PaymentMethod
   externalReference    String?
   receiptNumber        String?

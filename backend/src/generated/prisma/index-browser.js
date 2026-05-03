@@ -178,6 +178,7 @@ exports.Prisma.PaymentScalarFieldEnum = {
   studentId: 'studentId',
   amount: 'amount',
   currency: 'currency',
+  feeType: 'feeType',
   method: 'method',
   externalReference: 'externalReference',
   receiptNumber: 'receiptNumber',

@@ -85,6 +85,19 @@ const getMappedValue = (row: RawStatementRow, field: keyof StatementColumnMappin
     return typeof fallbackEntry?.[1] === 'string' ? fallbackEntry[1].trim() : '';
 };
 
+const normalizeAmount = (value?: number | string | { toString(): string } | null) => {
+    if (value === undefined || value === null || value === '') {
+        return null;
+    }
+
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+        return null;
+    }
+
+    return parsed.toFixed(2);
+};
+
 const buildMatchScore = (
     statement: { amount: number; reference: string; payerName: string; transactionDate: Date | null },
     payment: any
@@ -94,37 +107,17 @@ const buildMatchScore = (
 
     const statementReference = normalizeText(statement.reference);
     const paymentReference = normalizeText(payment.externalReference || payment.receiptNumber);
-    const statementName = normalizeText(statement.payerName);
-    const studentName = normalizeText(`${payment.student?.firstName || ''}${payment.student?.lastName || ''}${payment.payerName || ''}`);
+    const statementAmount = normalizeAmount(statement.amount);
+    const paymentAmount = normalizeAmount(payment.amount);
 
     if (statementReference && paymentReference && statementReference === paymentReference) {
         score += 60;
         reasons.push('Exact reference match');
-    } else if (statementReference && paymentReference && (statementReference.includes(paymentReference) || paymentReference.includes(statementReference))) {
+    }
+
+    if (statementAmount && paymentAmount && statementAmount === paymentAmount) {
         score += 40;
-        reasons.push('Partial reference match');
-    }
-
-    if (statement.amount > 0 && Number(payment.amount || 0) === statement.amount) {
-        score += 25;
         reasons.push('Exact amount match');
-    }
-
-    if (statementName && studentName && (studentName.includes(statementName) || statementName.includes(studentName))) {
-        score += 15;
-        reasons.push('Name match');
-    }
-
-    if (statement.transactionDate) {
-        const paymentDate = new Date(payment.paymentDate || payment.submittedAt);
-        const diffDays = Math.abs(statement.transactionDate.getTime() - paymentDate.getTime()) / (24 * 60 * 60 * 1000);
-        if (diffDays <= 1) {
-            score += 15;
-            reasons.push('Date within 1 day');
-        } else if (diffDays <= 3) {
-            score += 8;
-            reasons.push('Date within 3 days');
-        }
     }
 
     return { score, reasons };
@@ -133,10 +126,9 @@ const buildMatchScore = (
 const canAutoApproveSuggestion = (suggestion: { score: number; reasons: string[] }) => {
     const reasons = suggestion.reasons || [];
     return (
-        suggestion.score >= 95 &&
+        suggestion.score >= 100 &&
         reasons.includes('Exact reference match') &&
-        reasons.includes('Exact amount match') &&
-        reasons.includes('Date within 1 day')
+        reasons.includes('Exact amount match')
     );
 };
 
@@ -199,7 +191,7 @@ const computePreviewRows = async (rawRows: RawStatementRow[], mapping: Statement
             matchState:
                 suggestions.length === 0
                     ? 'NO_MATCH'
-                    : suggestions[0].score >= 70
+                    : suggestions[0].score >= 100
                         ? 'STRONG_MATCH'
                         : 'POSSIBLE_MATCH',
             suggestions,
@@ -423,6 +415,121 @@ export const markStatementImportRowResolved = async (importId: string, rowId: st
     });
 
     return getStatementImportById(importId);
+};
+
+export const tryAutoApprovePaymentFromStatementMatch = async (paymentId: string, actorId: string) => {
+    const payment = await prisma.payment.findUnique({
+        where: { id: paymentId },
+        include: {
+            student: {
+                include: {
+                    user: true,
+                },
+            },
+        },
+    });
+
+    if (!payment) {
+        throw new AppError('Payment not found', 404);
+    }
+
+    if (payment.status !== PaymentStatus.PENDING) {
+        return null;
+    }
+
+    const normalizedReference = normalizeText(payment.externalReference || payment.receiptNumber);
+    const normalizedAmount = normalizeAmount(payment.amount);
+
+    if (!normalizedReference || !normalizedAmount) {
+        return null;
+    }
+
+    const unresolvedRows = await prisma.statementImportRow.findMany({
+        where: {
+            resolvedPaymentId: null,
+        },
+        include: {
+            statementImport: true,
+        },
+        orderBy: [
+            { reconciledAt: 'asc' },
+            { rowNumber: 'asc' },
+        ],
+    });
+
+    const matchingRow = unresolvedRows.find((row) => (
+        normalizeText(row.reference) === normalizedReference &&
+        normalizeAmount(row.amount) === normalizedAmount
+    ));
+
+    if (!matchingRow) {
+        return null;
+    }
+
+    const reconciliationNote = [
+        'Auto-approved from imported statement',
+        matchingRow.statementImport.fileName ? `file: ${matchingRow.statementImport.fileName}` : null,
+        matchingRow.rowNumber ? `row: ${matchingRow.rowNumber}` : null,
+        matchingRow.reference ? `reference: ${matchingRow.reference}` : null,
+        matchingRow.amount ? `amount: ${Number(matchingRow.amount).toFixed(2)}` : null,
+    ]
+        .filter(Boolean)
+        .join(' | ');
+
+    await prisma.$transaction(async (tx) => {
+        await tx.payment.update({
+            where: { id: paymentId },
+            data: {
+                reconciliationStatus: ReconciliationStatus.MATCHED,
+                reconciliationNote,
+                reconciledAt: new Date(),
+                reconciledBy: actorId,
+                verificationStatus: VerificationStatus.VERIFIED,
+                verificationNotes: 'Automatically verified after an exact statement match on reference and amount.',
+                verifiedAt: new Date(),
+                verifiedBy: actorId,
+                status: PaymentStatus.APPROVED,
+                reviewNotes: 'Automatically approved after an exact statement match on reference and amount.',
+                reviewedAt: new Date(),
+                reviewerId: actorId,
+            },
+        });
+
+        await tx.statementImportRow.update({
+            where: { id: matchingRow.id },
+            data: {
+                resolvedPaymentId: paymentId,
+                autoApprovedPaymentId: paymentId,
+                reconciledAt: new Date(),
+                matchState: 'STRONG_MATCH',
+            },
+        });
+    });
+
+    await recalculateStudentBalance(payment.studentId);
+
+    writeAuditLog({
+        action: 'payment.auto_approved_from_statement_submission',
+        actor: {
+            userId: actorId,
+            role: 'STUDENT',
+        },
+        targetType: 'payment',
+        targetId: paymentId,
+        details: {
+            studentId: payment.studentId,
+            statementRowId: matchingRow.id,
+            importId: matchingRow.importId,
+            reference: matchingRow.reference,
+            amount: Number(matchingRow.amount || 0),
+        },
+    });
+
+    return {
+        paymentId,
+        rowId: matchingRow.id,
+        importId: matchingRow.importId,
+    };
 };
 
 export const listReconciliationExceptions = async () => {

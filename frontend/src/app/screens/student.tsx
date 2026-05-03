@@ -330,6 +330,15 @@ interface ReceiptOcrResult {
   };
 }
 
+interface FeeOption {
+  id: string;
+  type: string;
+  label: string;
+  title: string;
+  amount: number;
+  dueDate: string | null;
+}
+
 type ReceiptScanIssue = {
   summary: string;
   details?: string[];
@@ -374,6 +383,7 @@ export function UploadPaymentPage() {
   const [scanIssue, setScanIssue] = useState<ReceiptScanIssue | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [feeOptions, setFeeOptions] = useState<FeeOption[]>([]);
 
   // Keyboard shortcuts
   const { shortcuts, shortcutsHelpOpen, setShortcutsHelpOpen } = useAppShortcuts({
@@ -385,6 +395,7 @@ export function UploadPaymentPage() {
   // Form state
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState('');
+  const [feeType, setFeeType] = useState('');
   const [reference, setReference] = useState('');
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
   const [payerName, setPayerName] = useState('');
@@ -446,6 +457,32 @@ export function UploadPaymentPage() {
 
     return null;
   }, [isUploading, isScanning, scanIssue, ocrResult, proofUrl]);
+  const uniqueFeeOptions = useMemo(() => {
+    const seen = new Set<string>();
+    return feeOptions.filter((option) => {
+      if (seen.has(option.type)) {
+        return false;
+      }
+      seen.add(option.type);
+      return true;
+    });
+  }, [feeOptions]);
+
+  useEffect(() => {
+    if (uniqueFeeOptions.length === 1 && !feeType) {
+      setFeeType(uniqueFeeOptions[0].type);
+    }
+  }, [uniqueFeeOptions, feeType]);
+
+  useEffect(() => {
+    apiFetch<any>('/students/me')
+      .then((result) => {
+        setFeeOptions(Array.isArray(result?.feeOptions) ? result.feeOptions : []);
+      })
+      .catch(() => {
+        setFeeOptions([]);
+      });
+  }, []);
 
 
   const handleFileSelect = useCallback((selectedFile: File) => {
@@ -562,11 +599,12 @@ export function UploadPaymentPage() {
 
     setIsSubmitting(true);
     try {
-      await apiFetch('/payments', {
+      const payment = await apiFetch<any>('/payments', {
         method: 'POST',
         body: JSON.stringify({
           amount: Number(amount),
           method,
+          feeType: feeType || null,
           externalReference: reference,
           paymentDate,
           proofUrl,
@@ -577,7 +615,9 @@ export function UploadPaymentPage() {
           ocrReference: ocrResult?.reference || '',
         }),
       });
-      toast.success('Payment submitted for review!');
+      toast.success(payment?.status === 'APPROVED'
+        ? 'Payment automatically matched and approved!'
+        : 'Payment submitted for review!');
       // Reset form
       setFile(null);
       setPreviewUrl(null);
@@ -588,6 +628,7 @@ export function UploadPaymentPage() {
       setAutoFilledFields({ amount: false, reference: false });
       setAmount('');
       setMethod('');
+      setFeeType('');
       setReference('');
       setPayerName('');
       setNotes('');
@@ -834,6 +875,26 @@ export function UploadPaymentPage() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="payment-fee-type" className="text-[12px] text-muted-foreground font-medium">Fee Type</label>
+              <Select value={feeType || 'none'} onValueChange={(value) => setFeeType(value === 'none' ? '' : value)}>
+                <SelectTrigger id="payment-fee-type" className="h-10">
+                  <SelectValue placeholder="Select fee type..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Not specified</SelectItem>
+                  {uniqueFeeOptions.map((option) => (
+                    <SelectItem key={`${option.id}-${option.type}`} value={option.type}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-[11px] text-muted-foreground">
+                These options come from the fee structures currently assigned to you.
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">

@@ -7,11 +7,13 @@ import { writeAuditLog } from '../utils/audit-log';
 import { recalculateStudentBalance } from '../utils/balance';
 import { normalizePaymentReference, requiresPaymentReference } from '../utils/payment-reference';
 import { createNotification, createBulkNotifications } from './notification.service';
+import { tryAutoApprovePaymentFromStatementMatch } from './reconciliation.service';
 
 const submitPaymentSchema = z.object({
     amount: z.coerce.number().positive(),
     currency: z.string().default('MWK'),
     method: z.nativeEnum(PaymentMethod),
+    feeType: z.enum(['tuition', 'hostel', 'exam', 'library', 'other']).optional().nullable(),
     externalReference: z.string().min(1).optional().or(z.literal('')),
     receiptNumber: z.string().min(1).optional().or(z.literal('')),
     paymentDate: z.coerce.date(),
@@ -96,6 +98,7 @@ export const submitPayment = async (userId: string, input: unknown) => {
             studentId: user.student.id,
             amount: data.amount,
             currency: data.currency,
+            feeType: data.feeType || undefined,
             method: data.method,
             externalReference: normalizedExternalReference || undefined,
             receiptNumber: normalizedReceiptNumber || undefined,
@@ -107,6 +110,7 @@ export const submitPayment = async (userId: string, input: unknown) => {
             ocrAmount: data.ocrAmount,
             ocrReference: normalizedOcrReference || undefined,
             duplicateFlag: Boolean(duplicatePayment),
+            reconciliationStatus: ReconciliationStatus.UNMATCHED,
             academicYear: user.student.academicYear,
             term: user.student.term,
             semester: user.student.semester,
@@ -116,6 +120,14 @@ export const submitPayment = async (userId: string, input: unknown) => {
         },
     });
 
+    const statementAutoMatch = await tryAutoApprovePaymentFromStatementMatch(payment.id, userId);
+    const finalPayment = statementAutoMatch
+        ? await prisma.payment.findUniqueOrThrow({
+            where: { id: payment.id },
+            include: { student: true },
+        })
+        : payment;
+
     writeAuditLog({
         action: 'payment.submitted',
         actor: {
@@ -123,21 +135,25 @@ export const submitPayment = async (userId: string, input: unknown) => {
             role: 'STUDENT',
         },
         targetType: 'payment',
-        targetId: payment.id,
+        targetId: finalPayment.id,
         details: {
-            studentId: payment.studentId,
-            amount: Number(payment.amount),
-            method: payment.method,
-            duplicateFlag: payment.duplicateFlag,
+            studentId: finalPayment.studentId,
+            amount: Number(finalPayment.amount),
+            method: finalPayment.method,
+            feeType: finalPayment.feeType,
+            duplicateFlag: finalPayment.duplicateFlag,
+            automaticMatch: Boolean(statementAutoMatch),
         },
     });
 
     // Notify Student
     await createNotification({
         userId,
-        title: 'Payment Submitted',
-        message: `Your payment of MK ${Number(payment.amount).toLocaleString()} has been submitted and is pending review.`,
-        type: 'PAYMENT_SUBMITTED',
+        title: finalPayment.status === PaymentStatus.APPROVED ? 'Payment Approved' : 'Payment Submitted',
+        message: finalPayment.status === PaymentStatus.APPROVED
+            ? `Your payment of MK ${Number(finalPayment.amount).toLocaleString()} was automatically matched and approved.`
+            : `Your payment of MK ${Number(finalPayment.amount).toLocaleString()} has been submitted and is pending review.`,
+        type: finalPayment.status === PaymentStatus.APPROVED ? 'PAYMENT_APPROVED' : 'PAYMENT_SUBMITTED',
     });
 
     // Notify Admins
@@ -149,14 +165,16 @@ export const submitPayment = async (userId: string, input: unknown) => {
         await createBulkNotifications(
             staff.map((s) => ({
                 userId: s.id,
-                title: 'New Payment Pending Review',
-                message: `${user.student?.firstName} ${user.student?.lastName} submitted a payment of MK ${Number(payment.amount).toLocaleString()}.`,
-                type: 'PAYMENT_SUBMITTED',
+                title: finalPayment.status === PaymentStatus.APPROVED ? 'Payment Auto-Approved' : 'New Payment Pending Review',
+                message: finalPayment.status === PaymentStatus.APPROVED
+                    ? `${user.student?.firstName} ${user.student?.lastName} had a payment of MK ${Number(finalPayment.amount).toLocaleString()} auto-approved after an exact statement match.`
+                    : `${user.student?.firstName} ${user.student?.lastName} submitted a payment of MK ${Number(finalPayment.amount).toLocaleString()}.`,
+                type: finalPayment.status === PaymentStatus.APPROVED ? 'PAYMENT_APPROVED' : 'PAYMENT_SUBMITTED',
             }))
         );
     }
 
-    return payment;
+    return finalPayment;
 };
 
 export const listStudentPayments = async (userId: string) => {
